@@ -1,0 +1,32 @@
+name: Play upload
+
+# Stub, intentionally inert. Google Play requires the very first AAB to be uploaded by hand in the
+# Play Console. After that, finish this workflow (service-account secret + upload step, see
+# docs/play-store.md) and set the repository variable PLAY_UPLOAD_ENABLED=true.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag whose AAB to upload, e.g. v0.1.0"
+        required: true
+      track:
+        description: "Play track"
+        required: true
+        default: internal
+        type: choice
+        options: [internal, alpha, beta, production]
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    name: Upload AAB to Play
+    if: vars.PLAY_UPLOAD_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Not implemented yet
+        run: |
+          echo "::error::Play upload is not implemented yet. See docs/play-store.md."
+          exit 1
