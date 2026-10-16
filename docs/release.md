@@ -10,6 +10,17 @@ secrets (Settings → Secrets and variables → Actions):
 | `KEY_ALIAS` | Key alias inside the keystore |
 | `KEY_PASSWORD` | Key password |
 
+`.github/scripts/decode-keystore.sh` checks the secrets before every build. Releases fail with a clear message
+when something is wrong; PR CI only warns and signs the debug APK with a throwaway key.
+
+### If the secrets check fails
+- Names must match exactly (upper case). They must be **Repository secrets** under *Actions*. Secrets saved
+  under *Environments*, *Dependabot* or *Codespaces* are not visible to these workflows.
+- `KEYSTORE_BASE64` must be the base64 of the binary `.jks`/`.keystore` file, e.g. `base64 -w0 release.jks`
+  (Linux) or `base64 -i release.jks` (macOS). Line breaks are tolerated. A file path, a PEM certificate,
+  or the password is not valid.
+- `KEYSTORE_PASSWORD` must open the keystore, and `KEY_ALIAS` must exist in it.
+
 ## Version numbers
 - `versionName` = the tag without `v` (`v1.2.3` → `1.2.3`).
 - `versionCode` = `major × 1,000,000 + minor × 1,000 + patch` (`v1.2.3` → `1002003`). It increases with every

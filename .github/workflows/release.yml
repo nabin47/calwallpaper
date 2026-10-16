@@ -113,21 +113,8 @@ jobs:
           cache-provider: basic
           cache-read-only: true
 
-      - name: Check signing secrets
-        run: |
-          missing=()
-          for name in KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
-            [[ -n "${!name}" ]] || missing+=("$name")
-          done
-          if (( ${#missing[@]} )); then
-            echo "::error::Missing repository secrets: ${missing[*]} (Settings → Secrets and variables → Actions)."
-            exit 1
-          fi
-
-      - name: Decode keystore
-        run: |
-          echo "${KEYSTORE_BASE64}" | base64 --decode > "${RUNNER_TEMP}/release.jks"
-          echo "SIGNING_KEYSTORE_PATH=${RUNNER_TEMP}/release.jks" >> "$GITHUB_ENV"
+      - name: Decode and verify keystore
+        run: .github/scripts/decode-keystore.sh required
 
       - name: Checks (spotless, detekt, lint, tests)
         run: ./gradlew spotlessCheck detekt lint check
