@@ -33,3 +33,15 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# CI scratch
+.ci-logs/
+dist/
+release-notes.md
+
+# Secrets (never commit)
+*.p12
+*.pem
+keystore.properties
+signing.properties
+.env
