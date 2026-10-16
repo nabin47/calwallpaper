@@ -20,7 +20,11 @@ internal fun Project.configureAndroidApplication() {
             sourceCompatibility = ANDROID_JAVA_VERSION
             targetCompatibility = ANDROID_JAVA_VERSION
         }
-        lint { configureStrictLint(this@configureAndroidApplication) }
+        lint {
+            configureStrictLint(this@configureAndroidApplication)
+            // `data` (KMP Android library) has no `lint` task of its own; app lint covers it as a dependency.
+            checkDependencies = true
+        }
     }
 }
 

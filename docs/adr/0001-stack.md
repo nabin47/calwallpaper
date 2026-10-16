@@ -25,6 +25,9 @@ This ADR records the choices that §3 left open, plus the versions checked at sc
   proprietary default cache provider's terms.
 
 ## Consequences
+- detekt 2.0.0-alpha.6 calls the deprecated `Configuration.setVisible` (it will be removed in Gradle 11). This is the
+  only Gradle deprecation in the build (`org.gradle.warning.mode=all` lists it). It comes from upstream and
+  cannot be fixed here; check it again on each detekt upgrade.
 - Detekt rule or config names may change between alphas. Pin the exact version and read its changelog on upgrade.
 - Room 3 requires KSP. KSP 2.3.x is decoupled from Kotlin versions, but its compatibility with Kotlin 2.4 must
   be confirmed by CI when `data` adds Room (Phase 3).
