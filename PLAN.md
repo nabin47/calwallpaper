@@ -1,6 +1,6 @@
 # PLAN — Phase 0 scaffold (draft for approval)
 
-Status: **awaiting owner approval**. Versions verified on 2026-10-16 (Maven Central metadata + official release pages; Google Maven is not reachable from the sandbox, so Google artifacts were checked on developer.android.com).
+Status: **approved 2026-10-16**. Decisions: name CalWallpaper, applicationId `io.github.nabin47.calwallpaper`, Apache-2.0, Room 3, manual DI, detekt 2.0 alpha pinned (ADR 0001). Versions verified on 2026-10-16 (Maven Central metadata + official release pages; Google Maven is not reachable from the sandbox, so Google artifacts were checked on developer.android.com).
 
 ## 1. Module graph (dependencies point inward)
 
@@ -69,9 +69,6 @@ app ──────────────┬─► android-wallpaper ─┐
 - Live-wallpaper tap delivery varies by launcher (§2), so it has to be verified on your phone.
 - `versionCode` derivation: I propose `major*1_000_000 + minor*1_000 + patch`. It is monotonic for semver tags and lets you rebuild a tag.
 
-## 8. Questions for you (blocking)
-1. **App name** (display name; also replaces `{APP_NAME}` in CLAUDE.md)?
-2. **applicationId** (permanent once on Play), e.g. `io.github.nabin47.calwallpaper`?
-3. **License**: the repo already has Apache-2.0. Keep it? (The fonts we bundle later stay OFL.)
-4. Approve the §5 changes: Room 3, manual DI, and detekt option (a) or (b)?
-5. Pages: OK to enable *Settings → Pages → Source: GitHub Actions* (you do this once in the web UI)?
+## 8. Owner actions
+- Enable GitHub Pages once: *Settings → Pages → Source: GitHub Actions*.
+- After merging, create release `v0.0.1` (docs/release.md).
