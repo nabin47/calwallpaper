@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 # Decodes KEYSTORE_BASE64 into $RUNNER_TEMP/release.jks, checks that KEYSTORE_PASSWORD opens it and that
 # KEY_ALIAS exists, then exports SIGNING_KEYSTORE_PATH for Gradle. Never prints secret values.
-# Usage: decode-keystore.sh required|optional
-#   required: any problem fails the step (release builds).
-#   optional: any problem prints a warning and the build continues with the debug key (CI debug APKs).
+# Only release.yml calls this; PR CI never receives signing secrets.
 set -euo pipefail
 
-mode="${1:?usage: decode-keystore.sh required|optional}"
 keystore="${RUNNER_TEMP}/release.jks"
 
 problem() {
   rm -f "$keystore"
-  if [[ "$mode" == "required" ]]; then
-    echo "::error::$1"
-    exit 1
-  fi
-  echo "::warning::$1 The debug APK is signed with the default debug key instead."
-  exit 0
+  echo "::error::$1"
+  exit 1
 }
 
 missing=()

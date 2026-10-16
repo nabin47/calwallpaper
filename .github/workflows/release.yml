@@ -114,7 +114,7 @@ jobs:
           cache-read-only: true
 
       - name: Decode and verify keystore
-        run: .github/scripts/decode-keystore.sh required
+        run: .github/scripts/decode-keystore.sh
 
       - name: Checks (spotless, detekt, lint, tests)
         run: ./gradlew spotlessCheck detekt lint check

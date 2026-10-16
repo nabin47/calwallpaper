@@ -11,7 +11,7 @@ secrets (Settings → Secrets and variables → Actions):
 | `KEY_PASSWORD` | Key password |
 
 `.github/scripts/decode-keystore.sh` checks the secrets before every build. Releases fail with a clear message
-when something is wrong; PR CI only warns and signs the debug APK with a throwaway key.
+when something is wrong. PR CI never receives these secrets, because it runs code from the PR.
 
 ### If the secrets check fails
 - Names must match exactly (upper case). They must be **Repository secrets** under *Actions*. Secrets saved
@@ -49,9 +49,9 @@ Open the release page on the phone, download the `.apk`, and allow "Install unkn
 when asked. Debug builds from PR CI install side by side, as **CalWallpaper Debug** (`….debug`).
 
 ## Debug APK signing
-On same-repo PRs and `main`, CI signs the *debug* APK with the release key too, so each new CI build installs
-over the previous one. The debug app has a different applicationId (`.debug` suffix), so it can never
-replace or impersonate the release app. Fork and Dependabot PRs have no secrets and use a throwaway debug key.
+PR CI runs code from the PR, so it gets **no** signing secrets. Debug APKs are signed with the runner's
+throwaway debug key, which changes between runs: **uninstall the previous "CalWallpaper Debug"** before
+installing a newer debug APK. Release APKs always use the release key and update in place.
 
 ## Release size
 The job summary of each release run lists the APK and AAB sizes. Record them in `docs/performance.md`.

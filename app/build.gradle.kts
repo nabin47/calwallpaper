@@ -3,8 +3,8 @@ plugins {
     id("calwp.android.compose")
 }
 
-// Release signing comes from CI secrets (see docs/release.md). When any value is missing (fork or
-// Dependabot PRs, local builds) no release signing config exists and debug builds use the debug key.
+// Release signing comes from secrets that only release.yml provides (see docs/release.md). Everywhere
+// else (PR CI, local builds) no release signing config exists; debug builds use the standard debug key.
 val signingEnv =
     listOf("SIGNING_KEYSTORE_PATH", "KEYSTORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD")
         .associateWith { providers.environmentVariable(it).orNull.orEmpty() }
@@ -44,8 +44,6 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
-            // Same key on every CI run, so a newer debug APK installs over the previous one.
-            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
     }
 }
