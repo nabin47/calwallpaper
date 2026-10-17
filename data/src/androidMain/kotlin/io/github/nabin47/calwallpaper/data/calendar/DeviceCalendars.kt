@@ -52,7 +52,7 @@ class DeviceCalendars(
                             val name = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
                             val account = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.ACCOUNT_NAME)
                             val color = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.CALENDAR_COLOR)
-                            buildList {
+                            buildList<DeviceCalendar> {
                                 while (cursor.moveToNext()) {
                                     add(
                                         DeviceCalendar(
