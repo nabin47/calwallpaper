@@ -37,4 +37,5 @@ include(
     ":android-wallpaper",
     ":android-widgets",
     ":app",
+    ":baselineprofile",
 )

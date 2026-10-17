@@ -1,9 +1,29 @@
-CalWallpaper draws your calendar events and tasks on your home and lock-screen wallpaper, calmly and legibly.
+CalWallpaper draws your calendar events and tasks on your wallpaper, so the day ahead is there every time you look at your phone. No app to open, no widget to make room for.
 
-• Works with any calendar synced to your phone, including Google Calendar
-• Local tasks and Todoist
-• Home-screen widgets that open the right day or task
-• Privacy mode hides titles while your phone is locked
-• Layout presets that keep clear of the lock-screen clock
-• No account, no ads, no analytics. Your data stays on your device
-• Light on battery: redraws only when something changes
+WHAT IT SHOWS
+• Events from any calendar synced to your phone, including Google Calendar. No sign-in: it reads the calendars already on your device.
+• Tasks from a simple list kept on your phone, and optionally from Todoist.
+• Four layouts: Agenda list, Week strip, Month grid and Next 3.
+
+HOME AND LOCK SCREEN
+• Separate placement for the lock screen, kept clear of the clock and notifications.
+• Privacy mode hides titles while your phone is locked and shows only counts or dots.
+• Tap a day or an event on the home screen to open it in your calendar or in Todoist (depends on your launcher).
+
+WIDGETS AND SHORTCUTS
+• Agenda and week-strip widgets that open the right day or task.
+• Quick Settings tile and app shortcut to add a task in seconds.
+
+MAKE IT YOURS
+Color palettes or your own colors, Material You colors, font, text size, opacity, corner radius, spacing, position, safe zones, date range, week start, 12/24-hour time and completed items. A live preview shows every change.
+
+LIGHT ON YOUR BATTERY
+The wallpaper redraws only when something changes: no timers, no animation, no background service. Battery saver mode sets a still image instead of a live wallpaper.
+
+PRIVATE BY DESIGN
+• No account, no ads, no analytics, no tracking.
+• Your calendar never leaves your phone.
+• Todoist is optional. Your personal token is stored encrypted on your phone and sent only to Todoist.
+• Open source (Apache-2.0).
+
+Accessibility: follows your phone's font size and warns you in settings when your colors have low contrast.

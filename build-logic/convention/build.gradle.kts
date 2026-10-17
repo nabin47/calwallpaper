@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.ksp.gradlePlugin)
     implementation(libs.room3.gradlePlugin)
     implementation(libs.roborazzi.gradlePlugin)
+    implementation(libs.baselineprofile.gradlePlugin)
 }
 
 gradlePlugin {
@@ -49,6 +50,14 @@ gradlePlugin {
         register("screenshots") {
             id = "calwp.screenshots"
             implementationClass = "ScreenshotsConventionPlugin"
+        }
+        register("baselineProfileConsumer") {
+            id = "calwp.baselineprofile.consumer"
+            implementationClass = "BaselineProfileConsumerConventionPlugin"
+        }
+        register("baselineProfileProducer") {
+            id = "calwp.baselineprofile.producer"
+            implementationClass = "BaselineProfileProducerConventionPlugin"
         }
         register("androidCompose") {
             id = "calwp.android.compose"

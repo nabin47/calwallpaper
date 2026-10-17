@@ -4,6 +4,7 @@ import io.github.nabin47.calwallpaper.core.ItemTime
 import io.github.nabin47.calwallpaper.core.OpenTarget
 import io.github.nabin47.calwallpaper.core.SourceId
 import io.github.nabin47.calwallpaper.core.time.DateRange
+import io.github.nabin47.calwallpaper.domain.settings.AppearanceSettings
 import io.github.nabin47.calwallpaper.domain.settings.LayoutPreset
 import io.github.nabin47.calwallpaper.domain.settings.PalettePreset
 import io.github.nabin47.calwallpaper.domain.settings.PrivacyMode
@@ -146,6 +147,51 @@ class LayoutEngineTest {
             )
         assertEquals(normal * 1.5f, userScaled, 0.01f)
         assertEquals(normal * 1.3f, systemScaled, 0.01f)
+    }
+
+    /** Text box of a text op, using the fake measurer's metrics: left, top, right, bottom. */
+    private fun DrawOp.Text.box(): Bounds {
+        val metrics = FakeMeasurer.metrics(style)
+        return Bounds(x, baseline - metrics.ascent, x + FakeMeasurer.width(text, style), baseline + metrics.descent)
+    }
+
+    private fun Bounds.overlaps(other: Bounds): Boolean =
+        left < other.right - 0.5f && other.left < right - 0.5f && top < other.bottom - 0.5f && other.top < bottom - 0.5f
+
+    @Test
+    fun largestTextStaysOnScreenAndNeverOverlaps() {
+        // Android's largest font size (200%) times the largest text size setting.
+        val screen = Fixtures.screen.copy(fontScale = 2f)
+        for (preset in presets) {
+            for (locked in listOf(false, true)) {
+                val base = settings(preset)
+                val s =
+                    base.copy(
+                        appearance = base.appearance.copy(textScale = AppearanceSettings.TEXT_SCALE.endInclusive),
+                    )
+                val scene =
+                    LayoutEngine(
+                        FakeMeasurer,
+                    ).layout(Fixtures.request(s, isLocked = locked).copy(screen = screen))
+                val boxes = scene.ops.filterIsInstance<DrawOp.Text>().map { it.text to it.box() }
+                assertTrue(boxes.isNotEmpty(), "$preset locked=$locked draws nothing")
+                boxes.forEach { (text, box) ->
+                    assertTrue(
+                        box.left >= -0.5f && box.right <= screen.widthPx + 0.5f && box.top >= -0.5f &&
+                            box.bottom <= screen.heightPx + 0.5f,
+                        "$preset locked=$locked: '$text' leaves the screen",
+                    )
+                }
+                for (i in boxes.indices) {
+                    for (j in i + 1 until boxes.size) {
+                        assertFalse(
+                            boxes[i].second.overlaps(boxes[j].second),
+                            "$preset locked=$locked: '${boxes[i].first}' overlaps '${boxes[j].first}'",
+                        )
+                    }
+                }
+            }
+        }
     }
 
     @Test

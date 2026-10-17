@@ -1,0 +1,119 @@
+name: Baseline Profile
+
+# Generates the app's Baseline Profile on an emulator (Gradle Managed Device) and commits it to the branch, then
+# starts CI on that commit (ADR 0008, baselineprofile/README.md). Use it after large changes to startup, the
+# settings screen or the wallpaper's draw path:
+#   Actions -> Baseline Profile -> Run workflow -> "Use workflow from": your PR branch (never main).
+# Pushing a commit whose message contains [baseline-profile] does the same.
+# It runs the branch's own code with write access, like any push by a collaborator; forks cannot trigger it.
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: baseline-profile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    name: Generate and commit
+    if: >-
+      github.ref != 'refs/heads/main' &&
+      (github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[baseline-profile]'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      actions: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      # GitHub's Linux runners support hardware acceleration once /dev/kvm is accessible to the runner user.
+      - name: Enable KVM for the emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          ls -l /dev/kvm
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-provider: basic
+          cache-read-only: true
+
+      # Downloads the emulator and the API 34 AOSP image on first use. No GPU on the runner, so software rendering.
+      - name: Generate Baseline Profile
+        run: >-
+          ./gradlew :app:generateBaselineProfile
+          -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
+
+      - name: Upload profile and test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: baseline-profile
+          path: |
+            app/src/*/generated/baselineProfiles/
+            baselineprofile/build/outputs/
+            baselineprofile/build/reports/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit changed profile
+        id: commit
+        run: |
+          git add -A -- 'app/src/*/generated/baselineProfiles/*'
+          if git diff --cached --quiet; then
+            echo "The Baseline Profile is unchanged."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git diff --cached --stat
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "perf: regenerate baseline profile"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # Pushes made with GITHUB_TOKEN do not start workflows, so start CI explicitly for the new commit.
+      - name: Run CI on the new commit
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci.yml --ref "${GITHUB_REF_NAME}"
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### Baseline Profile"
+            echo
+            for f in app/src/*/generated/baselineProfiles/*.txt; do
+              [[ -f "$f" ]] && echo "- \`$f\`: $(wc -l < "$f") rules"
+            done
+            echo
+            if [[ "${{ steps.commit.outputs.pushed }}" == "true" ]]; then
+              echo "Committed to \`${GITHUB_REF_NAME}\`. CI was started on the new commit."
+            else
+              echo "Nothing committed."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

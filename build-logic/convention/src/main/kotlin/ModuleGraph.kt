@@ -3,7 +3,9 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 
 /**
- * Enforces CLAUDE.md §4/§8: dependencies point inward and nothing depends on `:app`.
+ * Enforces CLAUDE.md §4/§8: dependencies point inward and nothing depends on `:app`. The one exception is
+ * `:baselineprofile`, a test-only module that installs and drives the app to generate its Baseline Profile; the
+ * app in turn reads the generated profile from it. Nothing from it ships in the app (ADR 0008).
  * Runs once after all projects are configured; a violation fails the build with the offending edges.
  */
 internal object ModuleGraph {
@@ -17,7 +19,8 @@ internal object ModuleGraph {
             ":data" to setOf(":core", ":domain"),
             ":android-wallpaper" to sharedAndroid,
             ":android-widgets" to sharedAndroid,
-            ":app" to sharedAndroid + setOf(":android-wallpaper", ":android-widgets"),
+            ":app" to sharedAndroid + setOf(":android-wallpaper", ":android-widgets", ":baselineprofile"),
+            ":baselineprofile" to setOf(":app"),
         )
 
     /** Throws [GradleException] listing every forbidden project-to-project dependency. */

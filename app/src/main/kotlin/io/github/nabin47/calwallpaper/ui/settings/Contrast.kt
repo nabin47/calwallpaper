@@ -6,24 +6,56 @@ import kotlin.math.pow
 
 /**
  * Text contrast as the wallpaper will show it (CLAUDE.md §10: contrast warnings in settings). The panel is
- * blended over the background with its opacity, and the text over the panel with the text opacity, then the
- * WCAG 2.x contrast ratio is computed. Pure.
+ * blended over the background with its opacity, and each text color over the panel with the text opacity, then
+ * the WCAG 2.x contrast ratio is computed for every color the layout draws text in. Pure.
  */
 object Contrast {
     /** WCAG AA minimum for normal-size text. Below this the settings screen shows a warning. */
     const val MINIMUM_RATIO: Float = 4.5f
 
-    /** Contrast ratio (1 to 21) of the main text for [appearance], using [dynamic] if dynamic color is on. */
-    fun ratio(
+    /** The colors the wallpaper draws text in. */
+    enum class TextRole {
+        /** Titles and dates. */
+        TEXT,
+
+        /** Times, counts, weekday initials, completed items and "more" lines. */
+        SECONDARY,
+
+        /** Today's heading in the agenda list. */
+        ACCENT,
+
+        /** Today's date on the accent circle. */
+        ON_ACCENT,
+    }
+
+    /** Contrast ratio (1 to 21) of each [TextRole] for [appearance], using [dynamic] if dynamic color is on. */
+    fun ratios(
         appearance: AppearanceSettings,
         dynamic: Palette? = null,
-    ): Float {
+    ): Map<TextRole, Float> {
         val normalized = appearance.normalized()
         val palette = Palette.resolve(normalized, dynamic)
         val panel = blend(palette.panel, palette.background, normalized.panelOpacity * alpha(palette.panel))
-        val text = blend(palette.text, panel, normalized.textOpacity * alpha(palette.text))
-        return ratioOf(text, panel)
+        val textOpacity = normalized.textOpacity
+
+        fun over(
+            color: Int,
+            bottom: Int,
+        ): Int = blend(color, bottom, textOpacity * alpha(color))
+        val accent = over(palette.accent, panel)
+        return mapOf(
+            TextRole.TEXT to ratioOf(over(palette.text, panel), panel),
+            TextRole.SECONDARY to ratioOf(over(palette.secondaryText, panel), panel),
+            TextRole.ACCENT to ratioOf(accent, panel),
+            TextRole.ON_ACCENT to ratioOf(over(palette.onAccent, accent), accent),
+        )
     }
+
+    /** The weakest contrast ratio over every [TextRole]: what the settings warning reports. */
+    fun ratio(
+        appearance: AppearanceSettings,
+        dynamic: Palette? = null,
+    ): Float = ratios(appearance, dynamic).values.min()
 
     /** True if [ratio] is below [MINIMUM_RATIO]. */
     fun isLow(

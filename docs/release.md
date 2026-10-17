@@ -62,5 +62,10 @@ and only the "Assemble debug APK" step receives it.
 
 Release APKs always use the release key and update in place.
 
+## Google Play
+The first AAB is uploaded by hand in the Play Console; later ones can go through **Actions → Play upload**
+(`play.yml`). Before each Play release, add `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`
+(500 characters at most). See `docs/play-store.md` for the declarations, the checklist and the setup.
+
 ## Release size
 The job summary of each release run lists the APK and AAB sizes. Record them in `docs/performance.md`.

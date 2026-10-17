@@ -13,9 +13,10 @@ See CLAUDE.md §4 for the authoritative module list and key ideas. This page tra
 | `android-wallpaper` | Android library | core, domain, render, data | `AgendaWallpaperService` (own `:wallpaper` process, Direct Boot aware), Canvas renderer, static battery mode (ADR 0004). No Compose. |
 | `android-widgets` | Android library | core, domain, render, data | Glance widgets (Scene image plus tap areas; ADR 0005). |
 | `app` | Android application | all of the above | Settings UI (Compose), onboarding, permissions, deep-link router. |
+| `baselineprofile` | Android test (`com.android.test`) | app (test-only) | Generates the app's Baseline Profile on an emulator in CI; nothing ships from it (ADR 0008). |
 
 The rules are enforced by `build-logic/convention/src/main/kotlin/ModuleGraph.kt`, which fails the
-build on any edge not in the table (and on any dependency on `:app`).
+build on any edge not in the table (and on any dependency on `:app`, except the test-only `:baselineprofile`).
 
 KMP modules target only the JVM for now. iOS targets get added in the iOS phase; until then,
 `commonMain` code must stay free of `java.*` and Android APIs.
@@ -32,6 +33,8 @@ Convention plugins live in `build-logic/convention` (an included build):
 | `calwp.android.application` | `com.android.application` (built-in Kotlin), SDK levels, strict lint, quality gates |
 | `calwp.screenshots` | Roborazzi + Robolectric for JVM screenshot tests (goldens in `src/test/screenshots/`) |
 | `calwp.android.compose` | Compose compiler plugin + Compose BOM (never on `android-wallpaper`) |
+| `calwp.baselineprofile.consumer` | AndroidX Baseline Profile plugin + ProfileInstaller on `app` |
+| `calwp.baselineprofile.producer` | `com.android.test` + Baseline Profile plugin, Macrobenchmark, UiAutomator, quality gates |
 
 The quality gates are Spotless (ktlint), detekt (`config/detekt/detekt.yml`), and Kotlin `allWarningsAsErrors`.
 Android Lint uses `lint.xml` with warnings as errors.

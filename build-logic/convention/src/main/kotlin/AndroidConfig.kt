@@ -1,6 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.dsl.Lint
+import com.android.build.api.dsl.TestExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -42,6 +43,28 @@ internal fun Project.configureAndroidLibrary() {
         lint { configureStrictLint(this@configureAndroidLibrary) }
     }
 }
+
+/**
+ * Shared settings for the Baseline Profile generator (a `com.android.test` module). Its minSdk is 28, the lowest
+ * level on which Macrobenchmark can collect profiles; the app itself still supports 26.
+ */
+internal fun Project.configureAndroidTest() {
+    extensions.configure<TestExtension> {
+        compileSdk = libs.intVersion("android-compileSdk")
+        defaultConfig {
+            minSdk = PROFILE_GENERATOR_MIN_SDK
+            targetSdk = libs.intVersion("android-targetSdk")
+            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        }
+        compileOptions {
+            sourceCompatibility = ANDROID_JAVA_VERSION
+            targetCompatibility = ANDROID_JAVA_VERSION
+        }
+        lint { configureStrictLint(this@configureAndroidTest) }
+    }
+}
+
+private const val PROFILE_GENERATOR_MIN_SDK = 28
 
 /** Lint warnings fail the build; the shared `lint.xml` turns off checks that only nag about newer versions. */
 private fun Lint.configureStrictLint(project: Project) {

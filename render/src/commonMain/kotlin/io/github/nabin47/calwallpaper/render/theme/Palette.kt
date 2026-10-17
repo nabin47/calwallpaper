@@ -51,7 +51,7 @@ data class Palette(
                 panel = 0xFFF4EFE6.toInt(),
                 text = 0xFF2B2620.toInt(),
                 secondaryText = 0xFF6E6458.toInt(),
-                accent = 0xFFA0522D.toInt(),
+                accent = 0xFF934A27.toInt(),
                 onAccent = 0xFFFFFFFF.toInt(),
                 divider = 0xFFE0D7C8.toInt(),
                 background = 0xFFE6DCCB.toInt(),

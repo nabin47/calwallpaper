@@ -34,6 +34,24 @@ private fun TextMeasurer.longestPrefixWithEllipsis(
 }
 
 /**
+ * [style], shrunk just enough that the widest of [labels] fits in [maxWidth]; never enlarged. For text that must
+ * not be ellipsized (day numbers, weekday initials), so that large font sizes cannot overlap neighboring cells.
+ * Pure.
+ */
+fun TextMeasurer.shrinkToFit(
+    style: TextStyle,
+    labels: List<String>,
+    maxWidth: Float,
+): TextStyle {
+    val widest = labels.maxOfOrNull { width(it, style) } ?: 0f
+    if (widest <= maxWidth || widest <= 0f) return style
+    return style.copy(sizePx = style.sizePx * (maxWidth.coerceAtLeast(0f) / widest) * FIT_MARGIN)
+}
+
+/** Text width is not exactly proportional to size (hinting), so shrunk text keeps a little room. */
+private const val FIT_MARGIN = 0.97f
+
+/**
  * Greedy word wrap into at most [maxLines] lines no wider than [maxWidth]. Words longer than a line are broken
  * by character; text left over after the last line is ellipsized into it. Pure.
  */

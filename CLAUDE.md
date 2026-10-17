@@ -44,6 +44,7 @@ data/                   KMP: Room, DataStore, Ktor, source adapters
 android-wallpaper/      WallpaperService + Canvas renderer (NO Compose, NO DI framework if avoidable)
 android-widgets/        Glance widgets
 app/                    Settings UI, onboarding, permissions, deep-link router
+baselineprofile/        Test-only: generates the app's Baseline Profile in CI (ADR 0008)
 site/                   Static landing page + privacy policy (GitHub Pages)
 docs/                   Architecture, ADRs, contributing, release process
 ```
@@ -75,7 +76,7 @@ Colors (palette presets, custom, optional Material You dynamic color), font fami
 ## 8. Code quality
 
 - **Every public class/function has KDoc** (what, why, threading, edge cases). Each module has a `README.md` (purpose, public API, dependencies rules). Non-obvious decisions get an ADR in `docs/adr/` (short: context, decision, consequences).
-- Modular: dependencies point inward (`app` → `domain`/`render`/`data` → `core`). No module depends on `app`. Enforce with a Gradle check.
+- Modular: dependencies point inward (`app` → `domain`/`render`/`data` → `core`). No module depends on `app`, except the test-only `baselineprofile` generator (ADR 0008). Enforce with a Gradle check.
 - Small files and functions, no god classes, no `Util` dumping grounds. Prefer immutable models and pure functions in `render`/`domain`.
 - Formatting and lint: ktlint (via Spotless) + detekt + Android Lint, all enforced in CI.
 - Tests: JVM unit tests for layout engine, mappers, settings migrations; JVM screenshot tests for the renderer (Roborazzi or Paparazzi, so no emulator is needed); a few instrumented tests only where unavoidable.
@@ -99,7 +100,8 @@ Workflows (`.github/workflows/`), least-privilege `permissions:`, actions pinned
 - `ci.yml` (PR + main): spotless, detekt, lint, unit + screenshot tests, `assembleDebug`, upload debug APK artifact. Debug APKs are signed with a fixed debug-only key from the `DEBUG_KEYSTORE_BASE64` secret, passed only to the assemble step, so builds install over each other (ADR 0006). Never the release key.
 - `release.yml` (tag `v*.*.*`): run checks, build **signed** release APK and AAB from secrets (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`), derive `versionName` from the tag and a monotonic `versionCode`, generate release notes from Conventional Commits, publish a **GitHub Release** with APK + AAB + SHA-256 checksums. The workflow must also work when the owner has already created the Release/tag from the GitHub web UI (upload assets to the existing release instead of failing).
 - `pages.yml` (push to main under `site/`, plus manual dispatch): build and deploy `site/` via `actions/deploy-pages`. The download button reads the latest release client-side from the GitHub API, so the site never needs a rebuild per release. No release trigger: release runs execute on the tag ref, which the `github-pages` environment's protection rules reject.
-- `play.yml` (manual dispatch, disabled until the first manual Play upload is done): upload AAB to a Play track using a service account.
+- `play.yml` (manual dispatch, off until the repository variable `PLAY_UPLOAD_ENABLED` is `true`, after the first manual Play upload): upload the AAB of an existing GitHub Release to a Play track using a service account (`PLAY_SERVICE_ACCOUNT_JSON`, `google-play` environment). See `docs/play-store.md`.
+- `baseline-profile.yml` (manual dispatch, or `[baseline-profile]` in a commit message on a non-main branch): generate the Baseline Profile on an emulator and commit it (ADR 0008). `screenshots.yml` does the same for screenshot goldens (`[record-screenshots]`).
 - Dependabot or Renovate for dependencies and actions.
 - Never commit keystores, tokens or `local.properties`. Keep `.gitignore` strict.
 

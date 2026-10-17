@@ -1,0 +1,6 @@
+First release on Google Play.
+• Calendar events and tasks on your home and lock-screen wallpaper
+• Agenda, Week strip, Month grid and Next 3 layouts, with a live preview
+• Privacy mode for the lock screen; battery saver still image
+• Agenda and week widgets, tap to open the day or task
+• Todoist (optional) and a local task list with a Quick Settings tile
