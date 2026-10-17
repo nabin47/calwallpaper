@@ -88,8 +88,13 @@ launcher shortcut. The constraints:
     constraints, wake locks during work, rescheduling after boot, and long-running work.
   - **Kept:** removing `FOREGROUND_SERVICE` with `tools:node="remove"` could break expedited work on Android 8 to 11,
     which runs as a foreground service.
-  - **Confirm:** check the merged manifest in a CI build. If the owner prefers, a later change can try removing
-    `FOREGROUND_SERVICE` after testing.
+  - **Confirmed** in CI (run on f274e14, which now lists the release APK's permissions in every job summary):
+    `INTERNET`, `READ_CALENDAR`, `SET_WALLPAPER`, `RECEIVE_BOOT_COMPLETED`, `WAKE_LOCK`, `ACCESS_NETWORK_STATE`,
+    `FOREGROUND_SERVICE`, and `<applicationId>.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION`.
+  - **The last one** is a signature-level permission that androidx.core defines and holds itself. It protects the
+    app's own non-exported runtime receivers, so no other app can hold it and the user never sees it.
+  - **Optional follow-up:** if the owner prefers, a later change can try removing `FOREGROUND_SERVICE` after
+    testing.
 
 ## Consequences
 - **Needs the phone or a real account to confirm:**
