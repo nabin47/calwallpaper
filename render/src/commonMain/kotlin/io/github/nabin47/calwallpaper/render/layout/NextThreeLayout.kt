@@ -13,10 +13,15 @@ import kotlin.time.Instant
 
 /**
  * Next-3 minimal: the next three unfinished items, each with a "when" line and a large title wrapped to two
- * lines. In privacy mode the title is replaced by a neutral word.
+ * lines. Completed tasks are skipped even when "show completed" is on. In privacy mode the title is replaced by
+ * a neutral word.
  */
 internal fun LayoutContext.layoutNextThree(items: List<AgendaItem>) {
-    val upcoming = items.filter { it.isUpcoming(request.now) }.sortedWith(agendaOrder(zone)).take(COUNT)
+    val upcoming =
+        items
+            .filter { !it.isCompleted && it.isUpcoming(request.now) }
+            .sortedWith(agendaOrder(zone))
+            .take(COUNT)
     val rows = mutableListOf<Row>()
     upcoming.forEach { item ->
         if (rows.isNotEmpty()) rows += spacerRow(groupGap * 2)

@@ -63,6 +63,21 @@ class LayoutEngineTest {
     }
 
     @Test
+    fun tinySafeAreaDrawsNothingOutsideIt() {
+        for (preset in presets) {
+            val base = settings(preset)
+            val s = base.copy(layout = base.layout.copy(safeZoneTop = 0.5f, safeZoneBottom = 0.49f))
+            val scene = layout(s)
+            val top = Fixtures.screen.heightPx * 0.5f
+            val bottom = Fixtures.screen.heightPx * 0.51f
+            scene.ops.forEach { op ->
+                val extent = op.verticalExtent()
+                assertTrue(extent.start >= top - 0.01f && extent.endInclusive <= bottom + 0.01f, "$preset: $op")
+            }
+        }
+    }
+
+    @Test
     fun agendaOverflowShowsMoreLine() {
         val many = (1..60).map { Fixtures.event("e$it", "Event $it", week[0].time) }
         val scene = layout(settings(LayoutPreset.AGENDA), many)
@@ -177,6 +192,7 @@ class LayoutEngineTest {
             )
         val texts = layout(settings(LayoutPreset.NEXT_THREE), week + past).texts()
         assertFalse(texts.contains("Early call"))
+        assertFalse(texts.contains("Buy groceries"), "completed tasks are not upcoming")
         assertEquals(3, texts.count { it.startsWith("Today") || it.startsWith("Tomorrow") || it.contains(", Oct") })
     }
 
