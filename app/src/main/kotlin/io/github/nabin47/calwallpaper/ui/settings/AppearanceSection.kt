@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -174,7 +175,7 @@ private fun SwatchRow(
     Column(Modifier.padding(vertical = 4.dp)) {
         Text(text = label, style = MaterialTheme.typography.bodyLarge)
         Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(vertical = 4.dp),
+            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(vertical = 4.dp).selectableGroup(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             val colors = MaterialTheme.colorScheme
@@ -185,7 +186,7 @@ private fun SwatchRow(
                 Box(
                     modifier =
                         Modifier
-                            .size(40.dp)
+                            .size(SWATCH_SIZE)
                             .clip(CircleShape)
                             .background(Color(argb))
                             .border(
@@ -202,6 +203,9 @@ private fun SwatchRow(
         }
     }
 }
+
+/** Swatch diameter: Material's 48dp minimum touch target. */
+private val SWATCH_SIZE = 48.dp
 
 /** Starting point when the user first picks "Custom": the calm dark palette. */
 private fun defaultCustomColors(): CustomColors =
@@ -241,6 +245,6 @@ private val ACCENTS =
         0xFF34A853,
         0xFFFBBC04,
         0xFFEA4335,
-        0xFFA0522D,
+        0xFF934A27,
         0xFFC084FC,
     ).map { it.toInt() }

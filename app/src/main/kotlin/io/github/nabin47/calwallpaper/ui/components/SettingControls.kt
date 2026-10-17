@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
@@ -16,9 +17,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 
-/** A section title in the settings list. */
+/** A section title in the settings list; a heading for screen readers, so TalkBack can jump between sections. */
 @Composable
 fun SectionHeader(
     title: String,
@@ -28,7 +34,7 @@ fun SectionHeader(
         text = title,
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.primary,
-        modifier = modifier.padding(top = 24.dp, bottom = 8.dp),
+        modifier = modifier.padding(top = 24.dp, bottom = 8.dp).semantics { heading() },
     )
 }
 
@@ -82,7 +88,8 @@ fun <T> ChoiceSetting(
 
 /**
  * A labeled slider. [onPreview] runs while dragging (the preview follows the finger); [onCommit] runs once when
- * the finger lifts, so storage is written once per gesture.
+ * the finger lifts, so storage is written once per gesture. Screen readers announce [label] and [valueLabel]
+ * (e.g. "Text size, 1.2×") instead of a bare percentage.
  */
 @Composable
 fun SliderSetting(
@@ -96,8 +103,8 @@ fun SliderSetting(
     steps: Int = 0,
 ) {
     Column(modifier = modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = label, style = MaterialTheme.typography.bodyLarge)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(text = label, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
             Text(
                 text = valueLabel,
                 style = MaterialTheme.typography.bodyMedium,
@@ -110,6 +117,11 @@ fun SliderSetting(
             onValueChangeFinished = onCommit,
             valueRange = range,
             steps = steps,
+            modifier =
+                Modifier.semantics {
+                    contentDescription = label
+                    stateDescription = valueLabel
+                },
         )
     }
 }
@@ -124,11 +136,16 @@ fun SwitchSetting(
     enabled: Boolean = true,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(vertical = 8.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .toggleable(value = checked, enabled = enabled, role = Role.Switch, onValueChange = onCheckedChange)
+                .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(text = label, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-        Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
+        // The row handles the toggle, so the label and the switch are read and tapped as one control.
+        Switch(checked = checked, onCheckedChange = null, enabled = enabled)
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import io.github.nabin47.calwallpaper.AppServices
 import io.github.nabin47.calwallpaper.BuildConfig
@@ -96,9 +98,18 @@ fun SettingsScreen(
                 description = stringResource(R.string.preview_description),
                 modifier = Modifier.weight(1f),
             )
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                modifier =
+                    Modifier.toggleable(
+                        value = previewLocked,
+                        role = Role.Switch,
+                        onValueChange = { previewLocked = it },
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
                 Text(stringResource(R.string.preview_locked), style = MaterialTheme.typography.bodyMedium)
-                Switch(checked = previewLocked, onCheckedChange = { previewLocked = it })
+                Switch(checked = previewLocked, onCheckedChange = null)
             }
         }
         HorizontalDivider()

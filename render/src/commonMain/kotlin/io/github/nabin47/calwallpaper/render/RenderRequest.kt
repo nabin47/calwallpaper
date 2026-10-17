@@ -11,7 +11,10 @@ import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.TimeZone
 import kotlin.time.Instant
 
-/** The surface to lay out on. [density] is pixels per dp; [fontScale] is the system font size setting. */
+/**
+ * The surface to lay out on. [density] is pixels per dp; [fontScale] is the system font size setting as it applies
+ * to body text (on Android 14+ that is the non-linear scale, not the raw setting).
+ */
 data class ScreenSpec(
     val widthPx: Int,
     val heightPx: Int,

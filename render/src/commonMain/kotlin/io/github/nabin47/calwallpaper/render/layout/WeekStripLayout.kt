@@ -52,12 +52,14 @@ private fun LayoutContext.weekdayRow(
     days: List<LocalDate>,
     columnWidth: Float,
 ): Row {
-    val height = lineHeight(caption) + rowGap
+    val labels = days.map { strings.weekdayNarrow(it.dayOfWeek) }
+    val style = fitting(caption, labels, columnWidth - dp(COLUMN_PADDING_DP) * 2)
+    val height = lineHeight(style) + rowGap
     return Row(height) { top ->
         days.forEachIndexed { i, day ->
-            val label = strings.weekdayNarrow(day.dayOfWeek)
-            val x = columnLeft(i, columnWidth) + (columnWidth - width(label, caption)) / 2
-            text(label, x, top + rowGap / 2 + ascent(caption), caption, palette.secondaryText)
+            val label = labels[i]
+            val x = columnLeft(i, columnWidth) + (columnWidth - width(label, style)) / 2
+            text(label, x, top + rowGap / 2 + ascent(style), style, palette.secondaryText)
             dayRegion(Bounds(columnLeft(i, columnWidth), top, columnLeft(i + 1, columnWidth), top + height), day)
         }
     }
@@ -67,27 +69,29 @@ private fun LayoutContext.dateRow(
     days: List<LocalDate>,
     columnWidth: Float,
 ): Row {
-    val height = lineHeight(body) * TODAY_CIRCLE_FACTOR + rowGap
+    val labels = days.map { it.day.toString() }
+    val style = fitting(body, labels, columnWidth - dp(COLUMN_PADDING_DP) * 2)
+    val height = lineHeight(style) * TODAY_CIRCLE_FACTOR + rowGap
     return Row(height) { top ->
         val centerY = top + height / 2
         days.forEachIndexed { i, day ->
-            val label = day.day.toString()
+            val label = labels[i]
             val centerX = columnLeft(i, columnWidth) + columnWidth / 2
             val isToday = day == today
             if (isToday) {
                 circle(
                     centerX,
                     centerY,
-                    minOf(lineHeight(body) * TODAY_CIRCLE_FACTOR, columnWidth) / 2,
+                    minOf(lineHeight(style) * TODAY_CIRCLE_FACTOR, columnWidth) / 2,
                     palette.accent,
                 )
             }
-            val baseline = centerY - lineHeight(body) / 2 + ascent(body)
+            val baseline = centerY - lineHeight(style) / 2 + ascent(style)
             text(
                 label,
-                centerX - width(label, body) / 2,
+                centerX - width(label, style) / 2,
                 baseline,
-                body,
+                style,
                 if (isToday) palette.onAccent else palette.text,
             )
             dayRegion(Bounds(columnLeft(i, columnWidth), top, columnLeft(i + 1, columnWidth), top + height), day)
