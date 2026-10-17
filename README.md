@@ -3,7 +3,7 @@
 Your calendar events and tasks on your Android home and lock-screen wallpaper, plus home-screen widgets.
 Minimal, private (no account, no analytics), and light on battery.
 
-**Status:** Phase 0 (project scaffold). See [PLAN.md](PLAN.md).
+**Status:** Phase 0 done ([v0.0.1](https://github.com/nabin47/calwallpaper/releases/tag/v0.0.1): scaffold + signed release pipeline; the app is a placeholder screen). Next: Phase 1 (layout engine). See [PLAN.md](PLAN.md).
 
 - Download: [latest release](https://github.com/nabin47/calwallpaper/releases/latest) · site: https://nabin47.github.io/calwallpaper/
 - Architecture: [docs/architecture.md](docs/architecture.md) · decisions: [docs/adr/](docs/adr/)

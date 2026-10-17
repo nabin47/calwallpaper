@@ -8,6 +8,13 @@ detekt = "2.0.0-alpha.6"
 composeBom = "2026.09.00"
 activity = "1.13.0"
 junit4 = "4.13.2"
+ksp = "2.3.12"
+coroutines = "1.11.0"
+serialization = "1.11.0"
+datetime = "0.8.0"
+room3 = "3.0.3"
+sqlite = "2.7.1"
+datastore = "1.2.1"
 
 # Android SDK levels (read by build-logic and module scripts).
 android-compileSdk = "37"
@@ -21,6 +28,22 @@ kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", ve
 compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 detekt-gradlePlugin = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+kotlin-serialization-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+ksp-gradlePlugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "ksp" }
+# Plugin marker artifact (always <plugin id>:<plugin id>.gradle.plugin); it depends on the implementation.
+room3-gradlePlugin = { module = "androidx.room3:androidx.room3.gradle.plugin", version.ref = "room3" }
+
+# Shared (KMP) dependencies.
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+
+# Data layer.
+androidx-room3-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room3" }
+androidx-room3-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room3" }
+androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 
 # App dependencies.
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }

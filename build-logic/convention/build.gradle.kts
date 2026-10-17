@@ -10,6 +10,9 @@ dependencies {
     implementation(libs.compose.gradlePlugin)
     implementation(libs.spotless.gradlePlugin)
     implementation(libs.detekt.gradlePlugin)
+    implementation(libs.kotlin.serialization.gradlePlugin)
+    implementation(libs.ksp.gradlePlugin)
+    implementation(libs.room3.gradlePlugin)
 }
 
 gradlePlugin {
@@ -33,6 +36,14 @@ gradlePlugin {
         register("androidApplication") {
             id = "calwp.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
+        }
+        register("serialization") {
+            id = "calwp.serialization"
+            implementationClass = "SerializationConventionPlugin"
+        }
+        register("room") {
+            id = "calwp.room"
+            implementationClass = "RoomConventionPlugin"
         }
         register("androidCompose") {
             id = "calwp.android.compose"

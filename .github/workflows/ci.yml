@@ -56,6 +56,9 @@ jobs:
       - name: Unit tests
         run: .github/scripts/run-step.sh "Unit tests" ./gradlew check
 
+      - name: Room schema is committed
+        run: .github/scripts/run-step.sh "Room schema is committed" .github/scripts/check-room-schemas.sh
+
       - name: Assemble debug APK
         run: .github/scripts/run-step.sh "Assemble debug APK" ./gradlew :app:assembleDebug
 

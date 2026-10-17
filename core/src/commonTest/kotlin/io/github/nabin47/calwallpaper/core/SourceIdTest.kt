@@ -1,4 +1,4 @@
-package io.github.nabin47.calwallpaper.data
+package io.github.nabin47.calwallpaper.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

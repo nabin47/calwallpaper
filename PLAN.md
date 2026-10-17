@@ -1,6 +1,6 @@
 # PLAN — Phase 0 scaffold (draft for approval)
 
-Status: **approved 2026-10-16**. Decisions: name CalWallpaper, applicationId `io.github.nabin47.calwallpaper`, Apache-2.0, Room 3, manual DI, detekt 2.0 alpha pinned (ADR 0001). Versions verified on 2026-10-16 (Maven Central metadata + official release pages; Google Maven is not reachable from the sandbox, so Google artifacts were checked on developer.android.com).
+Status: **Phase 0 complete 2026-10-17** (v0.0.1 released). Approved 2026-10-16. Decisions: name CalWallpaper, applicationId `io.github.nabin47.calwallpaper`, Apache-2.0, Room 3, manual DI, detekt 2.0 alpha pinned (ADR 0001). Versions verified on 2026-10-16 (Maven Central metadata + official release pages; Google Maven is not reachable from the sandbox, so Google artifacts were checked on developer.android.com).
 
 ## 1. Module graph (dependencies point inward)
 
@@ -53,13 +53,15 @@ app ──────────────┬─► android-wallpaper ─┐
 4. Nothing else in §3 is deprecated. Glance, DataStore, Ktor (OkHttp engine), WorkManager, kotlinx.* and Spotless/ktlint are all current. `security-crypto` is already banned; use Tink or a Keystore AES-GCM key in a later phase.
 
 ## 6. Phases
-0. **Scaffold + CI/CD** (this session): modules, conventions, quality gates, hello screen, signed release, Pages site.
-1. `core`/`render`: models, Scene, layout engine (Agenda preset), JVM tests, Roborazzi.
-2. `android-wallpaper`: Canvas renderer, redraw triggers, Direct Boot cache, privacy mode.
-3. `data`: CalendarProviderSource, Room 3, DataStore settings v1 + migrations.
-4. `app` settings + live preview; onboarding and the READ_CALENDAR rationale.
-5. Glance widgets + deep links (`OpenTarget`).
-6. Todoist (encrypted token), WorkManager sync.
+0. **Scaffold + CI/CD**: done (v0.0.1).
+1. **Data foundation** (current): core models (`AgendaItem`, `OpenTarget`, time utils), `AgendaSource`,
+   `LocalTasksSource` (Room 3), `CalendarProviderSource`, and versioned settings with DataStore, migrations and
+   JSON import/export. See ADR 0002.
+2. `render`: the Scene and the layout engine (Agenda preset), with JVM tests and Roborazzi.
+3. `android-wallpaper`: Canvas renderer, redraw triggers, Direct Boot cache, privacy mode.
+4. `app`: settings UI with live preview, onboarding and the READ_CALENDAR rationale, and wiring of the sources.
+5. Glance widgets and deep links (`OpenTarget`).
+6. Todoist (encrypted token) and WorkManager sync.
 7. Remaining presets and customization, Baseline Profile, performance doc, Play readiness.
 
 ## 7. Risks
