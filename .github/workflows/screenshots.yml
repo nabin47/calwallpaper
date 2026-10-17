@@ -53,6 +53,16 @@ jobs:
       - name: Record goldens
         run: ./gradlew recordRoborazziDebug
 
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshot-test-reports
+          path: |
+            **/build/reports/tests/**
+            **/build/test-results/**
+          retention-days: 7
+
       - name: Commit changed screenshots
         id: commit
         run: |
