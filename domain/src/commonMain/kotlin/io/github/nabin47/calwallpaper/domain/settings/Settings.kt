@@ -98,11 +98,16 @@ data class CustomColors(
 )
 
 /**
- * Placement on the screen.
+ * Placement on the screen. The home screen and the lock screen are placed separately: lock-screen clocks are
+ * often much larger than home-screen ones (CLAUDE.md §2), so one placement cannot suit both.
  *
- * @property safeZoneTop fraction of screen height kept clear at the top (lock-screen clock), see [SafeZone].
- * @property safeZoneBottom fraction kept clear at the bottom (shortcuts, gesture bar).
- * @property horizontalInsetDp side margin, in [HORIZONTAL_INSET_DP].
+ * @property position where the block sits on the home screen (and whenever the device is unlocked).
+ * @property safeZoneTop fraction of screen height kept clear at the top of the home screen, see [SafeZone].
+ * @property safeZoneBottom fraction kept clear at the bottom of the home screen (dock, gesture bar).
+ * @property horizontalInsetDp side margin, in [HORIZONTAL_INSET_DP]; shared by both screens.
+ * @property lockPosition where the block sits while the device is locked.
+ * @property lockSafeZoneTop fraction kept clear above it on the lock screen (clock, date), in [LOCK_SAFE_ZONE_TOP].
+ * @property lockSafeZoneBottom fraction kept clear below it on the lock screen (shortcuts, unlock hint).
  */
 @Serializable
 data class LayoutSettings(
@@ -111,7 +116,23 @@ data class LayoutSettings(
     val safeZoneTop: Float = SafeZone.DEFAULT.top,
     val safeZoneBottom: Float = SafeZone.DEFAULT.bottom,
     val horizontalInsetDp: Int = DEFAULT_HORIZONTAL_INSET_DP,
+    val lockPosition: VerticalPosition = VerticalPosition.BOTTOM,
+    val lockSafeZoneTop: Float = DEFAULT_LOCK_SAFE_ZONE_TOP,
+    val lockSafeZoneBottom: Float = DEFAULT_LOCK_SAFE_ZONE_BOTTOM,
 ) {
+    /**
+     * Where the agenda goes when [locked] (lock screen) or not (home screen). Safe to call on non-normalized
+     * values: out-of-range numbers fall back to defaults.
+     */
+    fun placementFor(locked: Boolean): Placement =
+        with(normalized()) {
+            if (locked) {
+                Placement(lockPosition, lockSafeZoneTop, lockSafeZoneBottom)
+            } else {
+                Placement(position, safeZoneTop, safeZoneBottom)
+            }
+        }
+
     /** The validated safe zone. Safe to call on non-normalized values (falls back to the default). */
     val safeZone: SafeZone
         get() = with(normalized()) { SafeZone(top = safeZoneTop, bottom = safeZoneBottom) }
@@ -122,10 +143,15 @@ data class LayoutSettings(
         val bottom = safeZoneBottom.clampOr(SAFE_ZONE, SafeZone.DEFAULT.bottom)
         // Both at the 0.5 maximum would leave no room; fall back to the defaults.
         val fits = top + bottom < 1f
+        val lockTop = lockSafeZoneTop.clampOr(LOCK_SAFE_ZONE_TOP, DEFAULT_LOCK_SAFE_ZONE_TOP)
+        val lockBottom = lockSafeZoneBottom.clampOr(SAFE_ZONE, DEFAULT_LOCK_SAFE_ZONE_BOTTOM)
+        val lockFits = lockTop + lockBottom <= MAX_COMBINED_LOCK_SAFE_ZONE
         return copy(
             safeZoneTop = if (fits) top else SafeZone.DEFAULT.top,
             safeZoneBottom = if (fits) bottom else SafeZone.DEFAULT.bottom,
             horizontalInsetDp = horizontalInsetDp.coerceIn(HORIZONTAL_INSET_DP),
+            lockSafeZoneTop = if (lockFits) lockTop else DEFAULT_LOCK_SAFE_ZONE_TOP,
+            lockSafeZoneBottom = if (lockFits) lockBottom else DEFAULT_LOCK_SAFE_ZONE_BOTTOM,
         )
     }
 
@@ -136,6 +162,18 @@ data class LayoutSettings(
 
         /** Allowed side margin in dp. */
         val HORIZONTAL_INSET_DP: IntRange = 0..64
+
+        /** Allowed lock-screen top safe zone: up to three quarters, for large lock-screen clocks. */
+        val LOCK_SAFE_ZONE_TOP: ClosedFloatingPointRange<Float> = 0f..0.75f
+
+        /** Default lock-screen top safe zone: clears the big two-line clocks of recent Android versions. */
+        const val DEFAULT_LOCK_SAFE_ZONE_TOP: Float = 0.55f
+
+        /** Default lock-screen bottom safe zone: clears the shortcut buttons and the unlock hint. */
+        const val DEFAULT_LOCK_SAFE_ZONE_BOTTOM: Float = 0.2f
+
+        /** Lock-screen safe zones together leave at least 10% of the height for the agenda. */
+        private const val MAX_COMBINED_LOCK_SAFE_ZONE: Float = 0.9f
 
         /** Default side margin in dp. */
         const val DEFAULT_HORIZONTAL_INSET_DP: Int = 24
@@ -171,6 +209,16 @@ data class ContentSettings(
         const val DEFAULT_DAYS_AHEAD: Int = 7
     }
 }
+
+/**
+ * A resolved placement: where the agenda block sits and which fractions of the screen height stay clear.
+ * Fractions are already in range (see [LayoutSettings.normalized]).
+ */
+data class Placement(
+    val position: VerticalPosition,
+    val safeZoneTop: Float,
+    val safeZoneBottom: Float,
+)
 
 /** Calendar conventions. */
 @Serializable

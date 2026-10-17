@@ -28,7 +28,7 @@ internal fun LayoutContext.placeBlock(
     if (fitted.isEmpty()) return
     val height = fitted.fold(2 * padding) { sum, row -> sum + row.height }
     val top =
-        when (settings.layout.position) {
+        when (placement.position) {
             VerticalPosition.TOP -> content.top
             VerticalPosition.CENTER -> content.top + (content.height - height) / 2
             VerticalPosition.BOTTOM -> content.bottom - height

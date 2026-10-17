@@ -25,16 +25,28 @@ Phase 3 puts the Scene on the real wallpaper. The constraints:
 - **The wallpaper fills its whole surface.** A live wallpaper has nothing underneath it, so `Palette` and `Scene` gained an opaque
   `background` (presets, custom and Material You). It is a property, not a draw op, so widgets can stay transparent.
   The engine also reports this color to Android (`onComputeColors`), so the clock and status bar stay readable.
-- **Privacy uses the lock state.** `KeyguardManager.isKeyguardLocked` is read before every frame, and `USER_PRESENT` and
-  `SCREEN_ON` trigger a redraw. The layout replaces titles itself, so no renderer can leak them.
+- **Privacy uses the lock state.** "Locked" means the device still needs the user's credentials:
+  `KeyguardManager.isDeviceLocked` on secure devices, and keyguard showing (`isKeyguardLocked`) only on devices
+  without a secure lock. It is read before every frame, and `USER_PRESENT` and `SCREEN_ON` trigger a redraw. The
+  layout replaces titles itself, so no renderer can leak them.
+  - *Why not `isKeyguardLocked` everywhere* (found on the owner's phone, 2026-10-17): with face unlock, Android sends
+    `USER_PRESENT` at authentication while the lock screen is still showing. Nothing announces the keyguard
+    actually going away, so the home screen kept the privacy view until the next redraw.
+  - *Accepted trade-off:* after face unlock, the lock screen can briefly show the unlocked view until it is
+    dismissed. Trusted places or devices (Smart Lock) also count as unlocked.
+- **Separate lock-screen placement.** Lock-screen clocks are often far larger than home-screen ones; on the owner's
+  phone the two-line clock and date cover the top ~55%. `LayoutSettings` therefore has its own lock position and
+  safe zones: bottom by default, 55% clear at the top, 20% at the bottom, and up to 75% at the top. The layout uses
+  them whenever the request is locked, including the static lock image and the preview's lock-screen switch.
 - **Direct Boot.** The service is `directBootAware`. Before the first unlock it reads only device-protected storage: the
   settings and `DirectBootCache`, the last agenda as JSON. Live sources are observed only after `isUserUnlocked`. Because
   device-protected storage is readable before the user's credentials are entered, the cache stores titles only when
   privacy mode is **off**. With privacy on, the phone is always locked before the first unlock, so titles would be hidden
   anyway. Caches live under `wallpaper/` and are excluded from backups.
 - **Static battery mode** runs in the main process:
-  - **Rendering.** `StaticWallpaperUpdater` lays out the same Scene and calls `WallpaperManager.setBitmap`. Home and lock get
-    separate images when privacy mode is "when locked", one shared image otherwise.
+  - **Rendering.** `StaticWallpaperUpdater` lays out the same Scene and calls `WallpaperManager.setBitmap`. Home and lock
+    share one image only when they look the same: the same placement, and privacy mode off or always on. Otherwise
+    (privacy "when locked", or a separate lock-screen placement, the default) each screen gets its own image.
   - **No needless updates.** A SHA-256 digest of the scenes is stored, never the scenes, and an unchanged picture skips
     `setBitmap`.
   - **Triggers** (no polling, no exact alarms):

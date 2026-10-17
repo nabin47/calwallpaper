@@ -38,6 +38,9 @@ class SettingsCodecTest {
                     safeZoneTop = 0.3f,
                     safeZoneBottom = 0.1f,
                     horizontalInsetDp = 32,
+                    lockPosition = VerticalPosition.TOP,
+                    lockSafeZoneTop = 0.6f,
+                    lockSafeZoneBottom = 0.15f,
                 ),
             content =
                 ContentSettings(

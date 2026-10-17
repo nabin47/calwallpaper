@@ -17,8 +17,20 @@ class DeviceState(
     private val keyguard = appContext.getSystemService(KeyguardManager::class.java)
     private val users = appContext.getSystemService(UserManager::class.java)
 
-    /** True while the lock screen is showing (privacy mode hides titles then, CLAUDE.md §2). */
-    fun isLocked(): Boolean = keyguard?.isKeyguardLocked ?: true
+    /**
+     * True while the device is locked: privacy mode hides titles and the lock-screen placement is used
+     * (CLAUDE.md §2).
+     *
+     * With a PIN, pattern or password this is [KeyguardManager.isDeviceLocked], which turns false as soon as the
+     * user authenticates (including face unlock). The lock screen can stay up a moment longer than that, but
+     * Android announces unlocking (`USER_PRESENT`) at authentication, so asking "is the keyguard showing" at
+     * that point would wrongly keep the home screen in privacy mode until the next redraw. Without a secure lock,
+     * nothing protects the phone anyway, so the keyguard simply showing counts as locked.
+     */
+    fun isLocked(): Boolean {
+        val manager = keyguard ?: return true
+        return if (manager.isDeviceSecure) manager.isDeviceLocked else manager.isKeyguardLocked
+    }
 
     /**
      * False before the first unlock after boot (Direct Boot): credential-protected storage, the calendar

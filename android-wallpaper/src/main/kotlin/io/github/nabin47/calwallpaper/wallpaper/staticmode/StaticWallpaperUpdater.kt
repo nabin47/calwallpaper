@@ -96,7 +96,7 @@ class StaticWallpaperUpdater(
         withContext(Dispatchers.IO) {
             val size = ScreenSize.portrait(appContext)
             val requests =
-                StaticPlan.images(settings.staticTarget, settings.privacyMode).map { image ->
+                StaticPlan.images(settings.staticTarget, settings.privacyMode, settings.layout).map { image ->
                     image to graph.requestFactory.create(items, settings, size.width, size.height, image.locked)
                 }
             val fingerprint = fingerprintOf(requests)

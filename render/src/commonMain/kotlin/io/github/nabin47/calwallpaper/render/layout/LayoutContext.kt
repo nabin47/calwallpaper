@@ -1,6 +1,7 @@
 package io.github.nabin47.calwallpaper.render.layout
 
 import io.github.nabin47.calwallpaper.core.OpenTarget
+import io.github.nabin47.calwallpaper.domain.settings.Placement
 import io.github.nabin47.calwallpaper.domain.settings.PrivacyMode
 import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.domain.settings.SpacingDensity
@@ -48,6 +49,9 @@ internal class LayoutContext(
             SpacingDensity.COMFORTABLE -> 1f
             SpacingDensity.SPACIOUS -> SPACIOUS_SPACING
         }
+
+    /** Home or lock-screen placement, by the request's lock state. */
+    val placement: Placement = settings.layout.placementFor(request.isLocked)
 
     /** The safe area: screen minus system insets, the user's safe zone and side margins. */
     val content: Bounds = safeArea()
@@ -156,8 +160,8 @@ internal class LayoutContext(
         val insets = request.insets
         val layout = settings.layout
         val side = dp(layout.horizontalInsetDp.toFloat())
-        val top = maxOf(insets.top, screen.heightPx * layout.safeZoneTop)
-        val bottom = screen.heightPx - maxOf(insets.bottom, screen.heightPx * layout.safeZoneBottom)
+        val top = maxOf(insets.top, screen.heightPx * placement.safeZoneTop)
+        val bottom = screen.heightPx - maxOf(insets.bottom, screen.heightPx * placement.safeZoneBottom)
         return Bounds(
             left = insets.left + side,
             top = top,
