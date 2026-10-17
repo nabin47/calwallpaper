@@ -71,7 +71,7 @@ fun WidgetsPage(state: ScreenState) {
         item {
             InfoCard(
                 R.drawable.ic_dashboard,
-                stringResource(R.string.widget_agenda_name),
+                stringResource(R.string.widget_agenda_title),
                 stringResource(R.string.widget_agenda_body),
             ) {
                 PinButton(
@@ -82,7 +82,7 @@ fun WidgetsPage(state: ScreenState) {
         item {
             InfoCard(
                 R.drawable.ic_event,
-                stringResource(R.string.widget_week_name),
+                stringResource(R.string.widget_week_title),
                 stringResource(R.string.widget_week_body),
             ) {
                 PinButton(

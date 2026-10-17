@@ -245,6 +245,8 @@
     <!-- Widgets and shortcuts -->
     <string name="section_widgets">Widgets &amp; shortcuts</string>
     <string name="widgets_intro">Widgets are the sure way to tap into your agenda: the lock screen never passes taps to a wallpaper, and on the home screen it depends on your launcher.</string>
+    <string name="widget_agenda_title">Agenda widget</string>
+    <string name="widget_week_title">Week widget</string>
     <string name="widget_agenda_body">Your next days as a list. Tap a day or an event to open it.</string>
     <string name="widget_week_body">This week at a glance. Tap a day to open it in your calendar.</string>
     <string name="widget_add">Add to home screen</string>
