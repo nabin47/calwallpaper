@@ -1,13 +1,12 @@
 name: Pages
 
 # Deploys site/ to GitHub Pages. The download button reads the latest Release from the GitHub API
-# in the browser, so a new release does not need a rebuild; the release trigger just refreshes it.
+# in the browser, so releases never need a rebuild. There is deliberately no release trigger: a release
+# run executes on the tag ref, and the github-pages environment only accepts deployments from main.
 on:
   push:
     branches: [main]
     paths: ["site/**", ".github/workflows/pages.yml"]
-  release:
-    types: [published]
   workflow_dispatch:
 
 permissions:
