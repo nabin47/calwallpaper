@@ -95,6 +95,8 @@ private fun TokenEntry(
     val scope = rememberCoroutineScope()
     var input by remember { mutableStateOf("") }
     var rejected by remember { mutableStateOf(false) }
+    val rejectedText = stringResource(R.string.todoist_token_invalid)
+    val supporting: (@Composable () -> Unit)? = if (rejected) ({ Text(rejectedText) }) else null
     Column(Modifier.padding(vertical = 4.dp)) {
         if (problem != null) SettingHint(stringResource(syncErrorText(problem)))
         SettingHint(stringResource(R.string.todoist_token_hint))
@@ -107,7 +109,7 @@ private fun TokenEntry(
             label = { Text(stringResource(R.string.todoist_token_label)) },
             singleLine = true,
             isError = rejected,
-            supportingText = if (rejected) ({ Text(stringResource(R.string.todoist_token_invalid)) }) else null,
+            supportingText = supporting,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions =
                 KeyboardOptions(
