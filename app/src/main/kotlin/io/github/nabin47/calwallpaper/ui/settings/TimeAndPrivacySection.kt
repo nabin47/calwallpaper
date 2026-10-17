@@ -12,7 +12,6 @@ import io.github.nabin47.calwallpaper.domain.settings.WeekStart
 import io.github.nabin47.calwallpaper.ui.components.Choice
 import io.github.nabin47.calwallpaper.ui.components.ChoiceSetting
 import io.github.nabin47.calwallpaper.ui.components.SectionHeader
-import io.github.nabin47.calwallpaper.ui.components.SettingHint
 
 /** Week start and 12/24-hour time (CLAUDE.md §6). */
 @Composable
@@ -22,9 +21,9 @@ fun TimeSection(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
-        SectionHeader(stringResource(R.string.section_time))
         ChoiceSetting(
             label = stringResource(R.string.week_start),
+            hint = stringResource(R.string.week_start_hint),
             choices =
                 listOf(
                     Choice(WeekStart.LOCALE, stringResource(R.string.week_locale)),
@@ -37,6 +36,7 @@ fun TimeSection(
         )
         ChoiceSetting(
             label = stringResource(R.string.clock_label),
+            hint = stringResource(R.string.clock_hint),
             choices =
                 listOf(
                     Choice(ClockFormat.SYSTEM, stringResource(R.string.clock_system)),
@@ -60,6 +60,7 @@ fun PrivacySection(
         SectionHeader(stringResource(R.string.section_privacy))
         ChoiceSetting(
             label = stringResource(R.string.privacy_label),
+            hint = stringResource(R.string.privacy_hint),
             choices =
                 listOf(
                     Choice(PrivacyMode.OFF, stringResource(R.string.privacy_off)),
@@ -69,6 +70,5 @@ fun PrivacySection(
             selected = settings.privacyMode,
             onSelect = { mode -> editor.commit { it.copy(privacyMode = mode) } },
         )
-        SettingHint(stringResource(R.string.privacy_hint))
     }
 }

@@ -2,6 +2,14 @@
 <resources>
     <style name="Theme.CalWallpaper" parent="android:Theme.Material.Light.NoActionBar" />
 
+    <!-- Splash screen (AndroidX SplashScreen, ADR 0009): the launcher icon on the icon's own color, shown until
+         the settings are loaded, then the app theme. Android 12+ animates it from the launcher icon. -->
+    <style name="Theme.CalWallpaper.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.CalWallpaper</item>
+    </style>
+
     <!-- Quick-add: a floating dialog over whatever was on screen. Compose draws the card, so the window itself is
          transparent; tapping outside closes it. -->
     <style name="Theme.CalWallpaper.QuickAdd" parent="android:Theme.Material.Light.Dialog.NoActionBar">

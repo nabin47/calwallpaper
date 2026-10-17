@@ -12,8 +12,8 @@ import org.junit.runner.RunWith
 
 /**
  * Records the code the release app runs on its hot paths, so Android compiles it ahead of time (CLAUDE.md §5):
- * app start, the first-run steps, scrolling the settings with the live preview, and the live wallpaper drawing in
- * the system's preview, which runs the wallpaper process's layout and renderer.
+ * app start, the first-run steps, scrolling the home screen with its previews, a settings page, and the live
+ * wallpaper drawing in the system's preview, which runs the wallpaper process's layout and renderer.
  *
  * Runs on an emulator only: `./gradlew :app:generateBaselineProfile` (see the module README). Never touches real
  * accounts or data; calendar access is not granted, so the preview shows the sample agenda.
@@ -32,19 +32,30 @@ class BaselineProfileGenerator {
             startActivityAndWait()
             finishOnboardingIfShown()
             scrollSettings()
+            openAppearancePage()
             previewLiveWallpaper()
         }
 
     /**
-     * The first run shows onboarding: "Next", "Not now" (no calendar access), then "Open settings" at the end of
-     * the last, scrollable step. Later iterations go straight to the settings and skip all of this.
+     * The first run shows onboarding: "Get started", "Not now" (no calendar access), "Next" after the style step,
+     * then "Maybe later" instead of setting the wallpaper. Later iterations go straight to the home screen.
      */
     private fun MacrobenchmarkScope.finishOnboardingIfShown() {
-        val next = device.wait(Until.findObject(By.text(NEXT)), STEP_TIMEOUT_MS) ?: return
-        next.click()
-        device.wait(Until.findObject(By.text(NOT_NOW)), STEP_TIMEOUT_MS)?.click()
+        val start = device.wait(Until.findObject(By.text(GET_STARTED)), STEP_TIMEOUT_MS) ?: return
+        start.click()
+        for (label in listOf(NOT_NOW, NEXT, MAYBE_LATER)) {
+            device.wait(Until.findObject(By.text(label)), STEP_TIMEOUT_MS)?.click()
+            device.waitForIdle()
+        }
+    }
+
+    /** Opens the Appearance page (pinned preview, sliders), scrolls it and goes back. */
+    private fun MacrobenchmarkScope.openAppearancePage() {
+        repeat(FLINGS) { flingScrollable(down = true) }
+        device.wait(Until.findObject(By.text(APPEARANCE)), STEP_TIMEOUT_MS)?.click() ?: return
+        device.waitForIdle()
         flingScrollable(down = true)
-        device.wait(Until.findObject(By.text(OPEN_SETTINGS)), STEP_TIMEOUT_MS)?.click()
+        device.pressBack()
         device.waitForIdle()
     }
 
@@ -84,9 +95,11 @@ class BaselineProfileGenerator {
         const val WALLPAPER_SERVICE = "io.github.nabin47.calwallpaper.wallpaper.AgendaWallpaperService"
 
         // Button labels from app/src/main/res/values/strings.xml (the emulator runs in English).
-        const val NEXT = "Next"
+        const val GET_STARTED = "Get started"
         const val NOT_NOW = "Not now"
-        const val OPEN_SETTINGS = "Open settings"
+        const val NEXT = "Next"
+        const val MAYBE_LATER = "Maybe later"
+        const val APPEARANCE = "Appearance"
 
         const val STEP_TIMEOUT_MS = 3_000L
         const val WALLPAPER_SETTLE_MS = 3_000L
