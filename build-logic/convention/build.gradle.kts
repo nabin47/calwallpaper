@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.kotlin.serialization.gradlePlugin)
     implementation(libs.ksp.gradlePlugin)
     implementation(libs.room3.gradlePlugin)
+    implementation(libs.roborazzi.gradlePlugin)
 }
 
 gradlePlugin {
@@ -44,6 +45,10 @@ gradlePlugin {
         register("room") {
             id = "calwp.room"
             implementationClass = "RoomConventionPlugin"
+        }
+        register("screenshots") {
+            id = "calwp.screenshots"
+            implementationClass = "ScreenshotsConventionPlugin"
         }
         register("androidCompose") {
             id = "calwp.android.compose"

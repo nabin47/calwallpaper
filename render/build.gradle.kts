@@ -5,8 +5,9 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core"))
-            implementation(project(":domain"))
+            // Scene and RenderRequest expose core and domain types, so consumers need them too.
+            api(project(":core"))
+            api(project(":domain"))
         }
     }
 }

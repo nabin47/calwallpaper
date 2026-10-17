@@ -8,9 +8,9 @@ See CLAUDE.md §4 for the authoritative module list and key ideas. This page tra
 |---|---|---|---|
 | `core` | KMP (`jvm`) | — | `AgendaItem`, `OpenTarget`, `SourceId`, time utils, `Outcome`. No Android, no `java.*`. |
 | `domain` | KMP (`jvm`) | core | `AgendaSource`, versioned `Settings` + `SettingsCodec` + migrations, `SettingsRepository`. |
-| `render` | KMP (`jvm`) | core, domain | Layout engine → platform-neutral `Scene`. |
+| `render` | KMP (`jvm`) | core, domain | `LayoutEngine` → `Scene` (draw ops + hit regions); 4 presets, privacy, safe zones. |
 | `data` | KMP (Android target) | core, domain | `CalendarProviderSource`, `LocalTasksSource` (Room 3), DataStore settings; later Ktor/Todoist. |
-| `android-wallpaper` | Android library | core, domain, render, data | `WallpaperService` + Canvas renderer. No Compose, no DI framework. |
+| `android-wallpaper` | Android library | core, domain, render, data | `SceneCanvasRenderer` + `AndroidTextMeasurer` (+ Roborazzi screenshots); `WallpaperService` next. No Compose. |
 | `android-widgets` | Android library | core, domain, render, data | Glance widgets. |
 | `app` | Android application | all of the above | Settings UI (Compose), onboarding, permissions, deep-link router. |
 
@@ -30,6 +30,7 @@ Convention plugins live in `build-logic/convention` (an included build):
 | `calwp.kmp.android` | Kotlin Multiplatform + `com.android.kotlin.multiplatform.library`, quality gates |
 | `calwp.android.library` | `com.android.library` (built-in Kotlin), SDK levels, strict lint, quality gates |
 | `calwp.android.application` | `com.android.application` (built-in Kotlin), SDK levels, strict lint, quality gates |
+| `calwp.screenshots` | Roborazzi + Robolectric for JVM screenshot tests (goldens in `src/test/screenshots/`) |
 | `calwp.android.compose` | Compose compiler plugin + Compose BOM (never on `android-wallpaper`) |
 
 The quality gates are Spotless (ktlint), detekt (`config/detekt/detekt.yml`), and Kotlin `allWarningsAsErrors`.

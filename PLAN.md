@@ -54,11 +54,12 @@ app ──────────────┬─► android-wallpaper ─┐
 
 ## 6. Phases
 0. **Scaffold + CI/CD**: done (v0.0.1).
-1. **Data foundation** (current): core models (`AgendaItem`, `OpenTarget`, time utils), `AgendaSource`,
+1. **Data foundation**: done. core models (`AgendaItem`, `OpenTarget`, time utils), `AgendaSource`,
    `LocalTasksSource` (Room 3), `CalendarProviderSource`, and versioned settings with DataStore, migrations and
    JSON import/export. See ADR 0002.
-2. `render`: the Scene and the layout engine (Agenda preset), with JVM tests and Roborazzi.
-3. `android-wallpaper`: Canvas renderer, redraw triggers, Direct Boot cache, privacy mode.
+2. **Render** (current): the Scene and the layout engine with all four presets, privacy and safe zones;
+   the Android Canvas renderer and Roborazzi screenshot tests. See ADR 0003.
+3. `android-wallpaper`: the WallpaperService, redraw triggers, the Direct Boot cache, and lock-state detection.
 4. `app`: settings UI with live preview, onboarding and the READ_CALENDAR rationale, and wiring of the sources.
 5. Glance widgets and deep links (`OpenTarget`).
 6. Todoist (encrypted token) and WorkManager sync.
