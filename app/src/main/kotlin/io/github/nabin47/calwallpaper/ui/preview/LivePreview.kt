@@ -38,7 +38,7 @@ fun LivePreview(
         modifier =
             modifier
                 .aspectRatio(scene.widthPx.toFloat() / scene.heightPx, matchHeightConstraintsFirst = true)
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(24.dp))
                 .semantics { contentDescription = description },
     ) {
         drawIntoCanvas { canvas ->

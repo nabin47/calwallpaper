@@ -37,7 +37,6 @@ import io.github.nabin47.calwallpaper.domain.settings.SpacingDensity
 import io.github.nabin47.calwallpaper.render.theme.Palette
 import io.github.nabin47.calwallpaper.ui.components.Choice
 import io.github.nabin47.calwallpaper.ui.components.ChoiceSetting
-import io.github.nabin47.calwallpaper.ui.components.SectionHeader
 import io.github.nabin47.calwallpaper.ui.components.SettingHint
 import io.github.nabin47.calwallpaper.ui.components.SliderSetting
 import io.github.nabin47.calwallpaper.ui.components.SwitchSetting
@@ -57,7 +56,6 @@ fun AppearanceSection(
         { it.copy(appearance = transform(it.appearance)) }
 
     Column(modifier) {
-        SectionHeader(stringResource(R.string.section_appearance))
         ChoiceSetting(
             label = stringResource(R.string.palette_label),
             choices =
@@ -103,6 +101,7 @@ fun AppearanceSection(
         )
         SliderSetting(
             label = stringResource(R.string.text_size),
+            hint = stringResource(R.string.text_size_hint),
             valueLabel = stringResource(R.string.scale_value, appearance.textScale),
             value = appearance.textScale,
             range = AppearanceSettings.TEXT_SCALE,
@@ -119,6 +118,7 @@ fun AppearanceSection(
         )
         SliderSetting(
             label = stringResource(R.string.panel_opacity),
+            hint = stringResource(R.string.panel_opacity_hint),
             valueLabel = stringResource(R.string.percent_value, (appearance.panelOpacity * 100).roundToInt()),
             value = appearance.panelOpacity,
             range = AppearanceSettings.UNIT,

@@ -2,8 +2,51 @@
 <resources>
     <string name="app_name">CalWallpaper</string>
     <string name="version_label">Version %1$s</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="undo">Undo</string>
+
+    <!-- Home -->
+    <string name="home_layout_title">Layout</string>
+    <string name="home_colors_title">Colors</string>
+    <string name="home_customize_title">Customize</string>
+    <string name="home_more_title">More</string>
+    <string name="home_add_task">Add task</string>
+    <string name="home_calendar_title">See your own events</string>
+    <string name="home_calendar_body">The preview shows sample events. Allow calendar access to show yours. CalWallpaper only reads them, on this phone.</string>
+    <string name="status_live_off_title">Not your wallpaper yet</string>
+    <string name="status_live_off_body">Tap Set wallpaper. Android shows a preview: tap Set wallpaper there too, then choose Home screen and lock screen.</string>
+    <string name="status_live_on_title">CalWallpaper is your wallpaper</string>
+    <string name="status_live_on_body">Every change you make here shows up on your phone right away.</string>
+    <string name="status_static_title">Battery saver is on</string>
+    <string name="status_static_body">Your wallpaper is a still image, redrawn when your agenda, the date or your settings change.</string>
+    <string name="status_use_static">Use battery saver</string>
+
+    <!-- Settings summaries on the home screen -->
+    <string name="summary_font">%1$s font</string>
+    <string name="summary_text_size">%1$d%% text</string>
+    <string name="summary_position_top">at the top</string>
+    <string name="summary_position_center">in the middle</string>
+    <string name="summary_position_bottom">at the bottom</string>
+    <string name="summary_privacy_off">Titles always shown</string>
+    <string name="summary_privacy_when_locked">Titles hidden when locked</string>
+    <string name="summary_privacy_always">Titles always hidden</string>
+    <string name="summary_nothing">Nothing selected</string>
+    <string name="summary_days">%1$d days</string>
+    <string name="summary_week_start">Week starts: %1$s</string>
+    <string name="summary_clock_system">System time format</string>
+    <string name="summary_mode_live">Live wallpaper</string>
+    <string name="summary_mode_static">Battery saver (still image)</string>
+    <string name="summary_widgets">Agenda and week widgets, Quick add tile</string>
+    <string name="summary_backup">Export, import or reset your settings</string>
+    <string name="summary_about">Help, performance and version</string>
+    <string name="summary_todoist_on">On</string>
+    <string name="summary_todoist_off">Off. Tap to connect your Todoist tasks</string>
 
     <!-- Onboarding -->
+    <string name="onboarding_step">Step %1$d of %2$d</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_start">Get started</string>
     <string name="onboarding_welcome_title">Your agenda, on your wallpaper</string>
     <string name="onboarding_welcome_body">CalWallpaper draws your calendar events and tasks on your home and lock screen. Everything stays on this phone.</string>
     <string name="onboarding_next">Next</string>
@@ -11,10 +54,15 @@
     <string name="onboarding_calendar_body">To show events, CalWallpaper reads the calendars on this phone, including Google Calendar. It only reads: it never changes events, and nothing leaves your phone.</string>
     <string name="onboarding_calendar_allow">Allow calendar access</string>
     <string name="onboarding_calendar_skip">Not now</string>
-    <string name="onboarding_calendar_granted">Calendar access is on.</string>
-    <string name="onboarding_ready_title">Make it your wallpaper</string>
-    <string name="onboarding_ready_body">Choose a mode below. You can change it, and everything else, later in settings.</string>
-    <string name="onboarding_finish">Open settings</string>
+    <string name="onboarding_style_title">Pick a look</string>
+    <string name="onboarding_style_body">Choose a layout and colors. You can fine-tune everything later.</string>
+    <string name="onboarding_wallpaper_title">Set it as your wallpaper</string>
+    <string name="onboarding_wallpaper_body">Android sets live wallpapers itself, so the next screens are Android\'s, not CalWallpaper\'s.</string>
+    <string name="onboarding_wallpaper_step1">Tap Set wallpaper below.</string>
+    <string name="onboarding_wallpaper_step2">Android shows a full-screen preview. Tap its Set wallpaper button.</string>
+    <string name="onboarding_wallpaper_step3">Choose Home screen and lock screen. You\'ll come back here when it\'s done.</string>
+    <string name="onboarding_use_static">Use battery saver instead</string>
+    <string name="onboarding_later">Maybe later</string>
 
     <!-- Calendar permission -->
     <string name="calendar_blocked">Calendar access is turned off for CalWallpaper. You can turn it on in system settings.</string>
@@ -23,9 +71,11 @@
     <string name="open_app_settings">Open system settings</string>
 
     <!-- Preview -->
-    <string name="preview_description">Preview of the wallpaper with the current settings</string>
-    <string name="preview_locked">Preview the lock screen</string>
-    <string name="preview_sample">Showing a sample agenda. Allow calendar access to see yours.</string>
+    <string name="preview_description_home">Preview of the home screen wallpaper with the current settings</string>
+    <string name="preview_description_lock">Preview of the lock screen wallpaper with the current settings</string>
+    <string name="preview_showing_home">Home screen preview</string>
+    <string name="preview_showing_lock">Lock screen preview</string>
+    <string name="preview_sample_short">Sample events</string>
     <string name="sample_standup">Team standup</string>
     <string name="sample_lunch">Lunch with Sam</string>
     <string name="sample_bill">Pay electricity bill</string>
@@ -34,17 +84,18 @@
     <string name="sample_groceries">Buy groceries</string>
 
     <!-- Wallpaper mode -->
-    <string name="section_wallpaper">Wallpaper</string>
-    <string name="mode_label">Mode</string>
+    <string name="section_wallpaper">Wallpaper mode</string>
     <string name="mode_live">Live</string>
     <string name="mode_static">Battery saver</string>
     <string name="mode_live_body">Updates as soon as your agenda changes. Uses a little memory while it is visible.</string>
     <string name="mode_static_body">A still image, redrawn only when your agenda, the date or your settings change. Lightest on battery.</string>
     <string name="live_active">CalWallpaper is your live wallpaper.</string>
     <string name="live_inactive">CalWallpaper is not your wallpaper yet.</string>
-    <string name="live_set">Set live wallpaper</string>
-    <string name="live_set_hint">Android then asks whether to use it for the home screen, the lock screen or both.</string>
+    <string name="live_set">Set wallpaper</string>
+    <string name="live_set_hint">Android then shows its own preview: tap Set wallpaper there and choose Home screen and lock screen.</string>
     <string name="live_unavailable">This phone has no live wallpaper picker. Battery saver mode works everywhere.</string>
+    <string name="live_reapply">Open wallpaper preview</string>
+    <string name="static_auto_hint">The image updates by itself after each change; Apply now is only needed if it looks out of date.</string>
     <string name="static_target">Apply to</string>
     <string name="target_home">Home screen</string>
     <string name="target_lock">Lock screen</string>
@@ -61,6 +112,7 @@
     <string name="palette_paper">Paper</string>
     <string name="palette_midnight">Midnight</string>
     <string name="palette_custom">Custom</string>
+    <string name="palette_dynamic">Wallpaper colors</string>
     <string name="dynamic_color">Match system colors (Material You)</string>
     <string name="custom_background">Background</string>
     <string name="custom_panel">Panel</string>
@@ -73,8 +125,10 @@
     <string name="font_serif">Serif</string>
     <string name="font_mono">Mono</string>
     <string name="text_size">Text size</string>
+    <string name="text_size_hint">On top of your phone\'s font size.</string>
     <string name="text_opacity">Text opacity</string>
     <string name="panel_opacity">Panel opacity</string>
+    <string name="panel_opacity_hint">The card behind the text. 0% shows the text straight on the background.</string>
     <string name="corner_radius">Corner radius</string>
     <string name="spacing_label">Spacing</string>
     <string name="spacing_compact">Compact</string>
@@ -88,6 +142,7 @@
     <!-- Layout -->
     <string name="section_layout">Layout</string>
     <string name="preset_label">Layout</string>
+    <string name="preset_hint">How your agenda is arranged on the screen.</string>
     <string name="preset_agenda">Agenda</string>
     <string name="preset_week">Week</string>
     <string name="preset_month">Month</string>
@@ -101,15 +156,18 @@
     <string name="safe_hint">Leave room for the lock-screen clock, notifications and the app dock.</string>
     <string name="side_margin">Side margin</string>
     <string name="lock_screen_header">On the lock screen</string>
-    <string name="lock_screen_hint">The lock-screen clock is usually much bigger, so the lock screen has its own placement. Turn on \"Preview the lock screen\" above to check it.</string>
+    <string name="lock_screen_hint">Lock-screen clocks are usually much bigger than home-screen ones, so the lock screen has its own placement. Keep the agenda clear of the clock and the notification icons.</string>
 
     <!-- Content -->
-    <string name="section_content">What to show</string>
+    <string name="section_content">Calendars &amp; tasks</string>
     <string name="source_calendar">Calendar events</string>
     <string name="source_local">Local tasks</string>
     <string name="source_todoist">Todoist tasks</string>
+    <string name="source_calendar_hint">Events from the calendars synced to this phone, such as Google Calendar.</string>
+    <string name="source_local_hint">Tasks you add with Add task, the Quick add tile or the app shortcut.</string>
 
     <!-- Todoist -->
+    <string name="section_todoist">Todoist</string>
     <string name="todoist_token_hint">Paste your personal API token. In Todoist: Settings → Integrations → Developer → Copy API token. It is stored encrypted on this phone and sent only to Todoist.</string>
     <string name="todoist_token_label">API token</string>
     <string name="todoist_token_invalid">This doesn\'t look like a Todoist API token, or it could not be saved.</string>
@@ -129,21 +187,26 @@
     <string name="calendars_all">All calendars</string>
     <string name="days_ahead">Days to show</string>
     <string name="days_value">%1$d d</string>
+    <string name="days_ahead_hint">How far ahead the agenda looks. Week and month layouts always show their week or month.</string>
     <string name="show_completed">Show completed tasks</string>
+    <string name="show_completed_hint">Shown crossed out instead of disappearing.</string>
 
     <!-- Date and time -->
     <string name="section_time">Date and time</string>
     <string name="week_start">Week starts on</string>
+    <string name="week_start_hint">Used by the Week and Month layouts.</string>
     <string name="week_locale">Region default</string>
     <string name="week_monday">Monday</string>
     <string name="week_saturday">Saturday</string>
     <string name="week_sunday">Sunday</string>
     <string name="clock_label">Time format</string>
+    <string name="clock_hint">For event times, such as 14:00 or 2:00 PM.</string>
     <string name="clock_system">System</string>
     <string name="clock_12">12-hour</string>
     <string name="clock_24">24-hour</string>
 
     <!-- Privacy -->
+    <string name="section_lock_screen">Lock screen &amp; privacy</string>
     <string name="section_privacy">Privacy</string>
     <string name="privacy_label">Hide titles</string>
     <string name="privacy_off">Never</string>
@@ -178,4 +241,54 @@
     <string name="diagnostics_pss">%1$.1f MB</string>
     <string name="diagnostics_pss_unknown">not measured yet</string>
     <string name="diagnostics_frames">Frames drawn since start: %1$d</string>
+
+    <!-- Widgets and shortcuts -->
+    <string name="section_widgets">Widgets &amp; shortcuts</string>
+    <string name="widgets_intro">Widgets are the sure way to tap into your agenda: the lock screen never passes taps to a wallpaper, and on the home screen it depends on your launcher.</string>
+    <string name="widget_agenda_body">Your next days as a list. Tap a day or an event to open it.</string>
+    <string name="widget_week_body">This week at a glance. Tap a day to open it in your calendar.</string>
+    <string name="widget_add">Add to home screen</string>
+    <string name="widget_manual">Your launcher can\'t add it from here: long-press your home screen, tap Widgets and find CalWallpaper.</string>
+    <string name="tile_body">Add a task from the Quick Settings panel, without opening the app.</string>
+    <string name="tile_add">Add tile</string>
+    <string name="tile_manual">Swipe down twice, tap the pencil to edit the tiles, and drag Quick add into place.</string>
+    <string name="shortcut_title">App shortcut</string>
+    <string name="shortcut_body">Long-press the CalWallpaper icon and tap Quick add.</string>
+
+    <!-- Backup and reset -->
+    <string name="section_backup">Backup &amp; reset</string>
+    <string name="backup_export">Export settings</string>
+    <string name="backup_export_body">Save your settings to a file, to keep them or move them to another phone. It contains no events, tasks or tokens.</string>
+    <string name="backup_export_action">Export</string>
+    <string name="backup_exported">Settings exported.</string>
+    <string name="backup_export_failed">Could not save the file.</string>
+    <string name="backup_import">Import settings</string>
+    <string name="backup_import_body">Load settings from a file you exported before. Your current settings are replaced.</string>
+    <string name="backup_import_action">Import</string>
+    <string name="backup_imported">Settings imported.</string>
+    <string name="backup_import_failed">This file is not a CalWallpaper settings file.</string>
+    <string name="backup_reset">Reset to defaults</string>
+    <string name="backup_reset_body">Go back to the original look and settings. Your events, tasks and Todoist connection are kept.</string>
+    <string name="backup_reset_action">Reset</string>
+    <string name="backup_reset_confirm_title">Reset all settings?</string>
+    <string name="backup_reset_confirm_body">Colors, layout, placement and every other setting go back to their defaults.</string>
+    <string name="backup_reset_done">Settings reset.</string>
+
+    <!-- Help and about -->
+    <string name="section_about">Help &amp; about</string>
+    <string name="faq_title">Common questions</string>
+    <string name="faq_taps_q">Why doesn\'t tapping the wallpaper open my calendar?</string>
+    <string name="faq_taps_a">Android passes home-screen taps to a wallpaper only if your launcher supports it, and never on the lock screen. Widgets always work: see Widgets &amp; shortcuts.</string>
+    <string name="faq_lock_q">The lock-screen clock or notifications cover my agenda.</string>
+    <string name="faq_lock_a">Open Lock screen &amp; privacy and raise \"Keep clear at the top\" or \"Keep clear at the bottom\". The preview there shows the lock screen.</string>
+    <string name="faq_events_q">My events are missing.</string>
+    <string name="faq_events_a">Check that calendar access is allowed and that the calendar is selected in Calendars &amp; tasks. Events come from calendars synced to this phone, so turn on syncing for that account in your calendar app.</string>
+    <string name="faq_battery_q">Does it drain the battery?</string>
+    <string name="faq_battery_a">No timers, no animation and no background service: it redraws only when something changes. Battery saver mode goes further and sets a still image.</string>
+    <string name="faq_privacy_q">Who can see my agenda?</string>
+    <string name="faq_privacy_a">Anyone who sees your lock screen. Turn on \"Hide titles: When locked\" to show only counts there. Nothing leaves your phone: no account, no ads, no tracking.</string>
+    <string name="about_title">About</string>
+    <string name="about_body">Free and open source (Apache 2.0). Made to stay calm, light and private.</string>
+    <string name="about_privacy">Privacy policy</string>
+    <string name="about_source">Source code</string>
 </resources>

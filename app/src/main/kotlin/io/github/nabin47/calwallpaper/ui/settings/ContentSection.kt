@@ -29,7 +29,6 @@ import io.github.nabin47.calwallpaper.data.calendar.DeviceCalendar
 import io.github.nabin47.calwallpaper.domain.settings.ContentSettings
 import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.ui.CalendarPermissionState
-import io.github.nabin47.calwallpaper.ui.components.SectionHeader
 import io.github.nabin47.calwallpaper.ui.components.SettingHint
 import io.github.nabin47.calwallpaper.ui.components.SliderSetting
 import io.github.nabin47.calwallpaper.ui.components.SwitchSetting
@@ -57,9 +56,9 @@ fun ContentSection(
     )
 
     Column(modifier) {
-        SectionHeader(stringResource(R.string.section_content))
         SwitchSetting(
             label = stringResource(R.string.source_calendar),
+            hint = stringResource(R.string.source_calendar_hint),
             checked = SourceId.CALENDAR_PROVIDER in content.enabledSources,
             onCheckedChange = { on -> toggleSource(SourceId.CALENDAR_PROVIDER, on) },
         )
@@ -74,11 +73,13 @@ fun ContentSection(
         }
         SwitchSetting(
             label = stringResource(R.string.source_local),
+            hint = stringResource(R.string.source_local_hint),
             checked = SourceId.LOCAL_TASKS in content.enabledSources,
             onCheckedChange = { on -> toggleSource(SourceId.LOCAL_TASKS, on) },
         )
         SliderSetting(
             label = stringResource(R.string.days_ahead),
+            hint = stringResource(R.string.days_ahead_hint),
             valueLabel = stringResource(R.string.days_value, content.daysAhead),
             value = content.daysAhead.toFloat(),
             range = ContentSettings.DAYS_AHEAD.toFloatRange(),
@@ -88,6 +89,7 @@ fun ContentSection(
         )
         SwitchSetting(
             label = stringResource(R.string.show_completed),
+            hint = stringResource(R.string.show_completed_hint),
             checked = content.showCompleted,
             onCheckedChange = { on -> editor.commit(edit { it.copy(showCompleted = on) }) },
         )

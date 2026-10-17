@@ -2,6 +2,8 @@ plugins {
     id("calwp.android.application")
     id("calwp.android.compose")
     id("calwp.baselineprofile.consumer")
+    // Navigation 3 back-stack keys are @Serializable, so the stack survives process death (ADR 0009).
+    id("calwp.serialization")
 }
 
 // Release signing comes from secrets that only release.yml provides (see docs/release.md). Everywhere
@@ -74,6 +76,10 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.kotlinx.serialization.core)
 
     // Generates the Baseline Profile (test-only; nothing from it ships). See baselineprofile/README.md.
     baselineProfile(project(":baselineprofile"))
