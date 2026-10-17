@@ -18,6 +18,8 @@ datastore = "1.2.1"
 roborazzi = "1.76.0"
 robolectric = "4.17"
 annotation = "1.11.0"
+# Latest stable on developer.android.com/jetpack/androidx/releases/glance (verified 2026-10-17).
+glance = "1.2.0"
 
 # Android SDK levels (read by build-logic and module scripts).
 android-compileSdk = "37"
@@ -50,6 +52,9 @@ androidx-room3-compiler = { module = "androidx.room3:room3-compiler", version.re
 androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+
+# Widgets.
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
 
 # App dependencies.
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }

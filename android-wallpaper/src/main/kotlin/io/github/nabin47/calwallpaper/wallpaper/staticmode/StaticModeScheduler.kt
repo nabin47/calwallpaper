@@ -11,34 +11,61 @@ import android.content.pm.PackageManager
 import android.provider.CalendarContract
 import io.github.nabin47.calwallpaper.domain.settings.BatteryMode
 import io.github.nabin47.calwallpaper.domain.settings.Settings
+import io.github.nabin47.calwallpaper.wallpaper.WallpaperGraph
+import io.github.nabin47.calwallpaper.wallpaper.system.InstalledWidgets
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 /**
- * Keeps static (battery) mode's triggers in line with the setting. In static mode it enables the static-mode
- * components, watches the Calendar Provider with a content-trigger job (no polling) and sets an inexact,
- * non-waking alarm for shortly after midnight. In live mode it turns all of that off, so live-mode users get no
- * wakeups from static mode at all.
+ * Keeps the background refresh triggers in line with what needs them: the static (battery mode) image and the
+ * home-screen widgets. While either is in use it enables the refresh components, watches the Calendar Provider
+ * with a content-trigger job (no polling) and sets an inexact, non-waking alarm for shortly after midnight.
+ * Otherwise it turns all of that off, so a live-wallpaper user without widgets gets no wakeups at all.
+ * The classes keep their static-mode names, under which Android stores their enabled state (ADR 0005).
  *
  * Content-trigger jobs cannot survive a reboot, so [StaticRefreshReceiver] calls [sync] after boot
- * (`RECEIVE_BOOT_COMPLETED`, ADR 0004). Idempotent; call from any thread.
+ * (`RECEIVE_BOOT_COMPLETED`, ADR 0004). The receiver and [StaticRefreshJobService] re-sync on every run, so
+ * triggers that are no longer needed switch themselves off. Idempotent; call from any thread.
  */
 class StaticModeScheduler(
     context: Context,
 ) {
     private val appContext = context.applicationContext
+    private val widgets = InstalledWidgets(appContext)
 
-    /** Enables or disables static-mode triggers for [settings]. */
+    /** Enables or disables the refresh triggers for [settings] and the widgets currently placed. */
     fun sync(settings: Settings) {
-        if (settings.batteryMode == BatteryMode.STATIC) {
-            setComponentsEnabled(true)
-            scheduleCalendarJob()
-            scheduleMidnightAlarm()
-        } else {
-            appContext.getSystemService(JobScheduler::class.java)?.cancel(CALENDAR_JOB_ID)
-            appContext.getSystemService(AlarmManager::class.java)?.cancel(midnightIntent())
-            setComponentsEnabled(false)
-        }
+        if (settings.batteryMode == BatteryMode.STATIC || widgets.any()) enable() else disable()
+    }
+
+    /**
+     * A widget was placed: the triggers are needed whatever the settings say, so they are enabled right away,
+     * synchronously, within the widget provider's `onEnabled`.
+     */
+    fun onWidgetAdded() = enable()
+
+    /**
+     * The last widget of a kind was removed. Whether the triggers are still needed depends on the stored settings,
+     * which are read in the background. Best effort: if the process dies first, the next trigger run re-syncs and
+     * switches itself off.
+     */
+    fun onWidgetRemoved() {
+        val graph = WallpaperGraph.get(appContext)
+        graph.processScope.launch { sync(graph.settings.settings.first()) }
+    }
+
+    private fun enable() {
+        setComponentsEnabled(true)
+        scheduleCalendarJob()
+        scheduleMidnightAlarm()
+    }
+
+    private fun disable() {
+        appContext.getSystemService(JobScheduler::class.java)?.cancel(CALENDAR_JOB_ID)
+        appContext.getSystemService(AlarmManager::class.java)?.cancel(midnightIntent())
+        setComponentsEnabled(false)
     }
 
     /** (Re)schedules the job that runs after the Calendar Provider reports a change. */

@@ -132,6 +132,9 @@
     <string name="privacy_always">Always</string>
     <string name="privacy_hint">The lock screen is visible to anyone. Hidden titles show as \"Busy\" or a count.</string>
 
+    <!-- Opening items -->
+    <string name="open_failed">No app on this phone can open this.</string>
+
     <!-- Performance diagnostics -->
     <string name="section_diagnostics">Performance</string>
     <string name="diagnostics_hint">Measured on this phone by the wallpaper itself.</string>

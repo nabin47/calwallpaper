@@ -5,6 +5,8 @@ Pure Kotlin Multiplatform foundation: agenda models, time utilities, result type
 - **Public API:**
   - `AgendaItem`, `ItemKey`, `ItemKind` and `ItemTime` (`AllDay`, `Timed`, `Due`).
   - `OpenTarget`: where a tap leads.
+  - `OpenTargetLink`: an `OpenTarget` as a `calwallpaper://open/…` link and back, plus the router's class name
+    (ADR 0005).
   - `SourceId`: stable keys for each source.
   - `Outcome`.
   - `time/`: `DateRange`, `InstantRange`, `ItemTime.overlaps` / `startDate` / `sortInstant`, and `agendaOrder(zone)`.

@@ -1,10 +1,12 @@
 package io.github.nabin47.calwallpaper.wallpaper
 
 import android.app.WallpaperColors
+import android.app.WallpaperManager
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Build
+import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
@@ -39,6 +41,9 @@ import kotlin.time.Clock
  * Draws only when something changed (CLAUDE.md §5): becoming visible, new agenda data, new settings, a date,
  * time or time-zone change, a lock-state change (privacy mode) or a configuration change. There are no timers,
  * no animation and no foreground service; while invisible it draws nothing and holds no bitmap.
+ *
+ * Taps: launchers that support it report taps on empty home-screen space as [WallpaperManager.COMMAND_TAP];
+ * [WallpaperTaps] opens what was drawn there (ADR 0005).
  */
 class AgendaWallpaperService : WallpaperService() {
     private val engines = mutableSetOf<AgendaEngine>()
@@ -60,6 +65,7 @@ class AgendaWallpaperService : WallpaperService() {
         private val frame = WallpaperFrame()
         private val events = SystemEvents(this@AgendaWallpaperService, ::onSystemEvent)
         private val inputs = MutableStateFlow(readInputs())
+        private val taps = WallpaperTaps(this@AgendaWallpaperService, graph.deviceState)
 
         private var settings: Settings? = null
         private var items: List<AgendaItem>? = null
@@ -71,7 +77,7 @@ class AgendaWallpaperService : WallpaperService() {
 
         override fun onCreate(surfaceHolder: SurfaceHolder) {
             super.onCreate(surfaceHolder)
-            // Taps open items in a later phase; until then the wallpaper ignores touches entirely.
+            // Taps arrive as launcher commands (onCommand), not raw touches, so touch events stay off.
             setTouchEventsEnabled(false)
             events.register()
             scope.launch {
@@ -134,6 +140,21 @@ class AgendaWallpaperService : WallpaperService() {
         @RequiresApi(Build.VERSION_CODES.O_MR1)
         override fun onComputeColors(): WallpaperColors? =
             colorsBackground?.let { WallpaperColors(Color.valueOf(it), null, null) }
+
+        override fun onCommand(
+            action: String?,
+            x: Int,
+            y: Int,
+            z: Int,
+            extras: Bundle?,
+            resultRequested: Boolean,
+        ): Bundle? {
+            // The picker's preview and an invisible wallpaper open nothing.
+            if (action == WallpaperManager.COMMAND_TAP && !isPreview && visible) {
+                taps.onTap(frame.currentScene, x.toFloat(), y.toFloat())
+            }
+            return super.onCommand(action, x, y, z, extras, resultRequested)
+        }
 
         /** Font size, language or dark theme changed: text and dynamic colors may differ. */
         fun onDeviceConfigurationChanged() = onChange(RedrawReason.CONFIGURATION_CHANGED)

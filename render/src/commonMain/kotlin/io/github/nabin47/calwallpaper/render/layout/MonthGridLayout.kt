@@ -1,7 +1,6 @@
 package io.github.nabin47.calwallpaper.render.layout
 
 import io.github.nabin47.calwallpaper.core.AgendaItem
-import io.github.nabin47.calwallpaper.core.OpenTarget
 import io.github.nabin47.calwallpaper.core.time.DateRange
 import io.github.nabin47.calwallpaper.core.time.agendaOrder
 import io.github.nabin47.calwallpaper.core.time.overlaps
@@ -94,7 +93,7 @@ private fun LayoutContext.dayCell(
     val baseline = numberCenterY - lineHeight(caption) / 2 + ascent(caption)
     text(label, centerX - width(label, caption) / 2, baseline, caption, if (isToday) palette.onAccent else palette.text)
     dotRun(dayItems(day).take(MAX_DOTS), centerX, top + height * DOTS_POSITION, dp(DOT_DP))
-    region(Bounds(left, top, left + width, top + height), OpenTarget.CalendarDay(day))
+    dayRegion(Bounds(left, top, left + width, top + height), day)
 }
 
 private const val DAYS = 7

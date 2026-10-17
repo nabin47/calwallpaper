@@ -1,7 +1,6 @@
 package io.github.nabin47.calwallpaper.render.layout
 
 import io.github.nabin47.calwallpaper.core.AgendaItem
-import io.github.nabin47.calwallpaper.core.OpenTarget
 import io.github.nabin47.calwallpaper.core.time.DateRange
 import io.github.nabin47.calwallpaper.core.time.agendaOrder
 import io.github.nabin47.calwallpaper.core.time.overlaps
@@ -50,7 +49,7 @@ private fun LayoutContext.dayHeaderRow(
         val baseline = top + rowGap / 2 + ascent(header)
         text(label, innerLeft, baseline, header, if (day == today) palette.accent else palette.text)
         text(countLabel, innerRight - width(countLabel, caption), baseline, caption, palette.secondaryText)
-        region(Bounds(content.left, top, content.right, top + height), OpenTarget.CalendarDay(day))
+        dayRegion(Bounds(content.left, top, content.right, top + height), day)
     }
 }
 
@@ -70,7 +69,7 @@ private fun LayoutContext.itemRow(
         marker(item, innerLeft + markerWidth / 2 - dp(MARKER_INSET_DP), top + height / 2)
         text(time, innerLeft + markerWidth, baseline, caption, palette.secondaryText)
         text(title, titleLeft, baseline, titleStyle, titleColor(item))
-        region(Bounds(content.left, top, content.right, top + height), item.openTarget)
+        region(Bounds(content.left, top, content.right, top + height), item.openTarget, "$time ${item.title}".trim())
     }
 }
 

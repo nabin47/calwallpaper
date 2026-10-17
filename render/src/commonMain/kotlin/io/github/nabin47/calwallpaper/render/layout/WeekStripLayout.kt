@@ -1,7 +1,6 @@
 package io.github.nabin47.calwallpaper.render.layout
 
 import io.github.nabin47.calwallpaper.core.AgendaItem
-import io.github.nabin47.calwallpaper.core.OpenTarget
 import io.github.nabin47.calwallpaper.core.time.DateRange
 import io.github.nabin47.calwallpaper.core.time.agendaOrder
 import io.github.nabin47.calwallpaper.core.time.overlaps
@@ -59,10 +58,7 @@ private fun LayoutContext.weekdayRow(
             val label = strings.weekdayNarrow(day.dayOfWeek)
             val x = columnLeft(i, columnWidth) + (columnWidth - width(label, caption)) / 2
             text(label, x, top + rowGap / 2 + ascent(caption), caption, palette.secondaryText)
-            region(
-                Bounds(columnLeft(i, columnWidth), top, columnLeft(i + 1, columnWidth), top + height),
-                OpenTarget.CalendarDay(day),
-            )
+            dayRegion(Bounds(columnLeft(i, columnWidth), top, columnLeft(i + 1, columnWidth), top + height), day)
         }
     }
 }
@@ -94,10 +90,7 @@ private fun LayoutContext.dateRow(
                 body,
                 if (isToday) palette.onAccent else palette.text,
             )
-            region(
-                Bounds(columnLeft(i, columnWidth), top, columnLeft(i + 1, columnWidth), top + height),
-                OpenTarget.CalendarDay(day),
-            )
+            dayRegion(Bounds(columnLeft(i, columnWidth), top, columnLeft(i + 1, columnWidth), top + height), day)
         }
     }
 }
@@ -126,6 +119,7 @@ private fun LayoutContext.itemLineRow(
             region(
                 Bounds(columnLeft(i, columnWidth), top, columnLeft(i + 1, columnWidth), top + height),
                 item.openTarget,
+                if (hideTitles) strings.hiddenTitle else item.title,
             )
         }
     }

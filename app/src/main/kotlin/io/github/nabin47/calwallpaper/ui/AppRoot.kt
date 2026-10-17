@@ -60,8 +60,8 @@ fun AppRoot(
 }
 
 /**
- * Bookkeeping after each settings change: static-mode triggers and image, and the Direct Boot cache.
- * Main thread only.
+ * Bookkeeping after each settings change: background refresh triggers, the static image, the widgets and the
+ * Direct Boot cache. Main thread only.
  */
 private class StaticSync(
     private val services: AppServices,
@@ -78,18 +78,18 @@ private class StaticSync(
             // Strip titles from the Direct Boot cache right away, even if the live wallpaper is not running.
             scope.launch { services.graph.directBootCache.restrictTo(after.privacyMode) }
         }
-        if (after.batteryMode != BatteryMode.STATIC) return
         pendingApply?.cancel()
-        val switched = before.batteryMode != BatteryMode.STATIC
+        val switched = before.batteryMode != BatteryMode.STATIC && after.batteryMode == BatteryMode.STATIC
         pendingApply =
             scope.launch {
                 if (!switched) delay(APPLY_DELAY_MS)
-                services.staticUpdater.refresh(force = switched)
+                if (after.batteryMode == BatteryMode.STATIC) services.staticUpdater.refresh(force = switched)
+                services.widgets.requestUpdate()
             }
     }
 
     private companion object {
-        /** Waits for a pause in editing, so a burst of changes costs one wallpaper update. */
+        /** Waits for a pause in editing, so a burst of changes costs one wallpaper and widget update. */
         const val APPLY_DELAY_MS = 1_500L
     }
 }

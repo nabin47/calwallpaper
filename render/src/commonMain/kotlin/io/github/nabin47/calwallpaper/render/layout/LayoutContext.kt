@@ -132,12 +132,13 @@ internal class LayoutContext(
         ops += DrawOp.RoundRect(bounds, cornerRadius, color)
     }
 
-    /** Adds a tap target. Later regions win over earlier overlapping ones. */
+    /** Adds a tap target with an accessibility [label]. Later regions win over earlier overlapping ones. */
     fun region(
         bounds: Bounds,
         target: OpenTarget,
+        label: String,
     ) {
-        regions += HitRegion(bounds, target)
+        regions += HitRegion(bounds, target, label)
     }
 
     /** The finished scene. */

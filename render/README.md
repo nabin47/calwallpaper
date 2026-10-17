@@ -6,7 +6,7 @@ The layout engine. It turns agenda items, settings, screen size, insets and lock
 **Public API**
 - `LayoutEngine(measurer).layout(RenderRequest)`.
 - `LayoutEngine.requiredRange(...)`: the days to fetch for the current preset.
-- `Scene`, `DrawOp`, `Bounds`, `HitRegion`, and `Scene.hitTest(x, y)`.
+- `Scene`, `DrawOp`, `Bounds`, `HitRegion` (target plus an accessibility `label`), and `Scene.hitTest(x, y)`.
 - `RenderRequest`, `ScreenSpec` and `Insets`, plus `resolveFirstDayOfWeek` and `resolveUse24Hour`.
 - `text/`: `TextStyle`, `TextMeasurer` (implemented per platform), and `ellipsize` / `wrap`.
 - `theme/`: `Palette` (presets, custom colors, dynamic color) and `applyOpacity`.

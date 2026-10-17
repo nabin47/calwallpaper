@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_agenda_name">Agenda</string>
+    <string name="widget_agenda_description">Your upcoming events and tasks. Tap one to open it.</string>
+    <string name="widget_week_name">Week</string>
+    <string name="widget_week_description">This week at a glance. Tap a day or an item to open it.</string>
+    <string name="widget_unavailable">Tap to open CalWallpaper</string>
+</resources>

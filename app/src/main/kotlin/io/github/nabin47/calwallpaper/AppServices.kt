@@ -5,6 +5,7 @@ import io.github.nabin47.calwallpaper.data.calendar.DeviceCalendars
 import io.github.nabin47.calwallpaper.wallpaper.WallpaperGraph
 import io.github.nabin47.calwallpaper.wallpaper.staticmode.StaticModeScheduler
 import io.github.nabin47.calwallpaper.wallpaper.staticmode.StaticWallpaperUpdater
+import io.github.nabin47.calwallpaper.wallpaper.system.InstalledWidgets
 import java.io.File
 
 /**
@@ -25,8 +26,11 @@ class AppServices(
     /** Applies the static (battery mode) wallpaper. */
     val staticUpdater: StaticWallpaperUpdater by lazy { StaticWallpaperUpdater(appContext) }
 
-    /** Turns static-mode triggers on or off. */
+    /** Turns the background refresh triggers (static mode, widgets) on or off. */
     val staticScheduler: StaticModeScheduler by lazy { StaticModeScheduler(appContext) }
+
+    /** The home-screen widgets the user placed, to redraw them after a settings change. */
+    val widgets: InstalledWidgets by lazy { InstalledWidgets(appContext) }
 
     /** Whether onboarding was completed. */
     val onboarding: OnboardingStore = OnboardingStore(File(appContext.filesDir, "onboarding_done"))

@@ -2,9 +2,13 @@ package io.github.nabin47.calwallpaper.render.layout
 
 import io.github.nabin47.calwallpaper.core.AgendaItem
 import io.github.nabin47.calwallpaper.core.ItemKind
+import io.github.nabin47.calwallpaper.core.OpenTarget
+import io.github.nabin47.calwallpaper.render.Bounds
+import io.github.nabin47.calwallpaper.render.format.dayLabel
 import io.github.nabin47.calwallpaper.render.text.TextStyle
 import io.github.nabin47.calwallpaper.render.text.ellipsize
 import io.github.nabin47.calwallpaper.render.theme.withAlpha
+import kotlinx.datetime.LocalDate
 
 /** A single line of [text] in [style], ellipsized to the inner width. */
 internal fun LayoutContext.textRow(
@@ -15,6 +19,14 @@ internal fun LayoutContext.textRow(
     val line = measurer.ellipsize(text, style, innerWidth)
     val height = lineHeight(style) + rowGap
     return Row(height) { top -> text(line, innerLeft, top + rowGap / 2 + ascent(style), style, color) }
+}
+
+/** Adds a tap target that opens [day] in the calendar, labelled with the day's name. */
+internal fun LayoutContext.dayRegion(
+    bounds: Bounds,
+    day: LocalDate,
+) {
+    region(bounds, OpenTarget.CalendarDay(day), dayLabel(day, today, strings))
 }
 
 /** Empty vertical space. */
