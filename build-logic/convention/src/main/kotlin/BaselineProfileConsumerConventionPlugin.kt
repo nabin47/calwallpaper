@@ -1,4 +1,4 @@
-import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -14,12 +14,15 @@ class BaselineProfileConsumerConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             pluginManager.apply("androidx.baselineprofile")
-            extensions.configure<ApplicationExtension> {
-                // The plugin's nonMinifiedRelease build type copies `release` but only clears the legacy
-                // isMinifyEnabled flag. AGP 9's `optimization` block stays on, so R8 would still rename every class
-                // and the profile would record names that match nothing in the real release build.
-                buildTypes.configureEach {
-                    if (name.startsWith(NON_MINIFIED_PREFIX)) optimization { enable = false }
+            // The plugin's nonMinifiedRelease build type is created with initWith(release), which copies AGP 9's
+            // `optimization` block; the plugin then clears only the legacy isMinifyEnabled flag. R8 would still
+            // rename every class, and the profile would record names that match nothing in the real release build.
+            // finalizeDsl runs after the plugin has created its build types (and after initWith), so this sticks.
+            extensions.configure<ApplicationAndroidComponentsExtension> {
+                finalizeDsl { android ->
+                    android.buildTypes
+                        .matching { it.name.startsWith(NON_MINIFIED_PREFIX) }
+                        .configureEach { optimization { enable = false } }
                 }
             }
             dependencies {
