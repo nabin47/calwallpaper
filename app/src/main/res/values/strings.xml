@@ -100,6 +100,8 @@
     <string name="safe_bottom">Keep clear at the bottom</string>
     <string name="safe_hint">Leave room for the lock-screen clock, notifications and the app dock.</string>
     <string name="side_margin">Side margin</string>
+    <string name="lock_screen_header">On the lock screen</string>
+    <string name="lock_screen_hint">The lock-screen clock is usually much bigger, so the lock screen has its own placement. Turn on \"Preview the lock screen\" above to check it.</string>
 
     <!-- Content -->
     <string name="section_content">What to show</string>

@@ -13,7 +13,7 @@ Design: minimal, modern, calm. Typography and spacing do the work; no clutter, n
 - **Lock screen is not tappable.** Android never delivers touches on the lock screen to a wallpaper. Lock-screen = read-only display. Interaction is home screen (live wallpaper tap commands, launcher-dependent) and Glance widgets (always works).
 - Live wallpaper tap delivery (`WallpaperService.Engine.onCommand` with `android.wallpaper.tap`) depends on the launcher. Verify on a real device; keep widgets as the guaranteed-interactive path.
 - Lock-screen clock and notifications overlap the wallpaper: the layout needs a configurable **safe zone** (top/bottom insets) and presets that avoid the clock area.
-- Lock screen is visible to anyone: provide **privacy mode** (hide task titles while `KeyguardManager.isKeyguardLocked`, show counts or dots only).
+- Lock screen is visible to anyone: provide **privacy mode** (hide task titles while the device is locked, i.e. `KeyguardManager.isDeviceLocked` on secure devices (ADR 0004), show counts or dots only).
 - Wallpaper can run before first unlock (Direct Boot). Credential-protected storage (Room DB) is unavailable then. Persist the last rendered scene or bitmap in device-protected storage and render from that.
 - iOS cannot set wallpapers programmatically. The iOS plan is WidgetKit (Lock Screen + Home widgets) on shared Kotlin code. Do not promise wallpaper parity on iOS.
 

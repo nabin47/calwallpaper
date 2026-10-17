@@ -15,4 +15,29 @@ class LayoutSettingsTest {
     fun defaultsMatchSafeZoneDefault() {
         assertEquals(SafeZone.DEFAULT, LayoutSettings().safeZone)
     }
+
+    @Test
+    fun lockScreenHasItsOwnPlacement() {
+        val layout = LayoutSettings()
+        assertEquals(Placement(VerticalPosition.CENTER, 0.25f, 0.12f), layout.placementFor(locked = false))
+        assertEquals(
+            Placement(
+                VerticalPosition.BOTTOM,
+                LayoutSettings.DEFAULT_LOCK_SAFE_ZONE_TOP,
+                LayoutSettings.DEFAULT_LOCK_SAFE_ZONE_BOTTOM,
+            ),
+            layout.placementFor(locked = true),
+        )
+    }
+
+    @Test
+    fun lockSafeZonesAreClampedAndMustLeaveRoom() {
+        val clamped = LayoutSettings(lockSafeZoneTop = 2f, lockSafeZoneBottom = 0.1f).placementFor(locked = true)
+        assertEquals(0.75f, clamped.safeZoneTop, "top clamps to the lock range")
+        val noRoom = LayoutSettings(lockSafeZoneTop = 0.75f, lockSafeZoneBottom = 0.5f).placementFor(locked = true)
+        assertEquals(LayoutSettings.DEFAULT_LOCK_SAFE_ZONE_TOP, noRoom.safeZoneTop, "falls back when nothing fits")
+        assertEquals(LayoutSettings.DEFAULT_LOCK_SAFE_ZONE_BOTTOM, noRoom.safeZoneBottom)
+        val nan = LayoutSettings(lockSafeZoneTop = Float.NaN).placementFor(locked = true)
+        assertEquals(LayoutSettings.DEFAULT_LOCK_SAFE_ZONE_TOP, nan.safeZoneTop)
+    }
 }

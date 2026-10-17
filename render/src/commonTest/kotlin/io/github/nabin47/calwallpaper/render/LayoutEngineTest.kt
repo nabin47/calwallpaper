@@ -225,6 +225,28 @@ class LayoutEngineTest {
     }
 
     @Test
+    fun lockScreenUsesItsOwnPlacement() {
+        val base = settings(LayoutPreset.AGENDA, PrivacyMode.WHEN_LOCKED)
+        val s =
+            base.copy(
+                layout =
+                    base.layout.copy(
+                        lockPosition = VerticalPosition.BOTTOM,
+                        lockSafeZoneTop = 0.6f,
+                        lockSafeZoneBottom = 0.2f,
+                    ),
+            )
+        val locked = layout(s, isLocked = true)
+        val height = Fixtures.screen.heightPx
+        locked.ops.forEach { op ->
+            val extent = op.verticalExtent()
+            assertTrue(extent.start >= height * 0.6f - 0.01f && extent.endInclusive <= height * 0.8f + 0.01f, "$op")
+        }
+        val panel = locked.ops.filterIsInstance<DrawOp.RoundRect>().first()
+        assertEquals(height * 0.8f, panel.bounds.bottom, 0.01f, "bottom position hugs the lock safe zone")
+    }
+
+    @Test
     fun sceneBackgroundComesFromThePalette() {
         val base = settings(LayoutPreset.AGENDA)
         val light = base.copy(appearance = base.appearance.copy(palette = PalettePreset.CALM_LIGHT))
