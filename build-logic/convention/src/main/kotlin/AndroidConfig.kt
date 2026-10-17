@@ -48,6 +48,9 @@ private fun Lint.configureStrictLint(project: Project) {
     abortOnError = true
     warningsAsErrors = true
     checkReleaseBuilds = true
+    // Print every issue to the build log, so CI's failure comment shows all of them, not just the first.
+    textReport = true
+    textOutput = project.file("stdout")
     lintConfig =
         project.rootProject.layout.projectDirectory
             .file("lint.xml")

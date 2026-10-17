@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Battery saver mode (ADR 0004): set the still image, and re-arm its triggers after a reboot.
+         Declared here, next to the code that needs them; both are normal permissions (no prompt). -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application>
         <!-- The live wallpaper. Its own process keeps Compose and the settings UI out of its memory
              (CLAUDE.md §3); directBootAware lets it draw before the first unlock (ADR 0004). -->

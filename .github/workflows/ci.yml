@@ -51,7 +51,7 @@ jobs:
         run: .github/scripts/run-step.sh "Detekt" ./gradlew detekt
 
       - name: Android Lint
-        run: .github/scripts/run-step.sh "Android Lint" ./gradlew lint
+        run: .github/scripts/run-step.sh "Android Lint" ./gradlew lint --continue
 
       - name: Unit tests
         run: .github/scripts/run-step.sh "Unit tests" ./gradlew check
