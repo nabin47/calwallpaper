@@ -7,7 +7,8 @@ measured on the owner's phone with the steps below and recorded here with the ph
 |---|---|---|---|---|
 | Release APK size | ≪ 15 MB | 0.76 MB (794,141 B) | Release asset size | v0.0.1 |
 | Release AAB size | — | 1.71 MB (1,795,152 B) | Release asset size | v0.0.1 |
-| Release APK size (unsigned, R8) | ≪ 15 MB | _see the CI job summary of the Phase 3 PR_ | CI: "Release build size" step | Phase 3 PR |
+| Release APK size (unsigned, R8) | ≪ 15 MB | 1.38 MB (1,451,689 B) | CI "Release build size" step, run on 1f74955 | Phase 3 PR |
+| Debug APK size | — (not shipped) | 12.4 MB (12,975,956 B) | CI job log, same run | Phase 3 PR |
 | Wallpaper layout time | < 16 ms | _not yet measured on a phone_ | App → Performance (below) | — |
 | Wallpaper draw time (bitmap repaint) | < 16 ms | _not yet measured on a phone_ | App → Performance | — |
 | Wallpaper bitmap memory | 1 screen-sized bitmap, freed when invisible | _not yet measured on a phone_ | App → Performance | — |
