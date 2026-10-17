@@ -3,7 +3,6 @@ package io.github.nabin47.calwallpaper.baselineprofile
 import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.benchmark.macro.junit4.BaselineProfileRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.Until
@@ -20,7 +19,6 @@ import org.junit.runner.RunWith
  * accounts or data; calendar access is not granted, so the preview shows the sample agenda.
  */
 @RunWith(AndroidJUnit4::class)
-@LargeTest
 class BaselineProfileGenerator {
     /** Runs the journey repeatedly until the recorded profile is stable, then writes it out. */
     @get:Rule
