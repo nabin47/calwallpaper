@@ -36,7 +36,7 @@ Phase 3 puts the Scene on the real wallpaper. The constraints:
     dismissed. Trusted places or devices (Smart Lock) also count as unlocked.
 - **Separate lock-screen placement.** Lock-screen clocks are often far larger than home-screen ones; on the owner's
   phone the two-line clock and date cover the top ~55%. `LayoutSettings` therefore has its own lock position and
-  safe zones: bottom by default, 55% clear at the top, 20% at the bottom, and up to 75% at the top. The layout uses
+  safe zones: bottom by default, 55% clear at the top, 25% at the bottom (raised from 20% after the owner's phone showed the notification icons overlapping the last row), and up to 75% at the top. The layout uses
   them whenever the request is locked, including the static lock image and the preview's lock-screen switch.
 - **Direct Boot.** The service is `directBootAware`. Before the first unlock it reads only device-protected storage: the
   settings and `DirectBootCache`, the last agenda as JSON. Live sources are observed only after `isUserUnlocked`. Because

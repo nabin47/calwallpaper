@@ -1,5 +1,6 @@
 package io.github.nabin47.calwallpaper.render
 
+import io.github.nabin47.calwallpaper.core.ItemTime
 import io.github.nabin47.calwallpaper.core.OpenTarget
 import io.github.nabin47.calwallpaper.core.SourceId
 import io.github.nabin47.calwallpaper.core.time.DateRange
@@ -17,8 +18,10 @@ import io.github.nabin47.calwallpaper.render.format.EnglishRenderStrings
 import io.github.nabin47.calwallpaper.render.text.ELLIPSIS
 import io.github.nabin47.calwallpaper.render.theme.Palette
 import io.github.nabin47.calwallpaper.render.theme.alphaOf
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -183,6 +186,28 @@ class LayoutEngineTest {
                 assertTrue(labels.none { it.contains(item.title) }, "$preset leaks a title")
             }
         }
+    }
+
+    @Test
+    fun theSameItemFromSeveralCalendarsIsShownOnce() {
+        val holiday = ItemTime.AllDay(today, today)
+        val items =
+            listOf(
+                Fixtures.event("a", "Durga Puja Holiday", holiday),
+                Fixtures.event("b", "durga puja holiday ", holiday),
+                Fixtures.event(
+                    "c",
+                    "Durga Puja Holiday",
+                    ItemTime.AllDay(today.plus(1, DateTimeUnit.DAY), today.plus(1, DateTimeUnit.DAY)),
+                ),
+                Fixtures.event("d", "", holiday),
+                Fixtures.event("e", "", holiday),
+            )
+        val texts = layout(settings(LayoutPreset.AGENDA), items).texts()
+        assertEquals(2, texts.count { it == "Durga Puja Holiday" }, "once per day")
+        assertEquals(0, texts.count { it == "durga puja holiday " })
+        val counts = layout(settings(LayoutPreset.AGENDA, PrivacyMode.ALWAYS), items).texts()
+        assertTrue(counts.contains("3 items"), "today: one holiday plus two untitled items, $counts")
     }
 
     @Test
