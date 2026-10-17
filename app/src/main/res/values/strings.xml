@@ -1,6 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CalWallpaper</string>
-    <string name="hello_subtitle">Your calendar and tasks, on your wallpaper.</string>
     <string name="version_label">Version %1$s</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title">Your agenda, on your wallpaper</string>
+    <string name="onboarding_welcome_body">CalWallpaper draws your calendar events and tasks on your home and lock screen. Everything stays on this phone.</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_calendar_title">Show your calendar</string>
+    <string name="onboarding_calendar_body">To show events, CalWallpaper reads the calendars on this phone, including Google Calendar. It only reads: it never changes events, and nothing leaves your phone.</string>
+    <string name="onboarding_calendar_allow">Allow calendar access</string>
+    <string name="onboarding_calendar_skip">Not now</string>
+    <string name="onboarding_calendar_granted">Calendar access is on.</string>
+    <string name="onboarding_ready_title">Make it your wallpaper</string>
+    <string name="onboarding_ready_body">Choose a mode below. You can change it, and everything else, later in settings.</string>
+    <string name="onboarding_finish">Open settings</string>
+
+    <!-- Calendar permission -->
+    <string name="calendar_blocked">Calendar access is turned off for CalWallpaper. You can turn it on in system settings.</string>
+    <string name="calendar_needed">Allow calendar access to show your events.</string>
+    <string name="calendar_allow">Allow</string>
+    <string name="open_app_settings">Open system settings</string>
+
+    <!-- Preview -->
+    <string name="preview_description">Preview of the wallpaper with the current settings</string>
+    <string name="preview_locked">Preview the lock screen</string>
+    <string name="preview_sample">Showing a sample agenda. Allow calendar access to see yours.</string>
+    <string name="sample_standup">Team standup</string>
+    <string name="sample_lunch">Lunch with Sam</string>
+    <string name="sample_bill">Pay electricity bill</string>
+    <string name="sample_dentist">Dentist</string>
+    <string name="sample_trip">Weekend trip</string>
+    <string name="sample_groceries">Buy groceries</string>
+
+    <!-- Wallpaper mode -->
+    <string name="section_wallpaper">Wallpaper</string>
+    <string name="mode_label">Mode</string>
+    <string name="mode_live">Live</string>
+    <string name="mode_static">Battery saver</string>
+    <string name="mode_live_body">Updates as soon as your agenda changes. Uses a little memory while it is visible.</string>
+    <string name="mode_static_body">A still image, redrawn only when your agenda, the date or your settings change. Lightest on battery.</string>
+    <string name="live_active">CalWallpaper is your live wallpaper.</string>
+    <string name="live_inactive">CalWallpaper is not your wallpaper yet.</string>
+    <string name="live_set">Set live wallpaper</string>
+    <string name="live_set_hint">Android then asks whether to use it for the home screen, the lock screen or both.</string>
+    <string name="live_unavailable">This phone has no live wallpaper picker. Battery saver mode works everywhere.</string>
+    <string name="static_target">Apply to</string>
+    <string name="target_home">Home screen</string>
+    <string name="target_lock">Lock screen</string>
+    <string name="target_both">Both</string>
+    <string name="static_apply">Apply now</string>
+    <string name="static_applied">Wallpaper updated.</string>
+    <string name="static_failed">Could not set the wallpaper.</string>
+
+    <!-- Appearance -->
+    <string name="section_appearance">Appearance</string>
+    <string name="palette_label">Colors</string>
+    <string name="palette_calm_dark">Calm dark</string>
+    <string name="palette_calm_light">Calm light</string>
+    <string name="palette_paper">Paper</string>
+    <string name="palette_midnight">Midnight</string>
+    <string name="palette_custom">Custom</string>
+    <string name="dynamic_color">Match system colors (Material You)</string>
+    <string name="custom_background">Background</string>
+    <string name="custom_panel">Panel</string>
+    <string name="custom_text">Text</string>
+    <string name="custom_accent">Accent</string>
+    <string name="color_swatch">Color %1$s</string>
+    <string name="font_label">Font</string>
+    <string name="font_system">System</string>
+    <string name="font_sans">Sans</string>
+    <string name="font_serif">Serif</string>
+    <string name="font_mono">Mono</string>
+    <string name="text_size">Text size</string>
+    <string name="text_opacity">Text opacity</string>
+    <string name="panel_opacity">Panel opacity</string>
+    <string name="corner_radius">Corner radius</string>
+    <string name="spacing_label">Spacing</string>
+    <string name="spacing_compact">Compact</string>
+    <string name="spacing_comfortable">Comfortable</string>
+    <string name="spacing_spacious">Spacious</string>
+    <string name="contrast_warning">Low contrast (%1$.1f:1). Text may be hard to read; 4.5:1 or more is recommended.</string>
+    <string name="percent_value">%1$d%%</string>
+    <string name="dp_value">%1$d dp</string>
+    <string name="scale_value">%1$.2f×</string>
+
+    <!-- Layout -->
+    <string name="section_layout">Layout</string>
+    <string name="preset_label">Layout</string>
+    <string name="preset_agenda">Agenda</string>
+    <string name="preset_week">Week</string>
+    <string name="preset_month">Month</string>
+    <string name="preset_next_three">Next 3</string>
+    <string name="position_label">Position</string>
+    <string name="position_top">Top</string>
+    <string name="position_center">Center</string>
+    <string name="position_bottom">Bottom</string>
+    <string name="safe_top">Keep clear at the top</string>
+    <string name="safe_bottom">Keep clear at the bottom</string>
+    <string name="safe_hint">Leave room for the lock-screen clock, notifications and the app dock.</string>
+    <string name="side_margin">Side margin</string>
+
+    <!-- Content -->
+    <string name="section_content">What to show</string>
+    <string name="source_calendar">Calendar events</string>
+    <string name="source_local">Local tasks</string>
+    <string name="calendars_all">All calendars</string>
+    <string name="days_ahead">Days to show</string>
+    <string name="days_value">%1$d d</string>
+    <string name="show_completed">Show completed tasks</string>
+
+    <!-- Date and time -->
+    <string name="section_time">Date and time</string>
+    <string name="week_start">Week starts on</string>
+    <string name="week_locale">Region default</string>
+    <string name="week_monday">Monday</string>
+    <string name="week_saturday">Saturday</string>
+    <string name="week_sunday">Sunday</string>
+    <string name="clock_label">Time format</string>
+    <string name="clock_system">System</string>
+    <string name="clock_12">12-hour</string>
+    <string name="clock_24">24-hour</string>
+
+    <!-- Privacy -->
+    <string name="section_privacy">Privacy</string>
+    <string name="privacy_label">Hide titles</string>
+    <string name="privacy_off">Never</string>
+    <string name="privacy_when_locked">When locked</string>
+    <string name="privacy_always">Always</string>
+    <string name="privacy_hint">The lock screen is visible to anyone. Hidden titles show as \"Busy\" or a count.</string>
+
+    <!-- Performance diagnostics -->
+    <string name="section_diagnostics">Performance</string>
+    <string name="diagnostics_hint">Measured on this phone by the wallpaper itself.</string>
+    <string name="diagnostics_live">Live wallpaper</string>
+    <string name="diagnostics_static">Battery saver image</string>
+    <string name="diagnostics_none">No measurements yet. Set the wallpaper and look at it once.</string>
+    <string name="diagnostics_timing">Layout %1$.1f ms · draw %2$.1f ms</string>
+    <string name="diagnostics_memory">Bitmap %1$.1f MB · process %2$s</string>
+    <string name="diagnostics_pss">%1$.1f MB</string>
+    <string name="diagnostics_pss_unknown">not measured yet</string>
+    <string name="diagnostics_frames">Frames drawn since start: %1$d</string>
 </resources>

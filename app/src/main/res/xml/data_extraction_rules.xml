@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Android 12+ backup rules. Secrets (e.g. the Todoist token) will be excluded here when they exist (CLAUDE.md §7). -->
+<!-- Android 12+ backup rules. Keep in sync with backup_rules.xml.
+     wallpaper/ in device-protected storage holds caches (last agenda, diagnostics, static-image fingerprint):
+     regenerated on the device, never backed up. Secrets (e.g. the Todoist token) will be excluded too (CLAUDE.md §7). -->
 <data-extraction-rules>
-    <cloud-backup />
-    <device-transfer />
+    <cloud-backup>
+        <exclude domain="device_file" path="wallpaper/" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="device_file" path="wallpaper/" />
+    </device-transfer>
 </data-extraction-rules>
