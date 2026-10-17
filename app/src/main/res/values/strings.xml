@@ -107,6 +107,25 @@
     <string name="section_content">What to show</string>
     <string name="source_calendar">Calendar events</string>
     <string name="source_local">Local tasks</string>
+    <string name="source_todoist">Todoist tasks</string>
+
+    <!-- Todoist -->
+    <string name="todoist_token_hint">Paste your personal API token. In Todoist: Settings → Integrations → Developer → Copy API token. It is stored encrypted on this phone and sent only to Todoist.</string>
+    <string name="todoist_token_label">API token</string>
+    <string name="todoist_token_invalid">This doesn\'t look like a Todoist API token, or it could not be saved.</string>
+    <string name="todoist_connect">Connect</string>
+    <string name="todoist_sync_now">Sync now</string>
+    <string name="todoist_disconnect">Disconnect</string>
+    <string name="todoist_projects_all">All projects</string>
+    <string name="todoist_status_syncing">Connected. Syncing…</string>
+    <string name="todoist_status_synced">Synced %1$s</string>
+    <string name="todoist_status_error_since">%1$s Last synced %2$s.</string>
+    <string name="todoist_error_auth">Todoist rejected the token. Paste a new one.</string>
+    <string name="todoist_error_token_unreadable">The saved token can no longer be read (this happens when the screen lock is removed). Paste it again.</string>
+    <string name="todoist_error_network">Couldn\'t reach Todoist. Will retry when online.</string>
+    <string name="todoist_error_rate_limited">Todoist asked to slow down. Will retry soon.</string>
+    <string name="todoist_error_server">Todoist had a problem. Will retry soon.</string>
+    <string name="todoist_error_bad_response">Todoist sent something unexpected. An app update may be needed.</string>
     <string name="calendars_all">All calendars</string>
     <string name="days_ahead">Days to show</string>
     <string name="days_value">%1$d d</string>
@@ -131,6 +150,19 @@
     <string name="privacy_when_locked">When locked</string>
     <string name="privacy_always">Always</string>
     <string name="privacy_hint">The lock screen is visible to anyone. Hidden titles show as \"Busy\" or a count.</string>
+
+    <!-- Quick add -->
+    <string name="quick_add_title">Quick add</string>
+    <string name="quick_add_tile">Quick add</string>
+    <string name="quick_add_hint">What needs doing?</string>
+    <string name="quick_add_today">Today</string>
+    <string name="quick_add_tomorrow">Tomorrow</string>
+    <string name="quick_add_no_date">No date</string>
+    <string name="quick_add_cancel">Cancel</string>
+    <string name="quick_add_add">Add</string>
+    <string name="quick_add_done">Added to your list</string>
+    <string name="shortcut_quick_add_short">Quick add</string>
+    <string name="shortcut_quick_add_long">Add a task to your list</string>
 
     <!-- Opening items -->
     <string name="open_failed">No app on this phone can open this.</string>

@@ -3,9 +3,12 @@ package io.github.nabin47.calwallpaper.wallpaper
 import android.content.Context
 import io.github.nabin47.calwallpaper.core.SourceId
 import io.github.nabin47.calwallpaper.data.calendar.CalendarProviderSource
+import io.github.nabin47.calwallpaper.data.local.LocalTasks
 import io.github.nabin47.calwallpaper.data.local.LocalTasksDatabaseFactory
 import io.github.nabin47.calwallpaper.data.local.LocalTasksSource
 import io.github.nabin47.calwallpaper.data.settings.DataStoreSettingsRepository
+import io.github.nabin47.calwallpaper.data.todoist.DataStoreTodoistCache
+import io.github.nabin47.calwallpaper.data.todoist.TodoistSource
 import io.github.nabin47.calwallpaper.domain.AgendaSource
 import io.github.nabin47.calwallpaper.domain.settings.SettingsRepository
 import io.github.nabin47.calwallpaper.wallpaper.cache.DirectBootCache
@@ -49,10 +52,20 @@ class WallpaperGraph private constructor(
     /** Builds render requests with the device's locale, clock and palette choices. */
     val requestFactory: RenderRequestFactory by lazy { RenderRequestFactory(appContext) }
 
-    private val calendarSource by lazy { CalendarProviderSource(appContext) }
-    private val localTasksSource by lazy { LocalTasksSource(LocalTasksDatabaseFactory.create(appContext).taskDao()) }
+    /**
+     * The Todoist offline cache (credential-protected; use only after unlock). Written by the app's sync worker,
+     * read here; the wallpaper process never touches the network.
+     */
+    val todoistCache: DataStoreTodoistCache by lazy { DataStoreTodoistCache.create(appContext, processScope) }
 
-    /** All agenda sources merged. Todoist joins in a later phase. */
+    private val calendarSource by lazy { CalendarProviderSource(appContext) }
+    private val localTasksDatabase by lazy { LocalTasksDatabaseFactory.create(appContext) }
+    private val localTasksSource by lazy { LocalTasksSource(localTasksDatabase.taskDao()) }
+
+    /** Writes to the local task list (quick-add). Credential-protected: use only after unlock. */
+    val localTasks: LocalTasks by lazy { LocalTasks(localTasksDatabase.taskDao()) }
+
+    /** All agenda sources merged. */
     val feed: AgendaFeed by lazy {
         AgendaFeed { id -> sourceFor(id) }
     }
@@ -61,7 +74,7 @@ class WallpaperGraph private constructor(
         when (id) {
             SourceId.CALENDAR_PROVIDER -> calendarSource
             SourceId.LOCAL_TASKS -> localTasksSource
-            SourceId.TODOIST -> null
+            SourceId.TODOIST -> TodoistSource(todoistCache.cache)
         }
 
     /** Access to the per-process instance. */

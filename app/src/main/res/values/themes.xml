@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.CalWallpaper" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Quick-add: a floating dialog over whatever was on screen. Compose draws the card, so the window itself is
+         transparent; tapping outside closes it. -->
+    <style name="Theme.CalWallpaper.QuickAdd" parent="android:Theme.Material.Light.Dialog.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowSoftInputMode">stateVisible|adjustResize</item>
+    </style>
 </resources>

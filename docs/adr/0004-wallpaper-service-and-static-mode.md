@@ -70,9 +70,8 @@ Phase 3 puts the Scene on the real wallpaper. The constraints:
 ## Consequences
 - **Two processes.** The wallpaper process pays its own runtime overhead. In exchange, the settings UI never inflates the
   wallpaper's memory, and its PSS can be measured on its own.
-- **Local tasks across processes.** Room in the wallpaper process sees only its own writes. Local tasks are written in the
-  app process, but no write UI exists yet. When quick-add arrives, enable multi-instance invalidation or another
-  cross-process signal, and verify it.
+- **Local tasks across processes.** Room in the wallpaper process sees only its own writes, and local tasks are written
+  in the app process. Since ADR 0007, quick-add exists and both processes enable Room's multi-instance invalidation.
 - **Background.** The wallpaper background is a solid color from the palette. Using the user's own photo would need a photo
   picker (no permission needed) and is left for later.
 - **Taps.** Raw touches stay disabled. Taps arrive as launcher commands, handled since ADR 0005.

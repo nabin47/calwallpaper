@@ -38,6 +38,7 @@ import io.github.nabin47.calwallpaper.data.calendar.DeviceCalendar
 import io.github.nabin47.calwallpaper.domain.settings.BatteryMode
 import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.render.theme.Palette
+import io.github.nabin47.calwallpaper.todoist.TodoistConnection
 import io.github.nabin47.calwallpaper.ui.CalendarPermissionState
 import io.github.nabin47.calwallpaper.ui.components.SettingHint
 import io.github.nabin47.calwallpaper.ui.preview.LivePreview
@@ -111,6 +112,7 @@ fun SettingsScreen(
             report = report,
             dynamicPalette = dynamicPalette,
             applyStatic = { services.staticUpdater.refresh(force = true) },
+            todoist = services.todoist,
             modifier = Modifier.weight(1f),
         )
     }
@@ -127,6 +129,7 @@ private fun SettingsList(
     report: PerfReport,
     dynamicPalette: Palette?,
     applyStatic: suspend () -> Outcome<Unit>,
+    todoist: TodoistConnection,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
@@ -135,6 +138,7 @@ private fun SettingsList(
         item { AppearanceSection(settings, editor, dynamicPalette) }
         item { LayoutSection(settings, editor) }
         item { ContentSection(settings, editor, permission, calendars) }
+        item { TodoistSection(settings, editor, todoist) }
         item { TimeSection(settings, editor) }
         item { PrivacySection(settings, editor) }
         item { DiagnosticsSection(report) }

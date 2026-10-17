@@ -14,7 +14,9 @@ Draft answers to prepare before the first Play upload (CLAUDE.md §10). Fill in 
 
 ## Permission declarations
 - `READ_CALENDAR`: core functionality (shows the user's events on the wallpaper/widgets), requested in context with a rationale screen.
-- `INTERNET`: only for sources the user enables (Todoist).
+- `INTERNET`: only for sources the user enables (Todoist), HTTPS only.
+- `WAKE_LOCK`, `ACCESS_NETWORK_STATE`, `FOREGROUND_SERVICE` (normal, no prompt): merged from WorkManager, which the
+  widgets and Todoist sync use. No foreground service of the app's own; see ADR 0007.
 - `SET_WALLPAPER` (normal, no prompt): battery saver mode sets a still image of the agenda as the wallpaper.
 - `RECEIVE_BOOT_COMPLETED` (normal, no prompt): battery saver mode and the widgets re-arm their update triggers
   after a reboot. The receiver is disabled while neither is in use.

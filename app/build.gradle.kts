@@ -71,5 +71,6 @@ dependencies {
     implementation(project(":android-widgets"))
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.compose.material3)
 }

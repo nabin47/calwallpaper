@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher shortcut (long-press the app icon). targetPackage must be literal, so debug builds (.debug) have their own copy in src/debug. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_add"
+        android:shortcutId="quick_add"
+        android:shortcutLongLabel="@string/shortcut_quick_add_long"
+        android:shortcutShortLabel="@string/shortcut_quick_add_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="io.github.nabin47.calwallpaper.quickadd.QuickAddActivity"
+            android:targetPackage="io.github.nabin47.calwallpaper.debug" />
+    </shortcut>
+</shortcuts>
