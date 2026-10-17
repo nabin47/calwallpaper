@@ -8,6 +8,7 @@ import io.github.nabin47.calwallpaper.domain.settings.PalettePreset
  * Colors of a theme as `0xAARRGGBB`, before the user's opacity settings are applied (see [applyOpacity]).
  *
  * @property onAccent text drawn on top of [accent] (e.g. today's date in a filled circle).
+ * @property background fills the whole wallpaper behind the panel. Opaque; opacity settings never change it.
  */
 data class Palette(
     val panel: Int,
@@ -16,6 +17,7 @@ data class Palette(
     val accent: Int,
     val onAccent: Int,
     val divider: Int,
+    val background: Int,
 ) {
     /** Built-in palettes and resolution from settings. */
     companion object {
@@ -28,6 +30,7 @@ data class Palette(
                 accent = 0xFF8AB4F8.toInt(),
                 onAccent = 0xFF10131A.toInt(),
                 divider = 0xFF2A2E35.toInt(),
+                background = 0xFF2B3440.toInt(),
             )
 
         /** Dark text on a light panel. */
@@ -39,6 +42,7 @@ data class Palette(
                 accent = 0xFF1F5FBF.toInt(),
                 onAccent = 0xFFFFFFFF.toInt(),
                 divider = 0xFFDADDE2.toInt(),
+                background = 0xFFC9D6E3.toInt(),
             )
 
         /** Warm off-white with ink-like text. */
@@ -50,6 +54,7 @@ data class Palette(
                 accent = 0xFFA0522D.toInt(),
                 onAccent = 0xFFFFFFFF.toInt(),
                 divider = 0xFFE0D7C8.toInt(),
+                background = 0xFFE6DCCB.toInt(),
             )
 
         /** True black with a cool accent, for OLED screens. */
@@ -61,6 +66,7 @@ data class Palette(
                 accent = 0xFF7DD3FC.toInt(),
                 onAccent = 0xFF001018.toInt(),
                 divider = 0xFF1C2028.toInt(),
+                background = 0xFF000000.toInt(),
             )
 
         private const val SECONDARY_ALPHA = 0.7f
@@ -89,6 +95,8 @@ data class Palette(
         private fun fromCustom(colors: CustomColors): Palette {
             val text = colors.text.argb
             val accent = colors.accent.argb
+            val fallbackBackground =
+                if (luminance(colors.panel.argb) > LUMINANCE_THRESHOLD) CALM_LIGHT.background else CALM_DARK.background
             return Palette(
                 panel = colors.panel.argb,
                 text = text,
@@ -96,6 +104,7 @@ data class Palette(
                 accent = accent,
                 onAccent = if (luminance(accent) > LUMINANCE_THRESHOLD) 0xFF000000.toInt() else 0xFFFFFFFF.toInt(),
                 divider = withAlpha(text, DIVIDER_ALPHA),
+                background = colors.background?.argb?.let(::opaque) ?: fallbackBackground,
             )
         }
     }
@@ -137,6 +146,9 @@ fun withAlpha(
     val scaled = (alpha * factor.coerceIn(0f, 1f) + 0.5f).toInt().coerceIn(0, CHANNEL_MAX)
     return (scaled shl ALPHA_SHIFT) or (color and RGB_MASK)
 }
+
+/** [color] with full alpha: the wallpaper background must not be see-through. */
+private fun opaque(color: Int): Int = color or (CHANNEL_MAX shl ALPHA_SHIFT)
 
 /** The alpha channel of [color], 0..255. */
 fun alphaOf(color: Int): Int = (color ushr ALPHA_SHIFT) and CHANNEL_MASK

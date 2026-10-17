@@ -21,6 +21,7 @@ class SettingsCodecTest {
                             panel = ArgbColor(0x80112233.toInt()),
                             text = ArgbColor(0xFFFFFFFF.toInt()),
                             accent = ArgbColor(0xFF4C8BF5.toInt()),
+                            background = ArgbColor(0xFF203040.toInt()),
                         ),
                     useDynamicColor = true,
                     font = FontChoice.SERIF,
@@ -49,6 +50,7 @@ class SettingsCodecTest {
             time = TimeSettings(weekStart = WeekStart.SATURDAY, clockFormat = ClockFormat.H24),
             privacyMode = PrivacyMode.ALWAYS,
             batteryMode = BatteryMode.STATIC,
+            staticTarget = WallpaperTarget.LOCK,
         )
 
     private fun decodeOk(text: String): Settings = assertIs<Outcome.Success<Settings>>(codec.decode(text)).value
@@ -69,6 +71,19 @@ class SettingsCodecTest {
         assertTrue("\"schemaVersion\": 1" in text)
         assertTrue("\"#80112233\"" in text, "colors are hex strings")
         assertTrue("\"week_strip\"" in text, "enums use stable serial names")
+    }
+
+    @Test
+    fun phaseThreeFieldsDecodeFromOlderFiles() {
+        // Files written before the static target and custom background existed keep working.
+        val old =
+            decodeOk(
+                """{"schemaVersion":1,"settings":{"appearance":{"customColors":""" +
+                    """{"panel":"#FF000000","text":"#FFFFFFFF","accent":"#FF4C8BF5"}}}}""",
+            )
+        assertEquals(WallpaperTarget.HOME_AND_LOCK, old.staticTarget)
+        assertEquals(null, old.appearance.customColors?.background)
+        assertTrue("\"home_and_lock\"" in codec.encode(Settings()), "target uses a stable serial name")
     }
 
     @Test

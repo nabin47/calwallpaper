@@ -4,6 +4,7 @@ import io.github.nabin47.calwallpaper.core.OpenTarget
 import io.github.nabin47.calwallpaper.core.SourceId
 import io.github.nabin47.calwallpaper.core.time.DateRange
 import io.github.nabin47.calwallpaper.domain.settings.LayoutPreset
+import io.github.nabin47.calwallpaper.domain.settings.PalettePreset
 import io.github.nabin47.calwallpaper.domain.settings.PrivacyMode
 import io.github.nabin47.calwallpaper.domain.settings.VerticalPosition
 import io.github.nabin47.calwallpaper.render.Fixtures.LONG_TITLE
@@ -14,6 +15,7 @@ import io.github.nabin47.calwallpaper.render.Fixtures.today
 import io.github.nabin47.calwallpaper.render.Fixtures.week
 import io.github.nabin47.calwallpaper.render.format.EnglishRenderStrings
 import io.github.nabin47.calwallpaper.render.text.ELLIPSIS
+import io.github.nabin47.calwallpaper.render.theme.Palette
 import io.github.nabin47.calwallpaper.render.theme.alphaOf
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
@@ -220,6 +222,13 @@ class LayoutEngineTest {
             LocalDate(2026, 10, 17),
             LayoutEngine.requiredRange(settings(LayoutPreset.WEEK_STRIP), today, DayOfWeek.SATURDAY).start,
         )
+    }
+
+    @Test
+    fun sceneBackgroundComesFromThePalette() {
+        val base = settings(LayoutPreset.AGENDA)
+        val light = base.copy(appearance = base.appearance.copy(palette = PalettePreset.CALM_LIGHT))
+        assertEquals(Palette.CALM_LIGHT.background, layout(light).background)
     }
 
     @Test

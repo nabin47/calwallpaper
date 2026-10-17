@@ -6,11 +6,13 @@ Persistence and agenda sources.
   - `calendar/`:
     - `CalendarProviderSource`: Android Calendar Provider, with a `ContentObserver` and no polling. Needs `READ_CALENDAR`.
     - `CalendarInstanceRow` and its pure mapper.
+    - `DeviceCalendars`: the list of visible calendars, for per-calendar selection in settings.
   - `local/`:
     - `LocalTasksSource` (read).
     - `LocalTasks` (quick-add, complete, delete).
     - `LocalTasksDatabase` (Room 3) and `LocalTasksDatabaseFactory`.
-  - `settings/`: `DataStoreSettingsRepository`, stored in device-protected storage for Direct Boot.
+  - `settings/`: `DataStoreSettingsRepository`, stored in device-protected storage for Direct Boot and opened with
+    `MultiProcessDataStoreFactory`, so the app and the `:wallpaper` process see each other's changes (ADR 0004).
 - **Depends on:** `core`, `domain`, Room 3 (KSP), `androidx.sqlite` (platform driver), DataStore.
 - **Build:**
   - KMP with an Android target (`com.android.kotlin.multiplatform.library`, `kotlin { android { } }`).

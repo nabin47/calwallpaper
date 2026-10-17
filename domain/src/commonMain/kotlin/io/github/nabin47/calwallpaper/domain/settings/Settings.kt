@@ -11,6 +11,9 @@ import kotlinx.serialization.Serializable
  * Values from storage or imports may be out of range; call [normalized] (the codec and repository do) before
  * rendering. Adding a field with a default is backward compatible; renaming or changing meaning needs a
  * [SettingsMigration] and a bump of [SettingsCodec.CURRENT_VERSION].
+ *
+ * @property staticTarget which screens the static (battery mode) image is applied to. The live wallpaper's
+ *   screens are chosen in the system's wallpaper picker instead, because apps cannot set them.
  */
 @Serializable
 data class Settings(
@@ -20,6 +23,7 @@ data class Settings(
     val time: TimeSettings = TimeSettings(),
     val privacyMode: PrivacyMode = PrivacyMode.WHEN_LOCKED,
     val batteryMode: BatteryMode = BatteryMode.LIVE,
+    val staticTarget: WallpaperTarget = WallpaperTarget.HOME_AND_LOCK,
 ) {
     /** A copy with every value clamped into its valid range; non-finite numbers revert to defaults. */
     fun normalized(): Settings =
@@ -80,12 +84,17 @@ data class AppearanceSettings(
     }
 }
 
-/** The user's own colors for [PalettePreset.CUSTOM]. */
+/**
+ * The user's own colors for [PalettePreset.CUSTOM].
+ *
+ * @property background fills the wallpaper behind the panel; `null` picks a dark or light default from [panel].
+ */
 @Serializable
 data class CustomColors(
     val panel: ArgbColor,
     val text: ArgbColor,
     val accent: ArgbColor,
+    val background: ArgbColor? = null,
 )
 
 /**
