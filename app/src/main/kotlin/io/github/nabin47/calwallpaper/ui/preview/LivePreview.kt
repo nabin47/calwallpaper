@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.withScale
 import io.github.nabin47.calwallpaper.render.LayoutEngine
 import io.github.nabin47.calwallpaper.render.RenderRequest
 import io.github.nabin47.calwallpaper.wallpaper.render.AndroidTextMeasurer
@@ -41,13 +42,11 @@ fun LivePreview(
                 .semantics { contentDescription = description },
     ) {
         drawIntoCanvas { canvas ->
-            val native = canvas.nativeCanvas
             val scale = size.width / scene.widthPx
-            native.save()
-            native.scale(scale, scale)
-            native.drawColor(scene.background)
-            renderer.draw(native, scene)
-            native.restore()
+            canvas.nativeCanvas.withScale(scale, scale) {
+                drawColor(scene.background)
+                renderer.draw(this, scene)
+            }
         }
     }
 }
