@@ -84,12 +84,13 @@ jobs:
             echo "### ✅ CI passed"
             echo
             echo "Debug APK: see **Artifacts** → \`calwallpaper-debug-apk\` on this run."
+            echo
             echo "| APK | Size (bytes) |"
             echo "|---|---|"
             for apk in app/build/outputs/apk/debug/*.apk app/build/outputs/apk/release/*.apk; do
               echo "| \`$(basename "$apk")\` | $(stat -c %s "$apk") |"
             done
-          } >> "$GITHUB_STEP_SUMMARY"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Build failure report
         if: failure()
