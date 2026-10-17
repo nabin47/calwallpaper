@@ -13,6 +13,12 @@ enum class RedrawReason {
 
     /** Date, time or time zone changed. */
     TIME_CHANGED,
+
+    /** The device was locked or unlocked: privacy mode may hide or show titles. */
+    LOCK_STATE_CHANGED,
+
+    /** Font size, language or dark theme changed. */
+    CONFIGURATION_CHANGED,
 }
 
 /**

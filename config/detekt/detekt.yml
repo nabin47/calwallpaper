@@ -18,3 +18,14 @@ style:
   MagicNumber:
     excludes: ['**/test/**', '**/commonTest/**', '**/jvmTest/**', '**/androidHostTest/**', '**/androidUnitTest/**', '**/androidTest/**', '**/*.kts']
     ignoreAnnotated: ['Composable']
+
+complexity:
+  TooManyFunctions:
+    # Framework callbacks (WallpaperService.Engine, BroadcastReceiver, JobService) are dictated by Android.
+    ignoreOverridden: true
+  LongMethod:
+    # Compose UI reads top to bottom; splitting a screen into tiny functions hurts more than it helps.
+    ignoreAnnotated: ['Composable']
+  LongParameterList:
+    # Composables take state and callbacks as parameters by design (state hoisting).
+    ignoreAnnotated: ['Composable']

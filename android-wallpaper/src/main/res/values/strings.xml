@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Live wallpaper picker. -->
+    <string name="wallpaper_label">CalWallpaper</string>
+    <string name="wallpaper_description">Your calendar and tasks on the home and lock screen.</string>
+
+    <!-- Words drawn on the wallpaper (render module's RenderStrings). -->
+    <string name="render_today">Today</string>
+    <string name="render_tomorrow">Tomorrow</string>
+    <string name="render_all_day">All day</string>
+    <string name="render_continues">Cont.</string>
+    <string name="render_hidden_title">Busy</string>
+    <string name="render_empty_agenda">Nothing scheduled</string>
+    <string name="render_empty_week">Nothing this week</string>
+    <string name="render_empty_month">Nothing this month</string>
+    <string name="render_all_clear">All clear</string>
+    <string name="render_nothing_upcoming">Nothing coming up</string>
+    <string name="render_am">AM</string>
+    <string name="render_pm">PM</string>
+    <plurals name="render_more">
+        <item quantity="one">+%d more</item>
+        <item quantity="other">+%d more</item>
+    </plurals>
+    <plurals name="render_item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+</resources>
