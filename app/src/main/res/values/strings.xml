@@ -32,7 +32,10 @@
     <string name="summary_privacy_when_locked">Titles hidden when locked</string>
     <string name="summary_privacy_always">Titles always hidden</string>
     <string name="summary_nothing">Nothing selected</string>
-    <string name="summary_days">%1$d days</string>
+    <plurals name="summary_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
     <string name="summary_week_start">Week starts: %1$s</string>
     <string name="summary_clock_system">System time format</string>
     <string name="summary_mode_live">Live wallpaper</string>
@@ -128,7 +131,7 @@
     <string name="text_size_hint">On top of your phone\'s font size.</string>
     <string name="text_opacity">Text opacity</string>
     <string name="panel_opacity">Panel opacity</string>
-    <string name="panel_opacity_hint">The card behind the text. 0% shows the text straight on the background.</string>
+    <string name="panel_opacity_hint">The card behind the text. Slide it all the way down to put the text straight on the background.</string>
     <string name="corner_radius">Corner radius</string>
     <string name="spacing_label">Spacing</string>
     <string name="spacing_compact">Compact</string>

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.nabin47.calwallpaper.R
@@ -143,7 +144,7 @@ private fun sourcesSummary(s: Settings): String {
             stringResource(R.string.source_todoist).takeIf { SourceId.TODOIST in s.content.enabledSources },
         )
     val shown = if (sources.isEmpty()) stringResource(R.string.summary_nothing) else sources.joinToString(", ")
-    return joined(shown, stringResource(R.string.summary_days, s.content.daysAhead))
+    return joined(shown, pluralStringResource(R.plurals.summary_days, s.content.daysAhead, s.content.daysAhead))
 }
 
 @Composable
