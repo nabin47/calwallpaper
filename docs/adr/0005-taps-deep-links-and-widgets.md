@@ -75,8 +75,10 @@ home-screen wallpaper and adds widgets, the interactive surface that always work
 
   `InstalledWidgets` finds this app's placed widgets through `AppWidgetManager` without naming their classes. It
   redraws them with the same explicit `APPWIDGET_UPDATE` broadcast the system sends. The app also redraws them after
-  a settings change (debounced) and when calendar access changes. Widget providers re-sync the triggers in
-  `onEnabled` and `onDisabled`. The static-mode class names stay, because Android stores a component's enabled
+  a settings change (debounced) and when calendar access changes. A widget provider's `onEnabled` turns
+  the triggers on synchronously, because nothing needs to be read, so the process can end right after. Its
+  `onDisabled` re-syncs in the background. That is best effort, so the job and receiver re-sync on every run as
+  well: triggers that are no longer needed switch themselves off at their next run. The static-mode class names stay, because Android stores a component's enabled
   state under its class name.
 - **Accessibility.** `HitRegion` gained a `label` (the day name, or time and title), which widgets expose as each tap
   area's content description. With privacy mode hiding titles, labels hide them too (tested).

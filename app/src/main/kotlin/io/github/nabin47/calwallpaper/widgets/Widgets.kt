@@ -22,12 +22,12 @@ class WeekWidget : SceneGlanceWidget(WidgetKind.WEEK) {
 abstract class CalWidgetReceiver : GlanceAppWidgetReceiver() {
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
-        StaticModeScheduler(context).onWidgetsChanged()
+        StaticModeScheduler(context).onWidgetAdded()
     }
 
     override fun onDisabled(context: Context) {
         super.onDisabled(context)
-        StaticModeScheduler(context).onWidgetsChanged()
+        StaticModeScheduler(context).onWidgetRemoved()
     }
 }
 

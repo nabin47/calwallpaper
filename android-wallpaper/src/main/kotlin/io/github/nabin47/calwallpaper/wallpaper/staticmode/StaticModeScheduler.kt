@@ -26,7 +26,8 @@ import kotlin.time.Clock
  * The classes keep their static-mode names, under which Android stores their enabled state (ADR 0005).
  *
  * Content-trigger jobs cannot survive a reboot, so [StaticRefreshReceiver] calls [sync] after boot
- * (`RECEIVE_BOOT_COMPLETED`, ADR 0004). Idempotent; call from any thread.
+ * (`RECEIVE_BOOT_COMPLETED`, ADR 0004). The receiver and [StaticRefreshJobService] re-sync on every run, so
+ * triggers that are no longer needed switch themselves off. Idempotent; call from any thread.
  */
 class StaticModeScheduler(
     context: Context,
@@ -36,24 +37,35 @@ class StaticModeScheduler(
 
     /** Enables or disables the refresh triggers for [settings] and the widgets currently placed. */
     fun sync(settings: Settings) {
-        if (settings.batteryMode == BatteryMode.STATIC || widgets.any()) {
-            setComponentsEnabled(true)
-            scheduleCalendarJob()
-            scheduleMidnightAlarm()
-        } else {
-            appContext.getSystemService(JobScheduler::class.java)?.cancel(CALENDAR_JOB_ID)
-            appContext.getSystemService(AlarmManager::class.java)?.cancel(midnightIntent())
-            setComponentsEnabled(false)
-        }
+        if (settings.batteryMode == BatteryMode.STATIC || widgets.any()) enable() else disable()
     }
 
     /**
-     * Re-syncs after a widget was added or the last one removed, reading the stored settings in the background.
-     * For widget providers' `onEnabled` and `onDisabled`.
+     * A widget was placed: the triggers are needed whatever the settings say, so they are enabled right away,
+     * synchronously, within the widget provider's `onEnabled`.
      */
-    fun onWidgetsChanged() {
+    fun onWidgetAdded() = enable()
+
+    /**
+     * The last widget of a kind was removed. Whether the triggers are still needed depends on the stored settings,
+     * which are read in the background. Best effort: if the process dies first, the next trigger run re-syncs and
+     * switches itself off.
+     */
+    fun onWidgetRemoved() {
         val graph = WallpaperGraph.get(appContext)
         graph.processScope.launch { sync(graph.settings.settings.first()) }
+    }
+
+    private fun enable() {
+        setComponentsEnabled(true)
+        scheduleCalendarJob()
+        scheduleMidnightAlarm()
+    }
+
+    private fun disable() {
+        appContext.getSystemService(JobScheduler::class.java)?.cancel(CALENDAR_JOB_ID)
+        appContext.getSystemService(AlarmManager::class.java)?.cancel(midnightIntent())
+        setComponentsEnabled(false)
     }
 
     /** (Re)schedules the job that runs after the Calendar Provider reports a change. */
