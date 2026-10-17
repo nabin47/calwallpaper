@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import io.github.nabin47.calwallpaper.R
 
 /**
- * A titled group of rows on a rounded surface, the Material 3 Expressive way of grouping a list: rows are
+ * A titled group of rows on a rounded surface, in the style of Material 3 Expressive lists: rows are
  * separated by small gaps instead of dividers.
  */
 @Composable

@@ -1,4 +1,4 @@
-# ADR 0009: App UX, navigation and Material 3 Expressive
+# ADR 0009: App UX, navigation and Material 3 design
 
 - Status: accepted
 - Date: 2026-10-17
@@ -37,13 +37,19 @@ choosing options seemed to do nothing. The app was one long settings list under 
   - Keys are `@Serializable` (`ui/navigation/Route`), so the back stack survives process death.
   - `NavDisplay` gives the system's predictive back gesture and transitions.
   - It replaces hand-rolled navigation and adds no network or tracking component.
-- **Material 3 Expressive.**
-  - `MaterialExpressiveTheme` with `MotionScheme.expressive()`.
-  - Large flexible top app bars on pages without a preview.
-  - Tonal icon containers, grouped list surfaces with gaps instead of dividers, and rounded cards.
+- **Material 3 (Material You), styled the Expressive way.**
+  - Material 3 1.4.0 is the latest stable release (Compose BOM 2026.09.00). In it, the Expressive APIs
+    (`MaterialExpressiveTheme`, `MotionScheme.expressive()`, the flexible app bars) are **internal**, so an app
+    cannot call them. Only the 1.5.0 pre-releases expose them, and CLAUDE.md §3 allows stable versions only. The
+    first CI build failed on exactly this.
+  - So the app uses the stable components and the Expressive visual language:
+    - tonal icon containers;
+    - grouped list surfaces with gaps instead of dividers;
+    - large rounded cards;
+    - large collapsing app bars;
+    - segmented buttons.
   - Dynamic (Material You) colors on Android 12+, and a navy scheme from the launcher icon below that.
-  - These APIs are still `@ExperimentalMaterial3ExpressiveApi` in Material 3 1.4.0, the latest stable (Compose BOM
-    2026.09.00), so they are opted into explicitly. They are not deprecated.
+  - Switch to `MaterialExpressiveTheme` and its motion scheme once Material 3 1.5.0 is stable.
   - Icons are vector drawables of the Material icons. Material 3 1.4 no longer ships an icon library, and the large
     extended-icons artifact is not worth its size.
 - **Splash screen.** AndroidX SplashScreen 1.2.0 shows the launcher icon on its own color. It stays up only until the
@@ -66,7 +72,7 @@ choosing options seemed to do nothing. The app was one long settings list under 
 ## Consequences
 - **Not checked visually.** The app UI has no screenshot tests (the renderer does). Layout regressions in the UI are
   caught only on the phone. Adding Roborazzi Compose tests for the home screen is a follow-up.
-- **Opted-in experimental APIs.** The Expressive APIs could change in Material 3 1.5. When it is stable, drop the
-  opt-ins as they graduate; most already did in the 1.5.0 pre-releases.
+- **Expressive is a follow-up.** When Material 3 1.5.0 is stable, adopt `MaterialExpressiveTheme`, the expressive
+  motion scheme and the flexible app bars. Dependabot will offer the BOM that carries it.
 - **Generator labels.** The Baseline Profile generator clicks onboarding buttons by their English labels. It was
   updated with them and must be updated again when they change.

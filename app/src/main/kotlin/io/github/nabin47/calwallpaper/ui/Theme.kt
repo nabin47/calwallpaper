@@ -3,9 +3,7 @@ package io.github.nabin47.calwallpaper.ui
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialExpressiveTheme
-import androidx.compose.material3.MotionScheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -15,11 +13,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 /**
- * App theme: Material 3 Expressive (ADR 0009), with its springy motion scheme. Colors are Material You (from the
- * user's wallpaper) on Android 12+, and a calm navy scheme built from the launcher icon's color below that.
- * Follows the system dark mode.
+ * App theme: Material 3 (ADR 0009). Colors are Material You (from the user's wallpaper) on Android 12+, and a
+ * calm navy scheme built from the launcher icon's color below that. Follows the system dark mode. The Expressive
+ * theme and motion scheme are not public in Material 3 1.4.0; switch once 1.5.0 is stable.
  */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CalWallpaperTheme(content: @Composable () -> Unit) {
     val dark = isSystemInDarkTheme()
@@ -30,7 +27,7 @@ fun CalWallpaperTheme(content: @Composable () -> Unit) {
         } else {
             fallbackColors(dark)
         }
-    MaterialExpressiveTheme(colorScheme = colors, motionScheme = MotionScheme.expressive(), content = content)
+    MaterialTheme(colorScheme = colors, content = content)
 }
 
 /** Navy, from the launcher icon (`#1F3A5F`), for Android 8–11 where Material You colors do not exist. */

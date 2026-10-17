@@ -9,11 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
@@ -30,10 +29,10 @@ import io.github.nabin47.calwallpaper.ui.ScreenState
 
 /**
  * A settings page. With a [preview], the preview stays pinned under a compact app bar while the controls scroll
- * below it, so every change is visible as it is made. Without one, a large Material 3 Expressive app bar
- * collapses as the content scrolls. The snackbar host shows the app-wide [ScreenState.snackbar].
+ * below it, so every change is visible as it is made. Without one, a large app bar collapses as the content
+ * scrolls. The snackbar host shows the app-wide [ScreenState.snackbar].
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PageScaffold(
     state: ScreenState,
@@ -61,7 +60,7 @@ fun PageScaffold(
                 }
             }
             if (scrollBehavior != null) {
-                LargeFlexibleTopAppBar(title = { Text(title) }, navigationIcon = back, scrollBehavior = scrollBehavior)
+                LargeTopAppBar(title = { Text(title) }, navigationIcon = back, scrollBehavior = scrollBehavior)
             } else {
                 TopAppBar(title = { Text(title) }, navigationIcon = back)
             }
