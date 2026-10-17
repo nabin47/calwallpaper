@@ -66,6 +66,21 @@ jobs:
           ./gradlew :app:generateBaselineProfile
           -Pandroid.testoptions.manageddevices.emulator.gpu=swiftshader_indirect
 
+      # A profile recorded from an R8-renamed build has names like "La1;" that match nothing in the real release
+      # build. Refuse to commit one: the app's own classes must appear under their real package.
+      - name: Check the profile uses real class names
+        run: |
+          f=app/src/release/generated/baselineProfiles/baseline-prof.txt
+          test -f "$f" || { echo "::error::No profile was generated at $f."; exit 1; }
+          own="$(grep -c 'Lio/github/nabin47/calwallpaper/' "$f" || true)"
+          echo "$(wc -l < "$f") rules, ${own} for the app's own classes."
+          if (( own < MIN_OWN_RULES )); then
+            echo "::error::Only ${own} rules name the app's own classes; the profiled build was probably obfuscated."
+            exit 1
+          fi
+        env:
+          MIN_OWN_RULES: 200
+
       - name: Upload profile and test reports
         if: always()
         uses: actions/upload-artifact@v7
