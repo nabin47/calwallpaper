@@ -10,6 +10,11 @@ val signingEnv =
         .associateWith { providers.environmentVariable(it).orNull.orEmpty() }
 val hasSigningKey = signingEnv.values.all { it.isNotEmpty() }
 
+// Debug signing (ADR 0006): CI signs debug APKs with one fixed debug-only key, decoded from the
+// DEBUG_KEYSTORE_BASE64 secret, so each new build installs over the last. It is never the release key; its
+// passwords are the standard, non-secret debug ones. Without it (forks, local builds) the usual debug key is used.
+val fixedDebugKeystore = providers.environmentVariable("DEBUG_KEYSTORE_PATH").orNull?.takeIf { it.isNotEmpty() }
+
 android {
     namespace = "io.github.nabin47.calwallpaper"
 
@@ -25,6 +30,14 @@ android {
     }
 
     signingConfigs {
+        if (fixedDebugKeystore != null) {
+            create("fixedDebug") {
+                storeFile = file(fixedDebugKeystore)
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
         if (hasSigningKey) {
             create("release") {
                 storeFile = file(signingEnv.getValue("SIGNING_KEYSTORE_PATH"))
@@ -44,6 +57,7 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
+            signingConfigs.findByName("fixedDebug")?.let { signingConfig = it }
         }
     }
 }

@@ -43,7 +43,8 @@ jobs:
           cache-provider: basic
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
-      # No signing secrets here: this job runs PR code. Release signing happens only in release.yml.
+      # No release signing secrets here: this job runs PR code. Release signing happens only in release.yml.
+      # The one secret this job sees is the debug-only key, and only in "Assemble debug APK" (ADR 0006).
       - name: Spotless
         run: .github/scripts/run-step.sh "Spotless" ./gradlew spotlessCheck
 
@@ -63,7 +64,11 @@ jobs:
         run: .github/scripts/run-step.sh "Room schema is committed" .github/scripts/check-room-schemas.sh
 
       - name: Assemble debug APK
-        run: .github/scripts/run-step.sh "Assemble debug APK" ./gradlew :app:assembleDebug
+        env:
+          # A debug-only key (never the release key), so each CI build installs over the last (ADR 0006).
+          # Empty for fork PRs; the build then falls back to a throwaway debug key.
+          DEBUG_KEYSTORE_BASE64: ${{ secrets.DEBUG_KEYSTORE_BASE64 }}
+        run: .github/scripts/run-step.sh "Assemble debug APK" .github/scripts/assemble-debug.sh
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v7

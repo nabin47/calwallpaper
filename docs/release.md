@@ -49,9 +49,18 @@ Open the release page on the phone, download the `.apk`, and allow "Install unkn
 when asked. Debug builds from PR CI install side by side, as **CalWallpaper Debug** (`….debug`).
 
 ## Debug APK signing
-PR CI runs code from the PR, so it gets **no** signing secrets. Debug APKs are signed with the runner's
-throwaway debug key, which changes between runs: **uninstall the previous "CalWallpaper Debug"** before
-installing a newer debug APK. Release APKs always use the release key and update in place.
+CI signs debug APKs with one fixed, **debug-only** key, so each new "CalWallpaper Debug" installs over the
+previous one (ADR 0006). The key is the repository secret `DEBUG_KEYSTORE_BASE64`. It is a base64-encoded PKCS12
+keystore with alias `androiddebugkey` and the standard debug password `android`. It is never the release key,
+and only the "Assemble debug APK" step receives it.
+
+- **Without the secret** (fork PRs, or before it is added), the APK uses the runner's throwaway debug key. The step
+  warns about it, and installing that APK over another needs an uninstall first.
+- **When switching keys** (the first fixed-key build after throwaway ones, or after replacing the key), uninstall
+  "CalWallpaper Debug" once.
+- **Replacing the key:** generate a new PKCS12 keystore with the same alias and password, then update the secret.
+
+Release APKs always use the release key and update in place.
 
 ## Release size
 The job summary of each release run lists the APK and AAB sizes. Record them in `docs/performance.md`.
