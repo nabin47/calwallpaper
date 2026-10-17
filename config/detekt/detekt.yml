@@ -1,0 +1,20 @@
+# Overrides on top of detekt's default config (buildUponDefaultConfig = true).
+# Test excludes include KMP/Android host-test source sets.
+
+comments:
+  UndocumentedPublicClass:
+    active: true
+    excludes: &testDirs ['**/test/**', '**/commonTest/**', '**/jvmTest/**', '**/androidHostTest/**', '**/androidUnitTest/**', '**/androidTest/**', '**/androidInstrumentedTest/**', '**/iosTest/**']
+  UndocumentedPublicFunction:
+    active: true
+    excludes: *testDirs
+
+naming:
+  FunctionNaming:
+    excludes: *testDirs
+    ignoreAnnotated: ['Composable']
+
+style:
+  MagicNumber:
+    excludes: ['**/test/**', '**/commonTest/**', '**/jvmTest/**', '**/androidHostTest/**', '**/androidUnitTest/**', '**/androidTest/**', '**/*.kts']
+    ignoreAnnotated: ['Composable']

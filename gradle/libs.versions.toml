@@ -1,0 +1,32 @@
+# Versions verified on 2026-10-16. See PLAN.md §3 for sources. Dependabot keeps them current.
+[versions]
+agp = "9.4.0"
+kotlin = "2.4.21"
+spotless = "8.10.4"
+ktlint = "1.8.0"
+detekt = "2.0.0-alpha.6"
+composeBom = "2026.09.00"
+activity = "1.13.0"
+junit4 = "4.13.2"
+
+# Android SDK levels (read by build-logic and module scripts).
+android-compileSdk = "37"
+android-targetSdk = "37"
+android-minSdk = "26"
+
+[libraries]
+# Build-logic only (Gradle plugins on the convention classpath).
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+spotless-gradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+detekt-gradlePlugin = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+
+# App dependencies.
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+
+# Tests.
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+junit4 = { module = "junit:junit", version.ref = "junit4" }

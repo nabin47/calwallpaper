@@ -1,10 +1,10 @@
-# CLAUDE.md — {APP_NAME}
+# CLAUDE.md — CalWallpaper
 
 Persistent project rules. Read this fully before every task. Keep it updated when decisions change.
 
 ## 1. Product
 
-{APP_NAME} is an Android app that renders the user's calendar events and tasks onto the **home and lock-screen wallpaper** (live wallpaper, plus a battery-saver static mode) and also ships **Glance home-screen widgets**. Tapping a day or an item opens the matching page in the source app (Google Calendar, Todoist, etc.) where the platform allows it. iOS comes later; Google Play release is planned.
+CalWallpaper is an Android app that renders the user's calendar events and tasks onto the **home and lock-screen wallpaper** (live wallpaper, plus a battery-saver static mode) and also ships **Glance home-screen widgets**. Tapping a day or an item opens the matching page in the source app (Google Calendar, Todoist, etc.) where the platform allows it. iOS comes later; Google Play release is planned.
 
 Design: minimal, modern, calm. Typography and spacing do the work; no clutter, no gradients-for-the-sake-of-it.
 
@@ -21,13 +21,15 @@ Design: minimal, modern, calm. Typography and spacing do the work; no clutter, n
 
 - **Kotlin Multiplatform** for shared logic; **native Android** for wallpaper service and widgets. No Flutter or React Native (engine overhead contradicts the RAM goal).
 - Kotlin (latest stable), coroutines + Flow, kotlinx.serialization, kotlinx.datetime.
-- Persistence: Room (KMP) with KSP, and DataStore for settings. No `kapt`.
+- Persistence: Room 3 (`androidx.room3`, KMP) with KSP, and DataStore for settings. No `kapt`. (ADR 0001)
 - Networking: Ktor client (OkHttp engine on Android).
 - Settings UI: Jetpack Compose (Material 3). **The wallpaper process must not load Compose.**
 - Widgets: Jetpack Glance.
-- DI: Koin or manual constructor injection. Pick the lighter option and record it in an ADR. No reflection-heavy setup in the wallpaper path.
+- DI: manual constructor injection (decided in ADR 0001; no Koin). No reflection-heavy setup in the wallpaper path.
 - Build: Gradle Kotlin DSL, version catalog (`libs.versions.toml`), convention plugins in `build-logic/`, R8 full mode, resource shrinking.
-- `minSdk` 26. `targetSdk`/`compileSdk` = latest stable level required by Google Play at build time. Verify, do not assume.
+- `minSdk` 26. `targetSdk`/`compileSdk` = latest stable level required by Google Play at build time. Verify, do not assume. (2026-10: 37; Play requires ≥ 36.)
+- Identity: app name **CalWallpaper**, `applicationId` **`io.github.nabin47.calwallpaper`** (permanent), license Apache-2.0.
+- Lint tooling exception: detekt is pinned to a 2.0 alpha because no stable detekt supports Kotlin 2.4 (ADR 0001). Move to stable when released.
 
 **Dependency rule:** before adding any library or plugin, check its latest stable version and deprecation status on Maven Central / official docs (use web search). Never pin from memory. Never use deprecated or archived libraries or APIs, for example: `kapt`, `AsyncTask`, `EncryptedSharedPreferences`/`security-crypto` (deprecated), Gson, `startActivityForResult`, `onBackPressed`, `LiveData` in new code, `SharedPreferences` for new settings, `jcenter`. Fix deprecation warnings; do not suppress them. Treat warnings as errors in CI.
 

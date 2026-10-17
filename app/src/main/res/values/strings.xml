@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CalWallpaper</string>
+    <string name="hello_subtitle">Your calendar and tasks, on your wallpaper.</string>
+    <string name="version_label">Version %1$s</string>
+</resources>

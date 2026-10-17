@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed-icon variant: only alpha is used, so the agenda lines are cut out of the page (evenOdd). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M38,38h32a4,4 0,0 1,4 4v30a4,4 0,0 1,-4 4h-32a4,4 0,0 1,-4 -4v-30a4,4 0,0 1,4 -4zM40,50h28v4h-28zM40,58h20v4h-20zM40,66h24v4h-24z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M43,33h4v9h-4zM61,33h4v9h-4z" />
+</vector>

@@ -1,0 +1,9 @@
+CalWallpaper draws your calendar events and tasks on your home and lock-screen wallpaper, calmly and legibly.
+
+• Works with any calendar synced to your phone, including Google Calendar
+• Local tasks and Todoist
+• Home-screen widgets that open the right day or task
+• Privacy mode hides titles while your phone is locked
+• Layout presets that keep clear of the lock-screen clock
+• No account, no ads, no analytics. Your data stays on your device
+• Light on battery: redraws only when something changes
