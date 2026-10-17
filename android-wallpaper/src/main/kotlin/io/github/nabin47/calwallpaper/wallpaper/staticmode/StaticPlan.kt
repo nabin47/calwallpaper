@@ -1,5 +1,6 @@
 package io.github.nabin47.calwallpaper.wallpaper.staticmode
 
+import io.github.nabin47.calwallpaper.domain.settings.LayoutSettings
 import io.github.nabin47.calwallpaper.domain.settings.PrivacyMode
 import io.github.nabin47.calwallpaper.domain.settings.WallpaperTarget
 import kotlinx.datetime.DateTimeUnit
@@ -32,12 +33,14 @@ data class StaticImage(
 /** Pure planning for static (battery) mode. */
 object StaticPlan {
     /**
-     * The images for [target]. Home and lock share one image when they would look the same (privacy mode off or
-     * always on); otherwise each screen gets its own, because privacy mode hides titles only while locked.
+     * The images for [target]. Home and lock share one image only when they would look the same: the same
+     * placement in [layout], and privacy mode off or always on. Otherwise each screen gets its own, because
+     * the lock screen has its own placement and privacy mode can hide titles only while locked.
      */
     fun images(
         target: WallpaperTarget,
         privacy: PrivacyMode,
+        layout: LayoutSettings,
     ): List<StaticImage> =
         when (target) {
             WallpaperTarget.HOME -> {
@@ -49,7 +52,8 @@ object StaticPlan {
             }
 
             WallpaperTarget.HOME_AND_LOCK -> {
-                if (privacy == PrivacyMode.WHEN_LOCKED) {
+                val samePlacement = layout.placementFor(locked = false) == layout.placementFor(locked = true)
+                if (privacy == PrivacyMode.WHEN_LOCKED || !samePlacement) {
                     listOf(
                         StaticImage(locked = false, screens = setOf(Screen.HOME)),
                         StaticImage(locked = true, screens = setOf(Screen.LOCK)),

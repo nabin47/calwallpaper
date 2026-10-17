@@ -44,8 +44,9 @@ Phase 3 puts the Scene on the real wallpaper. The constraints:
   privacy mode is **off**. With privacy on, the phone is always locked before the first unlock, so titles would be hidden
   anyway. Caches live under `wallpaper/` and are excluded from backups.
 - **Static battery mode** runs in the main process:
-  - **Rendering.** `StaticWallpaperUpdater` lays out the same Scene and calls `WallpaperManager.setBitmap`. Home and lock get
-    separate images when privacy mode is "when locked", one shared image otherwise.
+  - **Rendering.** `StaticWallpaperUpdater` lays out the same Scene and calls `WallpaperManager.setBitmap`. Home and lock
+    share one image only when they look the same: the same placement, and privacy mode off or always on. Otherwise
+    (privacy "when locked", or a separate lock-screen placement, the default) each screen gets its own image.
   - **No needless updates.** A SHA-256 digest of the scenes is stored, never the scenes, and an unchanged picture skips
     `setBitmap`.
   - **Triggers** (no polling, no exact alarms):
