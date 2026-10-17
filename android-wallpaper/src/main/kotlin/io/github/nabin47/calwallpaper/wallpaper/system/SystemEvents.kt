@@ -43,7 +43,16 @@ class SystemEvents(
     /** Starts listening. Idempotent. */
     fun register() {
         if (registered) return
-        val filter = IntentFilter().apply { ACTIONS.keys.forEach(::addAction) }
+        // Listed one by one (not from ACTIONS) so Android Lint can see they are all protected system broadcasts.
+        val filter =
+            IntentFilter().apply {
+                addAction(Intent.ACTION_DATE_CHANGED)
+                addAction(Intent.ACTION_TIME_CHANGED)
+                addAction(Intent.ACTION_TIMEZONE_CHANGED)
+                addAction(Intent.ACTION_USER_PRESENT)
+                addAction(Intent.ACTION_SCREEN_ON)
+                addAction(Intent.ACTION_USER_UNLOCKED)
+            }
         // All of these are protected system broadcasts, so a not-exported receiver still gets them.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             appContext.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED)
