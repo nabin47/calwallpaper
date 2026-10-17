@@ -1,6 +1,5 @@
 package io.github.nabin47.calwallpaper.wallpaper
 
-import android.annotation.TargetApi
 import android.app.WallpaperColors
 import android.content.res.Configuration
 import android.graphics.Canvas
@@ -8,6 +7,7 @@ import android.graphics.Color
 import android.os.Build
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
+import androidx.annotation.RequiresApi
 import io.github.nabin47.calwallpaper.core.AgendaItem
 import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.render.RenderRequest
@@ -131,7 +131,7 @@ class AgendaWallpaperService : WallpaperService() {
             super.onSurfaceDestroyed(holder)
         }
 
-        @TargetApi(Build.VERSION_CODES.O_MR1)
+        @RequiresApi(Build.VERSION_CODES.O_MR1)
         override fun onComputeColors(): WallpaperColors? =
             colorsBackground?.let { WallpaperColors(Color.valueOf(it), null, null) }
 

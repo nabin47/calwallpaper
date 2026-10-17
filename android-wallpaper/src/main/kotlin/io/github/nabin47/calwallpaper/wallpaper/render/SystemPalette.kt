@@ -1,9 +1,9 @@
 package io.github.nabin47.calwallpaper.wallpaper.render
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
+import androidx.annotation.RequiresApi
 import io.github.nabin47.calwallpaper.render.theme.Palette
 
 /**
@@ -13,14 +13,14 @@ import io.github.nabin47.calwallpaper.render.theme.Palette
  */
 object SystemPalette {
     /** The current dynamic palette. */
-    @TargetApi(Build.VERSION_CODES.S)
+    @RequiresApi(Build.VERSION_CODES.S)
     fun read(context: Context): Palette {
         val uiMode = context.resources.configuration.uiMode
         val night = (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
         return if (night) dark(context) else light(context)
     }
 
-    @TargetApi(Build.VERSION_CODES.S)
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun dark(context: Context): Palette =
         Palette(
             panel = context.getColor(android.R.color.system_neutral1_900),
@@ -32,7 +32,7 @@ object SystemPalette {
             background = context.getColor(android.R.color.system_accent2_800),
         )
 
-    @TargetApi(Build.VERSION_CODES.S)
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun light(context: Context): Palette =
         Palette(
             panel = context.getColor(android.R.color.system_neutral1_10),

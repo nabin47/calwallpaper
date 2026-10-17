@@ -17,6 +17,7 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.annotation)
     // LocalTasksDatabase (from :data) is a Room type; its class must be on this module's compile classpath.
     implementation(libs.androidx.room3.runtime)
 }
