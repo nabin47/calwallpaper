@@ -62,10 +62,14 @@ data class Bounds(
     ): Boolean = x >= left && x < right && y >= top && y < bottom
 }
 
-/** A tappable area that opens [target]. */
+/**
+ * A tappable area that opens [target]. [label] says what it opens, for accessibility (widgets expose it as the
+ * content description); it is user content when it contains a title, so never log it.
+ */
 data class HitRegion(
     val bounds: Bounds,
     val target: OpenTarget,
+    val label: String = "",
 )
 
 /** One drawing instruction. Colors are `0xAARRGGBB` with any opacity setting already applied. */

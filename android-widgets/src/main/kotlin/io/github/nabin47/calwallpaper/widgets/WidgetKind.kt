@@ -1,15 +1,19 @@
 package io.github.nabin47.calwallpaper.widgets
 
+import io.github.nabin47.calwallpaper.domain.settings.LayoutPreset
+
 /**
- * Home-screen widgets the app will offer (Glance, Phase 5). [layoutKey] names the Scene layout preset
- * each widget renders, so widgets reuse the wallpaper's layout engine.
+ * The home-screen widgets the app offers. Each renders one Scene layout [preset] with the user's appearance and
+ * content settings, so widgets reuse the wallpaper's layout engine (CLAUDE.md §4). [label] is the string
+ * resource that names it, for accessibility.
  */
 enum class WidgetKind(
-    val layoutKey: String,
+    val preset: LayoutPreset,
+    val label: Int,
 ) {
-    /** Scrollable agenda list. */
-    AGENDA("agenda"),
+    /** A small agenda: day headers and items. */
+    AGENDA(LayoutPreset.AGENDA, R.string.widget_agenda_name),
 
-    /** Next three items, minimal. */
-    NEXT_THREE("next3"),
+    /** The current week as a strip of days with items beneath. */
+    WEEK(LayoutPreset.WEEK_STRIP, R.string.widget_week_name),
 }

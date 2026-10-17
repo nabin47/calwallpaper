@@ -59,12 +59,14 @@ app ──────────────┬─► android-wallpaper ─┐
    JSON import/export. See ADR 0002.
 2. **Render**: done. The Scene and the layout engine with all four presets, privacy and safe zones; the Android
    Canvas renderer and Roborazzi screenshot tests. See ADR 0003.
-3. **Wallpaper + app** (current): the WallpaperService in its own process with event-driven redraws, one cached
+3. **Wallpaper + app**: done. The WallpaperService in its own process with event-driven redraws, one cached
    bitmap, the Direct Boot cache and lock-state privacy; static battery mode; onboarding with the calendar
    rationale; settings for every §6 option with a live preview; the set-as-wallpaper flow; on-device performance
    numbers. See ADR 0004.
-4. Local task list UI (minimal list and quick-add), with cross-process invalidation for the wallpaper.
-5. Glance widgets and deep links (`OpenTarget`).
+4. **Taps, deep links and widgets** (current; the owner moved it ahead of the task list): wallpaper tap
+   hit-testing, the `OpenTarget` router with web fallbacks and `<queries>`, and the Agenda and Week Glance widgets
+   on the Scene pipeline. See ADR 0005 and `docs/testing-taps.md`.
+5. Local task list UI (minimal list and quick-add), with cross-process invalidation for the wallpaper.
 6. Todoist (encrypted token) and WorkManager sync.
 7. Remaining presets and customization, Baseline Profile, performance doc, Play readiness.
 

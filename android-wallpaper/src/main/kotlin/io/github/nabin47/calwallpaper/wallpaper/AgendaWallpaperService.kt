@@ -1,14 +1,21 @@
 package io.github.nabin47.calwallpaper.wallpaper
 
 import android.app.WallpaperColors
+import android.app.WallpaperManager
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
 import io.github.nabin47.calwallpaper.core.AgendaItem
+import io.github.nabin47.calwallpaper.core.OpenTarget
+import io.github.nabin47.calwallpaper.core.OpenTargetLink
 import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.render.RenderRequest
 import io.github.nabin47.calwallpaper.wallpaper.feed.FeedKey
@@ -39,6 +46,10 @@ import kotlin.time.Clock
  * Draws only when something changed (CLAUDE.md §5): becoming visible, new agenda data, new settings, a date,
  * time or time-zone change, a lock-state change (privacy mode) or a configuration change. There are no timers,
  * no animation and no foreground service; while invisible it draws nothing and holds no bitmap.
+ *
+ * Taps: launchers that support it report taps on empty home-screen space as [WallpaperManager.COMMAND_TAP]. The
+ * engine hit-tests the drawn [io.github.nabin47.calwallpaper.render.Scene] and hands the target to the app's
+ * router activity (ADR 0005).
  */
 class AgendaWallpaperService : WallpaperService() {
     private val engines = mutableSetOf<AgendaEngine>()
@@ -71,7 +82,7 @@ class AgendaWallpaperService : WallpaperService() {
 
         override fun onCreate(surfaceHolder: SurfaceHolder) {
             super.onCreate(surfaceHolder)
-            // Taps open items in a later phase; until then the wallpaper ignores touches entirely.
+            // Taps arrive as launcher commands (onCommand), not raw touches, so touch events stay off.
             setTouchEventsEnabled(false)
             events.register()
             scope.launch {
@@ -135,6 +146,18 @@ class AgendaWallpaperService : WallpaperService() {
         override fun onComputeColors(): WallpaperColors? =
             colorsBackground?.let { WallpaperColors(Color.valueOf(it), null, null) }
 
+        override fun onCommand(
+            action: String?,
+            x: Int,
+            y: Int,
+            z: Int,
+            extras: Bundle?,
+            resultRequested: Boolean,
+        ): Bundle? {
+            if (action == WallpaperManager.COMMAND_TAP) onTap(x.toFloat(), y.toFloat())
+            return super.onCommand(action, x, y, z, extras, resultRequested)
+        }
+
         /** Font size, language or dark theme changed: text and dynamic colors may differ. */
         fun onDeviceConfigurationChanged() = onChange(RedrawReason.CONFIGURATION_CHANGED)
 
@@ -152,6 +175,35 @@ class AgendaWallpaperService : WallpaperService() {
                 SystemEvent.USER_UNLOCKED -> {
                     inputs.value = readInputs()
                 }
+            }
+        }
+
+        /**
+         * A tap at ([x], [y]) in screen coordinates, which equal surface coordinates because the wallpaper fills
+         * the screen. Ignored in the picker's preview, while invisible, and while the device is locked (the lock
+         * screen never reports taps, but a launcher on top of a not-yet-dismissed keyguard might).
+         */
+        private fun onTap(
+            x: Float,
+            y: Float,
+        ) {
+            if (isPreview || !visible || graph.deviceState.isLocked()) return
+            frame.currentScene?.hitTest(x, y)?.let(::open)
+        }
+
+        /**
+         * Starts the app's router with [target]. Allowed from the background because the wallpaper's window is
+         * visible: Android exempts apps with a visible non-app window, naming live wallpapers (ADR 0005).
+         */
+        private fun open(target: OpenTarget) {
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(OpenTargetLink.encode(target)))
+                    .setClassName(packageName, OpenTargetLink.ROUTER_CLASS)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                startActivity(intent)
+            } catch (_: ActivityNotFoundException) {
+                // Only possible in a build without the app module (tests); nothing to open.
             }
         }
 

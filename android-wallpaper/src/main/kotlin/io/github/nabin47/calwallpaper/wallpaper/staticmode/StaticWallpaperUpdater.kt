@@ -9,7 +9,7 @@ import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.render.LayoutEngine
 import io.github.nabin47.calwallpaper.render.RenderRequest
 import io.github.nabin47.calwallpaper.wallpaper.WallpaperGraph
-import io.github.nabin47.calwallpaper.wallpaper.feed.FeedKey
+import io.github.nabin47.calwallpaper.wallpaper.feed.currentAgenda
 import io.github.nabin47.calwallpaper.wallpaper.render.AndroidTextMeasurer
 import io.github.nabin47.calwallpaper.wallpaper.render.WallpaperFrame
 import kotlinx.coroutines.Dispatchers
@@ -17,15 +17,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import java.io.File
 import java.io.IOException
 import java.math.BigInteger
 import java.security.MessageDigest
-import kotlin.time.Clock
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * Renders the agenda to a bitmap and sets it as the home and/or lock wallpaper (static battery mode, CLAUDE.md
@@ -64,28 +59,10 @@ class StaticWallpaperUpdater(
                 }
 
                 else -> {
-                    apply(manager, settings, loadItems(settings), force)
+                    apply(manager, settings, graph.currentAgenda(settings), force)
                 }
             }
         }
-
-    private suspend fun loadItems(settings: Settings): List<AgendaItem> {
-        val zone = TimeZone.currentSystemDefault()
-        val key =
-            FeedKey.of(
-                settings = settings,
-                today =
-                    Clock.System
-                        .now()
-                        .toLocalDateTime(zone)
-                        .date,
-                zone = zone,
-                localeFirstDayOfWeek = graph.requestFactory.localeFirstDayOfWeek(),
-                unlocked = true,
-                calendarPermission = graph.deviceState.hasCalendarPermission(),
-            )
-        return withTimeoutOrNull(LOAD_TIMEOUT) { graph.feed.observe(key).first() }.orEmpty()
-    }
 
     private suspend fun apply(
         manager: WallpaperManager,
@@ -154,7 +131,6 @@ class StaticWallpaperUpdater(
 
     private companion object {
         val LOCK = Mutex()
-        val LOAD_TIMEOUT = 10.seconds
         const val DIGEST_ALGORITHM = "SHA-256"
         const val HEX_RADIX = 16
         const val FINGERPRINT_PATH = "wallpaper/static_fingerprint.txt"

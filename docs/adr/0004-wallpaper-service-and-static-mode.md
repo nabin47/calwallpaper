@@ -75,7 +75,7 @@ Phase 3 puts the Scene on the real wallpaper. The constraints:
   cross-process signal, and verify it.
 - **Background.** The wallpaper background is a solid color from the palette. Using the user's own photo would need a photo
   picker (no permission needed) and is left for later.
-- **No taps yet.** Touches are disabled until deep links (`OpenTarget` to Intent) arrive in Phase 5.
+- **Taps.** Raw touches stay disabled. Taps arrive as launcher commands, handled since ADR 0005.
 - **The midnight alarm is inexact.** The static image can update a little after midnight, at the latest when the phone wakes up.
 - **Broadcast exemptions.** `DATE_CHANGED` is *not* exempt from the implicit-broadcast limits, so it is registered only at
   runtime, by the live engine. Static mode uses the midnight alarm instead.

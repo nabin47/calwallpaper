@@ -15,6 +15,45 @@
         android:name="android.software.live_wallpaper"
         android:required="true" />
 
+    <!-- Package visibility (Android 11+) for the deep-link router: lets it check which installed app can open a
+         tap before trying it. Only these intents, never QUERY_ALL_PACKAGES (CLAUDE.md §4). The router still
+         falls back to plain startActivity if a check misses an app. -->
+    <queries>
+        <!-- Calendar apps: a day (time URI) and an event occurrence, as typed by the Calendar Provider, plus
+             apps that filter on the provider's URIs without a type. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data
+                android:host="com.android.calendar"
+                android:scheme="content" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data
+                android:host="com.android.calendar"
+                android:mimeType="time/epoch"
+                android:scheme="content" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data
+                android:host="com.android.calendar"
+                android:mimeType="vnd.android.cursor.item/event"
+                android:scheme="content" />
+        </intent>
+        <!-- The Todoist app's own links. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="todoist" />
+        </intent>
+        <!-- A browser for the web fallbacks. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -34,5 +73,42 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Deep-link router for wallpaper and widget taps (ADR 0005). No UI, not exported: only this app's own
+             wallpaper and widgets reach it, by explicit component (OpenTargetLink.ROUTER_CLASS). Its empty task
+             affinity keeps it out of the settings task. -->
+        <activity
+            android:name=".open.OpenTargetActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay" />
+
+        <!-- Home-screen widgets (ADR 0005). Exported so the launcher and system can update them, as every
+             widget provider must be; they only redraw. -->
+        <receiver
+            android:name=".widgets.AgendaWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_agenda_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_agenda_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widgets.WeekWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_week_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_week_info" />
+        </receiver>
     </application>
 </manifest>

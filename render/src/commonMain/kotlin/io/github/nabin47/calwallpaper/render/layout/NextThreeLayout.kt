@@ -52,7 +52,7 @@ private fun LayoutContext.entryRow(item: AgendaItem): Row {
             text(line, innerLeft, lineTop + ascent(titleStyle), titleStyle, titleColor(item))
             lineTop += lineHeight(titleStyle)
         }
-        region(Bounds(content.left, top, content.right, top + height), item.openTarget)
+        region(Bounds(content.left, top, content.right, top + height), item.openTarget, "$whenText$SEPARATOR$title")
     }
 }
 

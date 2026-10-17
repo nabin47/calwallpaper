@@ -163,6 +163,29 @@ class LayoutEngineTest {
     }
 
     @Test
+    fun everyTapTargetHasALabel() {
+        for (preset in presets) {
+            val scene = layout(settings(preset))
+            assertTrue(scene.hitRegions.isNotEmpty(), "$preset")
+            scene.hitRegions.forEach { assertTrue(it.label.isNotBlank(), "$preset: ${it.target}") }
+        }
+        val agenda = layout(settings(LayoutPreset.AGENDA))
+        assertTrue(agenda.hitRegions.any { it.label.endsWith("Pay electricity bill") })
+        assertTrue(agenda.hitRegions.any { it.label == "Today" })
+    }
+
+    @Test
+    fun hiddenTitlesStayOutOfTapLabels() {
+        for (preset in presets) {
+            val hidden = settings(preset, PrivacyMode.ALWAYS)
+            val labels = layout(hidden).hitRegions.map { it.label }
+            week.forEach { item ->
+                assertTrue(labels.none { it.contains(item.title) }, "$preset leaks a title")
+            }
+        }
+    }
+
+    @Test
     fun emptyStatesShowAMessage() {
         val strings = EnglishRenderStrings
         assertTrue(layout(settings(LayoutPreset.AGENDA), emptyList()).texts().contains(strings.emptyAgenda))

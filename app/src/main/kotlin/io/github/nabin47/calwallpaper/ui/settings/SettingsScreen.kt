@@ -83,7 +83,7 @@ fun SettingsScreen(
     }
     val liveActive = remember(resumeCount) { LiveWallpaper.isActive(context) }
     val report by produceState(PerfReport(), resumeCount) { value = services.graph.diagnostics.read() }
-    RefreshStaticOnPermissionChange(services, settings, permission.granted)
+    RefreshOnPermissionChange(services, settings, permission.granted)
 
     Column(modifier = modifier.fillMaxSize().safeDrawingPadding()) {
         Column(
@@ -150,11 +150,12 @@ private fun SettingsList(
 }
 
 /**
- * Re-applies the battery saver image when calendar access is granted or revoked (in the dialog or in system
- * settings): the content-trigger job only sees calendar data changes, not permission changes.
+ * Re-applies the battery saver image and redraws the widgets when calendar access is granted or revoked (in
+ * the dialog or in system settings): the content-trigger job only sees calendar data changes, not permission
+ * changes.
  */
 @Composable
-private fun RefreshStaticOnPermissionChange(
+private fun RefreshOnPermissionChange(
     services: AppServices,
     settings: Settings,
     granted: Boolean,
@@ -165,6 +166,7 @@ private fun RefreshStaticOnPermissionChange(
         if (granted == lastSeen) return@LaunchedEffect
         lastSeen = granted
         if (currentSettings.batteryMode == BatteryMode.STATIC) services.staticUpdater.refresh()
+        services.widgets.requestUpdate()
     }
 }
 

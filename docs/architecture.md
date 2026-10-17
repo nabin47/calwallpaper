@@ -11,7 +11,7 @@ See CLAUDE.md §4 for the authoritative module list and key ideas. This page tra
 | `render` | KMP (`jvm`) | core, domain | `LayoutEngine` → `Scene` (draw ops + hit regions); 4 presets, privacy, safe zones. |
 | `data` | KMP (Android target) | core, domain | `CalendarProviderSource`, `LocalTasksSource` (Room 3), DataStore settings; later Ktor/Todoist. |
 | `android-wallpaper` | Android library | core, domain, render, data | `AgendaWallpaperService` (own `:wallpaper` process, Direct Boot aware), Canvas renderer, static battery mode (ADR 0004). No Compose. |
-| `android-widgets` | Android library | core, domain, render, data | Glance widgets. |
+| `android-widgets` | Android library | core, domain, render, data | Glance widgets (Scene image plus tap areas; ADR 0005). |
 | `app` | Android application | all of the above | Settings UI (Compose), onboarding, permissions, deep-link router. |
 
 The rules are enforced by `build-logic/convention/src/main/kotlin/ModuleGraph.kt`, which fails the

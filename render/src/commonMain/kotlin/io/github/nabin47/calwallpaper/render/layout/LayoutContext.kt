@@ -10,6 +10,7 @@ import io.github.nabin47.calwallpaper.render.DrawOp
 import io.github.nabin47.calwallpaper.render.HitRegion
 import io.github.nabin47.calwallpaper.render.RenderRequest
 import io.github.nabin47.calwallpaper.render.Scene
+import io.github.nabin47.calwallpaper.render.format.dayLabel
 import io.github.nabin47.calwallpaper.render.text.FontWeight
 import io.github.nabin47.calwallpaper.render.text.TextMeasurer
 import io.github.nabin47.calwallpaper.render.text.TextStyle
@@ -132,12 +133,21 @@ internal class LayoutContext(
         ops += DrawOp.RoundRect(bounds, cornerRadius, color)
     }
 
-    /** Adds a tap target. Later regions win over earlier overlapping ones. */
+    /** Adds a tap target with an accessibility [label]. Later regions win over earlier overlapping ones. */
     fun region(
         bounds: Bounds,
         target: OpenTarget,
+        label: String,
     ) {
-        regions += HitRegion(bounds, target)
+        regions += HitRegion(bounds, target, label)
+    }
+
+    /** Adds a tap target that opens [day] in the calendar, labelled with the day's name. */
+    fun dayRegion(
+        bounds: Bounds,
+        day: LocalDate,
+    ) {
+        region(bounds, OpenTarget.CalendarDay(day), dayLabel(day, today, strings))
     }
 
     /** The finished scene. */
