@@ -6,10 +6,10 @@ See CLAUDE.md §4 for the authoritative module list and key ideas. This page tra
 
 | Module | Kind | Depends on | Purpose |
 |---|---|---|---|
-| `core` | KMP (`jvm`) | — | Models, time utils, `Outcome` result type. No Android, no `java.*`. |
-| `domain` | KMP (`jvm`) | core | Use cases, `AgendaSource`, settings model (`SafeZone`, …). |
+| `core` | KMP (`jvm`) | — | `AgendaItem`, `OpenTarget`, `SourceId`, time utils, `Outcome`. No Android, no `java.*`. |
+| `domain` | KMP (`jvm`) | core | `AgendaSource`, versioned `Settings` + `SettingsCodec` + migrations, `SettingsRepository`. |
 | `render` | KMP (`jvm`) | core, domain | Layout engine → platform-neutral `Scene`. |
-| `data` | KMP (Android target) | core, domain | Room 3, DataStore, Ktor, source adapters (`SourceId`). |
+| `data` | KMP (Android target) | core, domain | `CalendarProviderSource`, `LocalTasksSource` (Room 3), DataStore settings; later Ktor/Todoist. |
 | `android-wallpaper` | Android library | core, domain, render, data | `WallpaperService` + Canvas renderer. No Compose, no DI framework. |
 | `android-widgets` | Android library | core, domain, render, data | Glance widgets. |
 | `app` | Android application | all of the above | Settings UI (Compose), onboarding, permissions, deep-link router. |
