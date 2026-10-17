@@ -6,6 +6,7 @@ import io.github.nabin47.calwallpaper.core.time.agendaOrder
 import io.github.nabin47.calwallpaper.core.time.overlaps
 import io.github.nabin47.calwallpaper.render.Bounds
 import io.github.nabin47.calwallpaper.render.text.ellipsize
+import io.github.nabin47.calwallpaper.render.text.shrinkToFit
 import kotlinx.datetime.LocalDate
 
 /**
@@ -53,7 +54,7 @@ private fun LayoutContext.weekdayRow(
     columnWidth: Float,
 ): Row {
     val labels = days.map { strings.weekdayNarrow(it.dayOfWeek) }
-    val style = fitting(caption, labels, columnWidth - dp(COLUMN_PADDING_DP) * 2)
+    val style = measurer.shrinkToFit(caption, labels, columnWidth - dp(COLUMN_PADDING_DP) * 2)
     val height = lineHeight(style) + rowGap
     return Row(height) { top ->
         days.forEachIndexed { i, day ->
@@ -70,7 +71,7 @@ private fun LayoutContext.dateRow(
     columnWidth: Float,
 ): Row {
     val labels = days.map { it.day.toString() }
-    val style = fitting(body, labels, columnWidth - dp(COLUMN_PADDING_DP) * 2)
+    val style = measurer.shrinkToFit(body, labels, columnWidth - dp(COLUMN_PADDING_DP) * 2)
     val height = lineHeight(style) * TODAY_CIRCLE_FACTOR + rowGap
     return Row(height) { top ->
         val centerY = top + height / 2

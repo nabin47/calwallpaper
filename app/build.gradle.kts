@@ -1,6 +1,7 @@
 plugins {
     id("calwp.android.application")
     id("calwp.android.compose")
+    id("calwp.baselineprofile.consumer")
 }
 
 // Release signing comes from secrets that only release.yml provides (see docs/release.md). Everywhere
@@ -73,4 +74,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.compose.material3)
+
+    // Generates the Baseline Profile (test-only; nothing from it ships). See baselineprofile/README.md.
+    baselineProfile(project(":baselineprofile"))
 }

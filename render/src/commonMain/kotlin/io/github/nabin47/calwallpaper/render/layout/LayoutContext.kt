@@ -101,20 +101,6 @@ internal class LayoutContext(
         style: TextStyle,
     ): Float = measurer.width(text, style)
 
-    /**
-     * [style], shrunk just enough that the widest of [labels] fits in [maxWidth]; never enlarged. Used where text
-     * cannot be ellipsized (day numbers, weekday initials) so that large font sizes cannot overlap neighbor cells.
-     */
-    fun fitting(
-        style: TextStyle,
-        labels: List<String>,
-        maxWidth: Float,
-    ): TextStyle {
-        val widest = labels.maxOfOrNull { width(it, style) } ?: 0f
-        if (widest <= maxWidth || widest <= 0f) return style
-        return style.copy(sizePx = style.sizePx * (maxWidth.coerceAtLeast(0f) / widest) * FIT_MARGIN)
-    }
-
     /** Adds a text op; empty strings are skipped. */
     fun text(
         text: String,
@@ -186,8 +172,6 @@ internal class LayoutContext(
     }
 
     private companion object {
-        /** Text width is not exactly proportional to size (hinting), so fitted text keeps a little room. */
-        const val FIT_MARGIN = 0.97f
         const val COMPACT_SPACING = 0.75f
         const val SPACIOUS_SPACING = 1.3f
         const val PANEL_PADDING_DP = 16f

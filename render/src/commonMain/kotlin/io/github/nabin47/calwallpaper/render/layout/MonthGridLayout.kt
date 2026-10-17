@@ -6,6 +6,7 @@ import io.github.nabin47.calwallpaper.core.time.agendaOrder
 import io.github.nabin47.calwallpaper.core.time.overlaps
 import io.github.nabin47.calwallpaper.render.Bounds
 import io.github.nabin47.calwallpaper.render.text.TextStyle
+import io.github.nabin47.calwallpaper.render.text.shrinkToFit
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
@@ -25,7 +26,8 @@ internal fun LayoutContext.layoutMonthGrid(
     val columnWidth = innerWidth / DAYS
     val title = textRow(strings.monthTitle(month.start.month, month.start.year), header, palette.text)
     val weekdays = weekdayInitialsRow(firstDayOfWeek, columnWidth)
-    val numbers = fitting(caption, (1..month.dayCount).map { it.toString() }, columnWidth - dp(CELL_PADDING_DP) * 2)
+    val dayLabels = (1..month.dayCount).map { it.toString() }
+    val numbers = measurer.shrinkToFit(caption, dayLabels, columnWidth - dp(CELL_PADDING_DP) * 2)
     val empty = items.isEmpty()
     val message = if (empty) textRow(strings.emptyMonth, caption, palette.secondaryText) else null
     val fixed = title.height + weekdays.height + (message?.height ?: 0f)
@@ -46,7 +48,7 @@ private fun LayoutContext.weekdayInitialsRow(
     columnWidth: Float,
 ): Row {
     val labels = weekdaysFrom(firstDayOfWeek).map { strings.weekdayNarrow(it) }
-    val style = fitting(caption, labels, columnWidth - dp(CELL_PADDING_DP) * 2)
+    val style = measurer.shrinkToFit(caption, labels, columnWidth - dp(CELL_PADDING_DP) * 2)
     val height = lineHeight(style) + rowGap
     return Row(height) { top ->
         labels.forEachIndexed { i, label ->

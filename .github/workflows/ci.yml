@@ -55,7 +55,8 @@ jobs:
         run: .github/scripts/run-step.sh "Android Lint" .github/scripts/lint.sh
 
       - name: Unit tests
-        run: .github/scripts/run-step.sh "Unit tests" ./gradlew check
+        # Also compiles the Baseline Profile generator, which only runs on an emulator (baseline-profile.yml).
+        run: .github/scripts/run-step.sh "Unit tests" ./gradlew check :baselineprofile:assemble
 
       - name: Screenshot tests
         run: .github/scripts/run-step.sh "Screenshot tests" ./gradlew verifyRoborazziDebug
