@@ -98,7 +98,7 @@ Testing happens on one Android phone: the owner installs the APK from the PR's C
 Workflows (`.github/workflows/`), least-privilege `permissions:`, actions pinned to a major version or SHA, Gradle caching:
 - `ci.yml` (PR + main): spotless, detekt, lint, unit + screenshot tests, `assembleDebug`, upload debug APK artifact.
 - `release.yml` (tag `v*.*.*`): run checks, build **signed** release APK and AAB from secrets (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`), derive `versionName` from the tag and a monotonic `versionCode`, generate release notes from Conventional Commits, publish a **GitHub Release** with APK + AAB + SHA-256 checksums. The workflow must also work when the owner has already created the Release/tag from the GitHub web UI (upload assets to the existing release instead of failing).
-- `pages.yml` (push to main under `site/`, and on release): build and deploy `site/` via `actions/deploy-pages`. The download button reads the latest release client-side from the GitHub API, so the site never needs a rebuild per release.
+- `pages.yml` (push to main under `site/`, plus manual dispatch): build and deploy `site/` via `actions/deploy-pages`. The download button reads the latest release client-side from the GitHub API, so the site never needs a rebuild per release. No release trigger: release runs execute on the tag ref, which the `github-pages` environment's protection rules reject.
 - `play.yml` (manual dispatch, disabled until the first manual Play upload is done): upload AAB to a Play track using a service account.
 - Dependabot or Renovate for dependencies and actions.
 - Never commit keystores, tokens or `local.properties`. Keep `.gitignore` strict.
