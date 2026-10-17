@@ -34,3 +34,8 @@ caught in CI without an emulator, and the owner has no local tools.
 - **Measurer and renderer must match.** `AndroidTextMeasurer` and `SceneCanvasRenderer` share `TextPaints`, so a drawn width always equals
   the measured width.
 - **No per-frame layout.** Scenes are built only when data, settings, time or lock state change (CLAUDE.md §5).
+- **JDK internals are opened for tests.** Robolectric's native graphics reflect into `jdk.internal.access` and `java.io`; on
+  JDK 17+ that fails unless the test JVM gets `--add-opens` for both (set in `ScreenshotsConventionPlugin`). Recheck on
+  Robolectric upgrades and drop the flags once they are no longer needed.
+- **Bot-pushed goldens.** Commits pushed by the record workflow start `pull_request` CI runs that wait for approval
+  ("action_required"); the workflow dispatches CI on that commit itself, and that run is the one to read.
