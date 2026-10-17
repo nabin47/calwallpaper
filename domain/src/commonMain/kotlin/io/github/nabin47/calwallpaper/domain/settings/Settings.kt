@@ -170,7 +170,7 @@ data class LayoutSettings(
         const val DEFAULT_LOCK_SAFE_ZONE_TOP: Float = 0.55f
 
         /** Default lock-screen bottom safe zone: clears the shortcut buttons and the unlock hint. */
-        const val DEFAULT_LOCK_SAFE_ZONE_BOTTOM: Float = 0.2f
+        const val DEFAULT_LOCK_SAFE_ZONE_BOTTOM: Float = 0.25f
 
         /** Lock-screen safe zones together leave at least 10% of the height for the agenda. */
         private const val MAX_COMBINED_LOCK_SAFE_ZONE: Float = 0.9f
