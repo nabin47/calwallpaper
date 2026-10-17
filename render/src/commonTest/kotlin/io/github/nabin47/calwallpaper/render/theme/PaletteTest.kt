@@ -28,6 +28,26 @@ class PaletteTest {
                 ),
             )
         assertEquals(0xFF000000.toInt(), custom.onAccent, "bright accent gets dark text")
+        assertEquals(Palette.CALM_DARK.background, custom.background, "dark panel gets the dark default background")
+    }
+
+    @Test
+    fun customBackgroundIsOpaqueAndSurvivesOpacity() {
+        val custom =
+            Palette.resolve(
+                AppearanceSettings(
+                    palette = PalettePreset.CUSTOM,
+                    customColors =
+                        CustomColors(
+                            panel = ArgbColor(0xFFFFFFFF.toInt()),
+                            text = ArgbColor(0xFF000000.toInt()),
+                            accent = ArgbColor(0xFF1F5FBF.toInt()),
+                            background = ArgbColor(0x40123456),
+                        ),
+                ),
+            )
+        assertEquals(0xFF123456.toInt(), custom.background)
+        assertEquals(custom.background, custom.applyOpacity(0f, 0f).background)
     }
 
     @Test

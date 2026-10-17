@@ -4,6 +4,16 @@
 
     <!-- Read-only access to on-device calendars (CLAUDE.md §7). Requested in context, never at startup. -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <!-- Battery saver mode sets a still image as the wallpaper (ADR 0004). Normal permission: no prompt. -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <!-- Battery saver mode re-arms its triggers after a reboot (ADR 0004). Unused in live mode, where the
+         receiver stays disabled. Normal permission: no prompt. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- The live wallpaper is the app's main feature (CLAUDE.md §10). -->
+    <uses-feature
+        android:name="android.software.live_wallpaper"
+        android:required="true" />
 
     <application
         android:allowBackup="true"

@@ -137,7 +137,14 @@ internal class LayoutContext(
     }
 
     /** The finished scene. */
-    fun build(): Scene = Scene(request.screen.widthPx, request.screen.heightPx, ops.toList(), regions.toList())
+    fun build(): Scene =
+        Scene(
+            widthPx = request.screen.widthPx,
+            heightPx = request.screen.heightPx,
+            ops = ops.toList(),
+            hitRegions = regions.toList(),
+            background = palette.background,
+        )
 
     private fun style(
         sp: Float,

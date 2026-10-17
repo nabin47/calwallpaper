@@ -165,3 +165,19 @@ enum class BatteryMode {
     @SerialName("static")
     STATIC,
 }
+
+/** Screens the static wallpaper image is applied to (Android's home and lock wallpapers). */
+@Serializable
+enum class WallpaperTarget {
+    /** Home screen only. */
+    @SerialName("home")
+    HOME,
+
+    /** Lock screen only. */
+    @SerialName("lock")
+    LOCK,
+
+    /** Both screens. */
+    @SerialName("home_and_lock")
+    HOME_AND_LOCK,
+}

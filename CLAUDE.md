@@ -58,7 +58,7 @@ Key ideas:
 
 - The wallpaper draws **only** on: visibility change to visible, data change, settings change, date/time/timezone change. **No timers, no continuous animation, no foreground service.** At most one short fade on data change, and it must be optional.
 - Keep at most one screen-sized bitmap cache. Release it when the wallpaper becomes invisible. Reuse paints, layouts and fonts; no allocation in draw paths.
-- Data refresh: `ContentObserver` on the Calendar Provider, `WorkManager` for periodic network sync (respect the 15-minute minimum), broadcasts that are exempt from implicit-broadcast limits (`ACTION_DATE_CHANGED`, `ACTION_TIME_CHANGED`, `ACTION_TIMEZONE_CHANGED`), else register dynamically.
+- Data refresh: `ContentObserver` on the Calendar Provider, `WorkManager` for periodic network sync (respect the 15-minute minimum), broadcasts that are exempt from implicit-broadcast limits (`ACTION_TIME_CHANGED`, `ACTION_TIMEZONE_CHANGED`, `ACTION_LOCALE_CHANGED`, `ACTION_BOOT_COMPLETED`), else register dynamically (`ACTION_DATE_CHANGED` is **not** exempt; ADR 0004).
 - Bundle at most 3–4 OFL-licensed fonts as subsetted variable fonts, plus "system default". Keep APK small (target well under 15 MB; report the actual size in each release).
 - Add a Baseline Profile for the app module. Add a `docs/performance.md` with measured numbers (idle PSS of the wallpaper process, APK size, draw time). Measure; do not guess. Treat regressions as bugs.
 
@@ -70,7 +70,7 @@ Colors (palette presets, custom, optional Material You dynamic color), font fami
 
 - Todoist: user pastes a personal API token. (OAuth needs a client secret, which requires a backend; out of scope.) Store it encrypted with an Android Keystore AES-GCM key (or Tink) in DataStore; do not use deprecated `security-crypto`. Never log tokens, task titles or event titles. Exclude secrets from backups.
 - HTTPS only (network security config). No analytics, ads, crash-reporting SDKs or accounts. Data stays on-device; the only network calls are to services the user enables.
-- Permissions: `READ_CALENDAR` (requested in context, with a rationale screen), `INTERNET`. Nothing else without an ADR.
+- Permissions: `READ_CALENDAR` (requested in context, with a rationale screen), `INTERNET`, and for battery saver mode `SET_WALLPAPER` and `RECEIVE_BOOT_COMPLETED` (ADR 0004). Nothing else without an ADR.
 
 ## 8. Code quality
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Battery saver mode (ADR 0004): set the still image, and re-arm its triggers after a reboot.
+         Declared here, next to the code that needs them; both are normal permissions (no prompt). -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application>
+        <!-- The live wallpaper. Its own process keeps Compose and the settings UI out of its memory
+             (CLAUDE.md §3); directBootAware lets it draw before the first unlock (ADR 0004). -->
+        <service
+            android:name=".AgendaWallpaperService"
+            android:directBootAware="true"
+            android:exported="true"
+            android:label="@string/wallpaper_label"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:process=":wallpaper">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/agenda_wallpaper" />
+        </service>
+
+        <!-- Static (battery) mode. Disabled until the user picks it, so live-mode users get no wakeups.
+             StaticModeScheduler enables and disables these. Not exported: they only receive system broadcasts
+             and the app's own alarm. -->
+        <receiver
+            android:name=".staticmode.StaticRefreshReceiver"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".staticmode.StaticRefreshJobService"
+            android:enabled="false"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+    </application>
+</manifest>

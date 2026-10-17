@@ -51,7 +51,7 @@ jobs:
         run: .github/scripts/run-step.sh "Detekt" ./gradlew detekt
 
       - name: Android Lint
-        run: .github/scripts/run-step.sh "Android Lint" ./gradlew lint
+        run: .github/scripts/run-step.sh "Android Lint" .github/scripts/lint.sh
 
       - name: Unit tests
         run: .github/scripts/run-step.sh "Unit tests" ./gradlew check
@@ -73,14 +73,24 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      # Unsigned release build: proves R8 keeps everything the app needs and measures the shipped size
+      # (docs/performance.md). No signing secrets here; this job runs PR code.
+      - name: Release build size
+        run: .github/scripts/run-step.sh "Release build size" ./gradlew :app:assembleRelease
+
       - name: Job summary
         run: |
           {
             echo "### ✅ CI passed"
             echo
             echo "Debug APK: see **Artifacts** → \`calwallpaper-debug-apk\` on this run."
-            echo "APK size: $(du -h app/build/outputs/apk/debug/*.apk | cut -f1)"
-          } >> "$GITHUB_STEP_SUMMARY"
+            echo
+            echo "| APK | Size (bytes) |"
+            echo "|---|---|"
+            for apk in app/build/outputs/apk/debug/*.apk app/build/outputs/apk/release/*.apk; do
+              echo "| \`$(basename "$apk")\` | $(stat -c %s "$apk") |"
+            done
+          } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Build failure report
         if: failure()

@@ -15,6 +15,10 @@ Draft answers to prepare before the first Play upload (CLAUDE.md §10). Fill in 
 ## Permission declarations
 - `READ_CALENDAR`: core functionality (shows the user's events on the wallpaper/widgets), requested in context with a rationale screen.
 - `INTERNET`: only for sources the user enables (Todoist).
+- `SET_WALLPAPER` (normal, no prompt): battery saver mode sets a still image of the agenda as the wallpaper.
+- `RECEIVE_BOOT_COMPLETED` (normal, no prompt): battery saver mode re-arms its update triggers after a reboot.
+  The receiver is disabled while the live wallpaper mode is used.
+- No `QUERY_ALL_PACKAGES`, no exact alarms, no foreground service.
 
 ## First upload
 Google Play requires the first AAB to be uploaded manually in the Play Console. After that, finish

@@ -17,6 +17,7 @@ sqlite = "2.7.1"
 datastore = "1.2.1"
 roborazzi = "1.76.0"
 robolectric = "4.17"
+annotation = "1.11.0"
 
 # Android SDK levels (read by build-logic and module scripts).
 android-compileSdk = "37"
@@ -38,6 +39,7 @@ room3-gradlePlugin = { module = "androidx.room3:androidx.room3.gradle.plugin", v
 
 # Shared (KMP) dependencies.
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
@@ -47,6 +49,7 @@ androidx-room3-runtime = { module = "androidx.room3:room3-runtime", version.ref 
 androidx-room3-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room3" }
 androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 
 # App dependencies.
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }

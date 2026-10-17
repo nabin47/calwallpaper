@@ -7,9 +7,11 @@ import io.github.nabin47.calwallpaper.render.text.TextStyle
  * Platform-neutral description of one frame: what to draw, in order, and which areas open what when tapped.
  *
  * Every renderer (wallpaper Canvas, settings preview, widgets, later iOS) draws the same [Scene], so layout
- * logic is written once (CLAUDE.md §4). Coordinates are pixels with the origin at the top left. The scene has
- * no background: the user's wallpaper shows through. Immutable; build on any thread, draw on the UI thread.
+ * logic is written once (CLAUDE.md §4). Coordinates are pixels with the origin at the top left. Immutable; build
+ * on any thread, draw on the UI thread.
  *
+ * @property background opaque `0xAARRGGBB` fill for renderers that own the whole surface (the wallpaper). It is not
+ *   an op, so overlays such as widgets can skip it and stay transparent.
  * @property ops draw operations, painted in list order (later ops on top).
  * @property hitRegions tappable areas. When regions overlap, the one added last wins (see [hitTest]).
  */
@@ -18,6 +20,7 @@ data class Scene(
     val heightPx: Int,
     val ops: List<DrawOp> = emptyList(),
     val hitRegions: List<HitRegion> = emptyList(),
+    val background: Int = DEFAULT_BACKGROUND,
 ) {
     init {
         require(widthPx > 0 && heightPx > 0) { "Scene size must be positive" }
@@ -31,6 +34,12 @@ data class Scene(
         x: Float,
         y: Float,
     ): OpenTarget? = hitRegions.lastOrNull { it.bounds.contains(x, y) }?.target
+
+    /** Defaults. */
+    companion object {
+        /** Opaque black, used when a scene is built without a palette. */
+        const val DEFAULT_BACKGROUND: Int = -0x1000000
+    }
 }
 
 /** An axis-aligned rectangle in pixels. [right] and [bottom] are exclusive. */
