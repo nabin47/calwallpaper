@@ -1,8 +1,12 @@
 name: Play upload
 
-# Stub, intentionally inert. Google Play requires the very first AAB to be uploaded by hand in the
-# Play Console. After that, finish this workflow (service-account secret + upload step, see
-# docs/play-store.md) and set the repository variable PLAY_UPLOAD_ENABLED=true.
+# Uploads the signed AAB of an existing GitHub Release to a Google Play track (docs/play-store.md).
+#   Actions -> Play upload -> Run workflow -> tag (e.g. v0.1.0), track, status.
+# Off until the repository variable PLAY_UPLOAD_ENABLED is "true": Google Play requires the very first AAB to be
+# uploaded by hand in the Play Console, and the service account must be set up first.
+# The AAB is not rebuilt here: it is the one release.yml built, signed and published, checked against its
+# SHA256SUMS.txt. The release notes come from fastlane/metadata/android/en-US/changelogs/<versionCode>.txt (or
+# default.txt) at the tag.
 on:
   workflow_dispatch:
     inputs:
@@ -15,18 +19,139 @@ on:
         default: internal
         type: choice
         options: [internal, alpha, beta, production]
+      status:
+        description: "Release status. Use draft while the app has never been published on any track."
+        required: true
+        default: completed
+        type: choice
+        options: [completed, draft]
 
 permissions:
   contents: read
 
+concurrency:
+  group: play-upload
+  cancel-in-progress: false
+
+env:
+  TAG: ${{ inputs.tag }}
+  PACKAGE_NAME: io.github.nabin47.calwallpaper
+
 jobs:
   upload:
     name: Upload AAB to Play
-    if: vars.PLAY_UPLOAD_ENABLED == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
+    # Put PLAY_SERVICE_ACCOUNT_JSON in this environment (Settings -> Environments) to require an approval per run;
+    # a repository secret of the same name also works.
+    environment: google-play
+    permissions:
+      contents: read
+      actions: read
+    defaults:
+      run:
+        shell: bash
     steps:
-      - name: Not implemented yet
+      - name: Check that Play upload is enabled
+        env:
+          ENABLED: ${{ vars.PLAY_UPLOAD_ENABLED }}
+          HAS_KEY: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON != '' }}
         run: |
-          echo "::error::Play upload is not implemented yet. See docs/play-store.md."
-          exit 1
+          if [[ "$ENABLED" != "true" ]]; then
+            echo "::error::Play upload is off. Upload the first AAB by hand, set up the service account, then set the repository variable PLAY_UPLOAD_ENABLED=true (docs/play-store.md)."
+            exit 1
+          fi
+          if [[ "$HAS_KEY" != "true" ]]; then
+            echo "::error::The secret PLAY_SERVICE_ACCOUNT_JSON is missing (docs/play-store.md, 'Automated uploads')."
+            exit 1
+          fi
+
+      - name: Derive versionCode from tag
+        id: version
+        run: |
+          if [[ ! "$TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "::error::Tag '$TAG' is not of the form vMAJOR.MINOR.PATCH."
+            exit 1
+          fi
+          # Same formula as release.yml (docs/release.md).
+          code=$(( 10#${BASH_REMATCH[1]} * 1000000 + 10#${BASH_REMATCH[2]} * 1000 + 10#${BASH_REMATCH[3]} ))
+          echo "version_code=${code}" >> "$GITHUB_OUTPUT"
+          echo "versionCode=${code}"
+
+      - name: Checkout tag (release notes)
+        uses: actions/checkout@v7
+        with:
+          ref: refs/tags/${{ inputs.tag }}
+
+      - name: Download and verify the release AAB
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir dist
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir dist \
+            --pattern "CalWallpaper-${TAG}.aab" --pattern SHA256SUMS.txt
+          (cd dist && sha256sum --check --ignore-missing --strict SHA256SUMS.txt)
+          test -f "dist/CalWallpaper-${TAG}.aab"
+
+      - name: Prepare release notes
+        env:
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+        run: |
+          dir=fastlane/metadata/android/en-US/changelogs
+          notes="$dir/${VERSION_CODE}.txt"
+          [[ -f "$notes" ]] || notes="$dir/default.txt"
+          if [[ ! -f "$notes" ]]; then
+            echo "::error::No release notes: add $dir/${VERSION_CODE}.txt (500 characters at most)."
+            exit 1
+          fi
+          if (( $(wc -m < "$notes") > 500 )); then
+            echo "::error::$notes is longer than Play's 500-character limit."
+            exit 1
+          fi
+          mkdir whatsnew
+          cp "$notes" whatsnew/whatsnew-en-US
+          echo "Release notes from $notes:"
+          cat whatsnew/whatsnew-en-US
+
+      # The R8 mapping lets Play show readable crash stack traces. release.yml keeps it as a 90-day artifact;
+      # if it is gone, the upload continues without it.
+      - name: Fetch R8 mapping from the release run
+        id: mapping
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow release.yml --branch "$TAG" --status success \
+            --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          if [[ -n "$run_id" ]] && gh run download "$run_id" --repo "$GITHUB_REPOSITORY" \
+              --name "r8-mapping-${TAG}" --dir mapping; then
+            echo "file=mapping/mapping.txt" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No R8 mapping found for $TAG; crash reports in Play will be obfuscated."
+            echo "file=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload to Google Play
+        # v1.1.5, pinned by commit.
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: ${{ env.PACKAGE_NAME }}
+          releaseFiles: dist/CalWallpaper-${{ inputs.tag }}.aab
+          releaseName: ${{ inputs.tag }}
+          track: ${{ inputs.track }}
+          status: ${{ inputs.status }}
+          whatsNewDirectory: whatsnew
+          mappingFile: ${{ steps.mapping.outputs.file }}
+
+      - name: Job summary
+        if: always()
+        env:
+          TRACK: ${{ inputs.track }}
+          STATUS: ${{ inputs.status }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+        run: |
+          {
+            echo "### Play upload"
+            echo
+            echo "Tag \`${TAG}\` (versionCode \`${VERSION_CODE:-?}\`) → track \`${TRACK}\`, status \`${STATUS}\`: ${{ job.status }}"
+          } >> "$GITHUB_STEP_SUMMARY"

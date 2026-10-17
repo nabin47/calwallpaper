@@ -4,48 +4,102 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy policy · CalWallpaper</title>
+  <meta name="description" content="CalWallpaper's privacy policy: no account, no analytics, no ads. Your calendar stays on your phone.">
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
   <header>
     <h1>Privacy policy</h1>
-    <p class="lead">CalWallpaper does not collect, share or sell your data.</p>
+    <p class="lead">CalWallpaper does not collect, share or sell your data. Everything it shows is read and drawn on
+      your phone.</p>
   </header>
   <main>
-    <p><em>Last updated: 2026-10-17</em></p>
+    <p><em>Effective 2026-10-17. Applies to CalWallpaper for Android (<code>io.github.nabin47.calwallpaper</code>),
+      from Google Play or from the GitHub releases.</em></p>
 
-    <h2>Calendar access</h2>
-    <p>If you grant the calendar permission, CalWallpaper reads events from your phone's calendar storage
-      to draw them on your wallpaper and widgets. This happens only on your device. Events are never sent anywhere.</p>
+    <h2>Who is responsible</h2>
+    <p>CalWallpaper is an open-source app published by its developer, GitHub user
+      <a href="https://github.com/nabin47">nabin47</a>. It has no company, server or backend behind it.
+      For questions or requests about privacy, see <a href="#contact">Contact</a>.</p>
 
-    <h2>Todoist</h2>
-    <p>If you connect Todoist, you paste a personal API token. The token is stored encrypted on your device,
-      excluded from backups, and used only to fetch your tasks directly from Todoist over HTTPS.
-      A copy of your open, dated tasks is kept on your device so the wallpaper works offline; it is not backed
-      up, and disconnecting Todoist in the app deletes it together with the token.
-      Your use of Todoist is covered by Todoist's own privacy policy.</p>
+    <h2>Summary</h2>
+    <ul>
+      <li>No account, no sign-in, no analytics, no advertising, no crash-reporting or tracking services.</li>
+      <li>Your calendar events and tasks never leave your phone, except that Todoist, if you connect it, is
+        contacted directly to fetch your own tasks.</li>
+      <li>The developer receives no data from the app, ever.</li>
+    </ul>
 
-    <h2>What we collect</h2>
-    <p>Nothing. There is no account, no analytics, no advertising, and no crash-reporting service.
-      The app has no server. The only network requests go to services you turn on yourself (for example Todoist).</p>
+    <h2>Calendar</h2>
+    <p>If you grant the calendar permission (<code>READ_CALENDAR</code>), CalWallpaper reads events from the
+      calendars stored on your phone, including accounts such as Google Calendar that your phone already syncs.
+      It uses them only to draw your wallpaper, widgets and the preview in the app. Access is read-only: the app
+      never changes or deletes events, and never sends them anywhere. You can revoke the permission at any time in
+      Android's settings.</p>
 
-    <h2>Data on your device</h2>
-    <p>Settings and a cache of what is shown on the wallpaper are stored locally. The cache lets the wallpaper appear
-      right after a restart, before you unlock the phone; when privacy mode is on, it contains no event or task titles.
-      Uninstalling the app removes all of it. Android's own backup may include your settings, but never the cache
-      and never your Todoist token.</p>
+    <h2>Your local task list</h2>
+    <p>Tasks you add in the app, its Quick Settings tile or its shortcut are stored in a database on your phone.
+      They are never uploaded by the app.</p>
 
-    <h2>Wallpaper permissions</h2>
-    <p>In battery saver mode, CalWallpaper sets a picture of your agenda as your wallpaper and refreshes it after a
-      restart. Android grants the two permissions this needs without asking; they give no access to your data.</p>
+    <h2>Todoist (optional)</h2>
+    <p>If you connect Todoist, you paste a personal API token from your Todoist settings. The token is encrypted
+      with a key kept in your phone's Android Keystore, is never shown again, and is used only to fetch your tasks
+      and projects directly from Todoist (<code>api.todoist.com</code>) over HTTPS. The app only reads from Todoist;
+      it never creates, changes or deletes anything there. A copy of your open, dated tasks is kept on your phone
+      so the wallpaper works offline. Disconnecting Todoist in the app deletes the token and that copy. Your use of
+      Todoist is governed by <a href="https://doist.com/privacy">Doist's privacy policy</a>.</p>
+
+    <h2>Opening other apps</h2>
+    <p>When you tap a day, event or task on the home screen or in a widget, CalWallpaper asks Android to open it in
+      the matching app: your calendar app, the Todoist app, or, if that app is missing, the page in your web
+      browser. Only what is needed to open that item is passed (for example the event's id and time, or a Todoist
+      link). What the other app does is governed by its own privacy policy.</p>
+
+    <h2>Network</h2>
+    <p>The app makes network requests only to Todoist, and only if you connect it. All connections use HTTPS;
+      unencrypted connections are blocked. There are no other servers, so there is nothing to send data to.</p>
+
+    <h2>Data stored on your phone</h2>
+    <ul>
+      <li><strong>Settings</strong>: your appearance, layout and source choices.</li>
+      <li><strong>Wallpaper cache</strong>: what the wallpaper last showed, so it can appear after a restart before
+        you unlock the phone. When privacy mode is on, it contains no event or task titles.</li>
+      <li><strong>Local tasks</strong>, and the <strong>Todoist</strong> token and offline copy described above.</li>
+      <li><strong>Diagnostics</strong>: draw times and memory use, shown only in the app's settings. Never sent.</li>
+    </ul>
+
+    <h2>Backups</h2>
+    <p>If you use Android's own backup (for example to your Google account), it may include your settings and your
+      local tasks, under your control and Google's terms. It never includes the wallpaper cache, the Todoist copy
+      or the Todoist token.</p>
+
+    <h2>Permissions</h2>
+    <ul>
+      <li><code>READ_CALENDAR</code>: show your events (asked only when you choose to, with an explanation).</li>
+      <li><code>INTERNET</code>: Todoist, only if you connect it.</li>
+      <li><code>SET_WALLPAPER</code>, <code>RECEIVE_BOOT_COMPLETED</code>: battery saver mode sets a still image of
+        your agenda and refreshes it after a restart; the widgets also refresh after a restart.</li>
+      <li><code>WAKE_LOCK</code>, <code>ACCESS_NETWORK_STATE</code>, <code>FOREGROUND_SERVICE</code>: added by
+        Android's WorkManager library, which keeps widgets and the Todoist sync up to date.</li>
+    </ul>
+    <p>None of these, other than the calendar, gives access to your personal data. Android grants them without
+      asking.</p>
+
+    <h2>Your choices and deleting data</h2>
+    <p>Everything the app stores is on your phone. Turn off privacy-sensitive features at any time, disconnect
+      Todoist in the app, clear the app's storage in Android's settings, or uninstall the app to delete all of it.
+      Because the developer holds no data about you, there is nothing to request, export or delete from us.</p>
 
     <h2>Children</h2>
     <p>The app is not directed at children and collects no data from anyone.</p>
 
-    <h2>Changes and contact</h2>
-    <p>Changes to this policy are published on this page and in the
-      <a href="https://github.com/nabin47/calwallpaper">source repository</a>.
-      Questions: open an issue at <a href="https://github.com/nabin47/calwallpaper/issues">github.com/nabin47/calwallpaper/issues</a>.</p>
+    <h2>Changes</h2>
+    <p>Changes to this policy are published on this page, with a new effective date, and in the
+      <a href="https://github.com/nabin47/calwallpaper">source repository</a>, where every past version is kept.</p>
+
+    <h2 id="contact">Contact</h2>
+    <p>Open an issue at <a href="https://github.com/nabin47/calwallpaper/issues">github.com/nabin47/calwallpaper/issues</a>,
+      or use the contact email shown on the app's Google Play page.</p>
   </main>
   <footer><a href="../">Back to CalWallpaper</a></footer>
 </body>

@@ -18,6 +18,16 @@ measured on the owner's phone with the steps below and recorded here with the ph
 | Wallpaper bitmap memory | 1 screen-sized bitmap, freed when invisible | _not yet measured on a phone_ | App → Performance | — |
 | Wallpaper process idle PSS | as low as possible | _not yet measured on a phone_ | App → Performance, cross-check in Developer options | — |
 
+## Baseline Profile
+Release builds include a Baseline Profile (ADR 0008), generated in CI by `baseline-profile.yml` on an emulator and
+committed under `app/src/release/generated/baselineProfiles/`. The workflow's summary shows how many rules it
+recorded. It covers app start, onboarding, the settings screen and the wallpaper's layout and draw path (through the
+system's live-wallpaper preview).
+
+**Not measured:** the startup gain. That needs a Macrobenchmark on a physical device, which this project does not
+have. On the phone, a rough check is the cold start of the release build from the GitHub Release (first open after a
+restart) compared with the previous release. Note it as a manual, approximate number.
+
 ## What CI measures
 Every CI run builds a debug APK and an unsigned, R8-optimized release APK. Both sizes are printed in the run's
 **Summary** tab. The signed release sizes come from the GitHub Release assets.

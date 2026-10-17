@@ -104,6 +104,10 @@ jobs:
             aapt2="$( (ls -d "$ANDROID_HOME"/build-tools/*/ 2>/dev/null || true) | sort -V | tail -n 1)aapt2"
             "$aapt2" dump permissions app/build/outputs/apk/release/*.apk | grep 'uses-permission' | sed 's/^/- /' \
               || echo "- (could not read permissions)"
+            # Play's 16 KB page-size rule only concerns native code; the app is expected to ship none.
+            echo
+            native="$(unzip -Z1 app/build/outputs/apk/release/*.apk 2>/dev/null | grep -E '^lib/.*\.so$' || true)"
+            echo "Native libraries in the release APK: ${native:-none}"
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Build failure report
