@@ -1,6 +1,6 @@
 # PLAN — Phase 0 scaffold (draft for approval)
 
-Status: **approved 2026-10-16**. Decisions: name CalWallpaper, applicationId `io.github.nabin47.calwallpaper`, Apache-2.0, Room 3, manual DI, detekt 2.0 alpha pinned (ADR 0001). Versions verified on 2026-10-16 (Maven Central metadata + official release pages; Google Maven is not reachable from the sandbox, so Google artifacts were checked on developer.android.com).
+Status: **Phase 0 complete 2026-10-17** (v0.0.1 released). Approved 2026-10-16. Decisions: name CalWallpaper, applicationId `io.github.nabin47.calwallpaper`, Apache-2.0, Room 3, manual DI, detekt 2.0 alpha pinned (ADR 0001). Versions verified on 2026-10-16 (Maven Central metadata + official release pages; Google Maven is not reachable from the sandbox, so Google artifacts were checked on developer.android.com).
 
 ## 1. Module graph (dependencies point inward)
 
