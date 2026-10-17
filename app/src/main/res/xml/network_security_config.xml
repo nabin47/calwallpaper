@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HTTPS only (CLAUDE.md §7). The only network calls go to services the user enables (Todoist). -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

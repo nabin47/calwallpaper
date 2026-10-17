@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Android 12+ backup rules. Keep in sync with backup_rules.xml.
-     wallpaper/ in device-protected storage holds caches (last agenda, diagnostics, static-image fingerprint):
-     regenerated on the device, never backed up. Secrets (e.g. the Todoist token) will be excluded too (CLAUDE.md §7). -->
+     - wallpaper/ in device-protected storage holds caches (last agenda, diagnostics, static-image fingerprint):
+       regenerated on the device, never backed up.
+     - todoist/ holds the Todoist offline cache (task titles); the next sync rebuilds it, so it is not backed up.
+     - The encrypted Todoist token lives in noBackupFilesDir, which Android never backs up, and its Keystore key
+       could not be restored anyway (CLAUDE.md §7, ADR 0007). -->
 <data-extraction-rules>
     <cloud-backup>
         <exclude domain="device_file" path="wallpaper/" />
+        <exclude domain="file" path="todoist/" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="device_file" path="wallpaper/" />
+        <exclude domain="file" path="todoist/" />
     </device-transfer>
 </data-extraction-rules>

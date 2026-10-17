@@ -63,11 +63,13 @@ app ──────────────┬─► android-wallpaper ─┐
    bitmap, the Direct Boot cache and lock-state privacy; static battery mode; onboarding with the calendar
    rationale; settings for every §6 option with a live preview; the set-as-wallpaper flow; on-device performance
    numbers. See ADR 0004.
-4. **Taps, deep links and widgets** (current; the owner moved it ahead of the task list): wallpaper tap
+4. **Taps, deep links and widgets**: done. The owner moved it ahead of the task list: wallpaper tap
    hit-testing, the `OpenTarget` router with web fallbacks and `<queries>`, and the Agenda and Week Glance widgets
    on the Scene pipeline. See ADR 0005 and `docs/testing-taps.md`.
-5. Local task list UI (minimal list and quick-add), with cross-process invalidation for the wallpaper.
-6. Todoist (encrypted token) and WorkManager sync.
+5. **Todoist and quick-add** (current): Todoist API v1 sync with WorkManager and backoff, the Keystore-encrypted
+   token, the offline cache, error states in settings, project selection; the quick-add Quick Settings tile and
+   launcher shortcut; cross-process invalidation for local tasks. See ADR 0007.
+6. Local task list screen (view, complete, delete) beyond quick-add.
 7. Remaining presets and customization, Baseline Profile, performance doc, Play readiness.
 
 ## 7. Risks

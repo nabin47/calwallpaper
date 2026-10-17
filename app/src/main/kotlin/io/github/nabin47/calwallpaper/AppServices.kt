@@ -2,6 +2,7 @@ package io.github.nabin47.calwallpaper
 
 import android.content.Context
 import io.github.nabin47.calwallpaper.data.calendar.DeviceCalendars
+import io.github.nabin47.calwallpaper.todoist.TodoistConnection
 import io.github.nabin47.calwallpaper.wallpaper.WallpaperGraph
 import io.github.nabin47.calwallpaper.wallpaper.staticmode.StaticModeScheduler
 import io.github.nabin47.calwallpaper.wallpaper.staticmode.StaticWallpaperUpdater
@@ -31,6 +32,9 @@ class AppServices(
 
     /** The home-screen widgets the user placed, to redraw them after a settings change. */
     val widgets: InstalledWidgets by lazy { InstalledWidgets(appContext) }
+
+    /** Todoist connection, sync and status for the settings screen. */
+    val todoist: TodoistConnection by lazy { TodoistConnection(appContext, graph) }
 
     /** Whether onboarding was completed. */
     val onboarding: OnboardingStore = OnboardingStore(File(appContext.filesDir, "onboarding_done"))

@@ -70,7 +70,7 @@ Colors (palette presets, custom, optional Material You dynamic color), font fami
 
 - Todoist: user pastes a personal API token. (OAuth needs a client secret, which requires a backend; out of scope.) Store it encrypted with an Android Keystore AES-GCM key (or Tink) in DataStore; do not use deprecated `security-crypto`. Never log tokens, task titles or event titles. Exclude secrets from backups.
 - HTTPS only (network security config). No analytics, ads, crash-reporting SDKs or accounts. Data stays on-device; the only network calls are to services the user enables.
-- Permissions: `READ_CALENDAR` (requested in context, with a rationale screen), `INTERNET`, and for battery saver mode `SET_WALLPAPER` and `RECEIVE_BOOT_COMPLETED` (ADR 0004). Nothing else without an ADR.
+- Permissions: `READ_CALENDAR` (requested in context, with a rationale screen), `INTERNET`, and for battery saver mode `SET_WALLPAPER` and `RECEIVE_BOOT_COMPLETED` (ADR 0004). WorkManager (via Glance and Todoist sync) also merges its normal permissions `WAKE_LOCK`, `ACCESS_NETWORK_STATE` and `FOREGROUND_SERVICE` (ADR 0007). Nothing else without an ADR.
 
 ## 8. Code quality
 

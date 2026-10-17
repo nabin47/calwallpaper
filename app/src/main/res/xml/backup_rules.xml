@@ -2,4 +2,5 @@
 <!-- Android 8-11 backup rules. Keep in sync with data_extraction_rules.xml. -->
 <full-backup-content>
     <exclude domain="device_file" path="wallpaper/" />
+    <exclude domain="file" path="todoist/" />
 </full-backup-content>

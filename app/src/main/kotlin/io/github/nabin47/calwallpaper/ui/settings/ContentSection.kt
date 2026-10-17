@@ -138,8 +138,9 @@ private fun CalendarChoices(
     }
 }
 
+/** A checkbox row with an optional color dot and detail line, for calendar and project choices. */
 @Composable
-private fun CheckRow(
+internal fun CheckRow(
     label: String,
     checked: Boolean,
     color: Int?,

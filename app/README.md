@@ -27,6 +27,14 @@ preview, and the "set as wallpaper" flow. It is also the composition root (manua
 - **`widgets/`:** the Agenda and Week widgets with their receivers, and `WidgetFrames`, which renders frames with the
   wallpaper's pipeline.
 
+**Todoist and quick-add** (ADR 0007)
+- **`todoist/TodoistConnection`:** connect with a pasted token, disconnect, sync now, and the status.
+- **`todoist/TodoistSyncScheduler`:** periodic work every 30 minutes, plus "sync now", with exponential backoff.
+- **`todoist/TodoistSyncWorker`:** runs one sync; redraws widgets and the static image when data changed.
+- **`ui/settings/TodoistSection`:** token entry, status and error messages, "Sync now", "Disconnect", projects.
+- **`quickadd/`:** the quick-add dialog activity, the Quick Settings tile and the launcher shortcut
+  (`res/xml/shortcuts.xml`; debug has its own copy).
+
 **Key classes**
 - `AppServices`: what the UI needs, sharing the process's `WallpaperGraph`.
 - `SettingsEditor`: draft-while-dragging, one write per change.
@@ -38,5 +46,6 @@ preview, and the "set as wallpaper" flow. It is also the composition root (manua
 - **Depends on:** every other module. Nothing may depend on `app`.
 - **applicationId:** `io.github.nabin47.calwallpaper`. It is permanent and guarded by `ApplicationIdTest`. Debug builds add `.debug`.
 - **Permissions:** `READ_CALENDAR`, plus `SET_WALLPAPER` and `RECEIVE_BOOT_COMPLETED` for battery saver mode (ADR 0004).
-  Taps and widgets add none; `<queries>` lists only calendar, Todoist and browser intents.
+  Taps and widgets add none; `<queries>` lists only calendar, Todoist and browser intents. `INTERNET` is for Todoist,
+  HTTPS only (`network_security_config.xml`). WorkManager merges its normal permissions (ADR 0007).
 - **Release:** R8 full mode + resource shrinking via `optimization { enable = true }`; signing from CI secrets (docs/release.md).

@@ -1,6 +1,7 @@
 plugins {
     id("calwp.kmp.android")
     id("calwp.room")
+    id("calwp.serialization")
 }
 
 kotlin {
@@ -30,13 +31,16 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.androidx.room3.runtime)
+            implementation(libs.ktor.client.core)
         }
         getByName("androidMain").dependencies {
             implementation(libs.androidx.sqlite.framework)
             implementation(libs.androidx.datastore)
+            implementation(libs.ktor.client.okhttp)
         }
         getByName("androidHostTest").dependencies {
             implementation(libs.kotlin.test.junit)
+            implementation(libs.ktor.client.mock)
         }
     }
 }

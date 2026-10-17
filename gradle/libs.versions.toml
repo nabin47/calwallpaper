@@ -20,6 +20,10 @@ robolectric = "4.17"
 annotation = "1.11.0"
 # Latest stable on developer.android.com/jetpack/androidx/releases/glance (verified 2026-10-17).
 glance = "1.2.0"
+# Latest stable on Maven Central (verified 2026-10-17). Todoist API v1 client (CLAUDE.md §3).
+ktor = "3.6.0"
+# Latest stable on developer.android.com/jetpack/androidx/releases/work (verified 2026-10-17).
+work = "2.12.0"
 
 # Android SDK levels (read by build-logic and module scripts).
 android-compileSdk = "37"
@@ -52,6 +56,12 @@ androidx-room3-compiler = { module = "androidx.room3:room3-compiler", version.re
 androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqlite" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+
+# Network (Todoist) and background sync.
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "work" }
 
 # Widgets.
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glance" }
