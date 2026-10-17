@@ -130,7 +130,18 @@ jobs:
           apk=app/build/outputs/apk/release/app-release.apk
           test -f "$apk" || { echo "::error::Signed APK not found (unsigned build?)"; ls -R app/build/outputs/apk; exit 1; }
           apksigner="$(ls -d "${ANDROID_HOME}"/build-tools/* | sort -V | tail -n 1)/apksigner"
-          "$apksigner" verify --print-certs "$apk" | grep -E "Signer #1 certificate (DN|SHA-256)"
+          # Fails the step if the signature is invalid. Certificate details are public, so print them all.
+          out="$("$apksigner" verify --verbose --print-certs "$apk")"
+          echo "$out"
+          # The APK must be signed by the release keystore, not by a debug or other key.
+          apk_sha="$(tr '[:upper:]' '[:lower:]' <<< "$out" | grep -oE 'certificate sha-256 digest: [0-9a-f]{64}' | head -n 1 | grep -oE '[0-9a-f]{64}$' || true)"
+          key_sha="$(keytool -list -v -keystore "$SIGNING_KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" \
+            | grep -E '^\s*SHA256:' | head -n 1 | sed 's/.*SHA256: *//; s/://g' | tr 'A-F' 'a-f')"
+          if [[ -z "$apk_sha" || "$apk_sha" != "$key_sha" ]]; then
+            echo "::error::APK certificate SHA-256 (${apk_sha:-not found}) does not match the release keystore (${key_sha:-not found})."
+            exit 1
+          fi
+          echo "APK is signed by the release key (SHA-256 ${apk_sha})."
 
       - name: Stage assets
         run: |
