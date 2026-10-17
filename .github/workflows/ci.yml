@@ -95,6 +95,14 @@ jobs:
             for apk in app/build/outputs/apk/debug/*.apk app/build/outputs/apk/release/*.apk; do
               echo "| \`$(basename "$apk")\` | $(stat -c %s "$apk") |"
             done
+            # Permissions of the shipped (release) APK after manifest merging, so library-added ones are visible
+            # in every PR (CLAUDE.md §7).
+            echo
+            echo "Permissions in the release APK:"
+            echo
+            aapt2="$( (ls -d "$ANDROID_HOME"/build-tools/*/ 2>/dev/null || true) | sort -V | tail -n 1)aapt2"
+            "$aapt2" dump permissions app/build/outputs/apk/release/*.apk | grep 'uses-permission' | sed 's/^/- /' \
+              || echo "- (could not read permissions)"
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Build failure report

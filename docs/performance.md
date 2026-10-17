@@ -11,6 +11,8 @@ measured on the owner's phone with the steps below and recorded here with the ph
 | Debug APK size | — (not shipped) | 12.4 MB (12,975,956 B) | CI job log, same run | Phase 3 PR |
 | Release APK size (unsigned, R8) | ≪ 15 MB | 1.59 MB (1,662,644 B); +211 KB for Glance and the Compose runtime it brings | CI "Release build size" step, run on 192ae34 | Phase 4 PR |
 | Debug APK size | — (not shipped) | 14.5 MB (15,240,866 B) | CI job log, same run | Phase 4 PR |
+| Release APK size (unsigned, R8) | ≪ 15 MB | 2.69 MB (2,815,599 B); +1.15 MB for Ktor and OkHttp (Todoist sync) | CI "Release build size" step, run on 4066a85 | Phase 5 PR |
+| Debug APK size | — (not shipped) | 16.5 MB (17,290,599 B) | CI job log, same run | Phase 5 PR |
 | Wallpaper layout time | < 16 ms | _not yet measured on a phone_ | App → Performance (below) | — |
 | Wallpaper draw time (bitmap repaint) | < 16 ms | _not yet measured on a phone_ | App → Performance | — |
 | Wallpaper bitmap memory | 1 screen-sized bitmap, freed when invisible | _not yet measured on a phone_ | App → Performance | — |
