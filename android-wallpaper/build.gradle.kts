@@ -1,5 +1,6 @@
 plugins {
     id("calwp.android.library")
+    id("calwp.screenshots")
 }
 
 android {
