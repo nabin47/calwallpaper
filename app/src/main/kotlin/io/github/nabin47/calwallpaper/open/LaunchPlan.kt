@@ -92,7 +92,7 @@ object LaunchPlan {
         kind: String,
         id: String,
     ): List<LaunchSpec> =
-        if (id.isNotEmpty() && id.all { (it.isLetterOrDigit() && it.code < ASCII_LIMIT) || it == '-' || it == '_' }) {
+        if (SAFE_ID.matches(id)) {
             val web = "https://app.todoist.com/app/$kind/$id"
             listOf(
                 LaunchSpec.Web(web, appOnly = true),
@@ -113,5 +113,6 @@ object LaunchPlan {
             LaunchSpec.Web("https://calendar.google.com/calendar/r/day/${date.year}/${date.month.number}/${date.day}"),
         )
 
-    private const val ASCII_LIMIT = 128
+    /** Todoist ids are alphanumeric; anything else is never put into a URL. */
+    private val SAFE_ID = Regex("[A-Za-z0-9_-]+")
 }

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.CalendarContract
+import androidx.core.net.toUri
 
 /**
  * Turns [LaunchSpec]s into Intents and starts the first one that works. Call from an Activity on the main
@@ -54,7 +55,7 @@ class LaunchIntents(
                 }
 
                 is LaunchSpec.AppLink -> {
-                    view(Uri.parse(spec.uri))
+                    view(spec.uri.toUri())
                 }
 
                 is LaunchSpec.Web -> {
@@ -73,7 +74,7 @@ class LaunchIntents(
 
     /** A browsable view of the page; app-only links need Android 11's non-browser flag and are skipped before. */
     private fun webIntent(spec: LaunchSpec.Web): Intent? {
-        val intent = view(Uri.parse(spec.url)).addCategory(Intent.CATEGORY_BROWSABLE)
+        val intent = view(spec.url.toUri()).addCategory(Intent.CATEGORY_BROWSABLE)
         return when {
             !spec.appOnly -> intent
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> intent.addFlags(Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER)

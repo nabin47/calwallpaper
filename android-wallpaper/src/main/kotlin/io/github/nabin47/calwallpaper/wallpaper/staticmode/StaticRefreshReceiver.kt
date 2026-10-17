@@ -11,8 +11,8 @@ import kotlin.time.Duration.Companion.seconds
 
 /**
  * Refreshes the static wallpaper and the widgets after boot, at midnight, and when the time, time zone or
- * language changes. Enabled only while static mode or widgets are in use (see [StaticModeScheduler]). Not exported: it receives system broadcasts and the
- * app's own midnight alarm only.
+ * language changes. Enabled only while static mode or widgets are in use (see [StaticModeScheduler]). Not
+ * exported: it receives system broadcasts and the app's own midnight alarm only.
  *
  * Work runs in the background with `goAsync`, bounded by [TIMEOUT] to stay inside the broadcast time limit.
  */

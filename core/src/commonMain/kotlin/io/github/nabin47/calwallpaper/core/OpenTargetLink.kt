@@ -64,9 +64,9 @@ object OpenTargetLink {
     fun decode(link: String): OpenTarget? {
         if (!link.startsWith(PREFIX)) return null
         val rest = link.removePrefix(PREFIX)
-        val kind = rest.substringBefore('?')
-        val params = parseQuery(rest.substringAfter('?', missingDelimiterValue = "")) ?: return null
-        return runCatching { targetOf(kind, params) }.getOrNull()
+        return parseQuery(rest.substringAfter('?', missingDelimiterValue = ""))?.let { params ->
+            runCatching { targetOf(rest.substringBefore('?'), params) }.getOrNull()
+        }
     }
 
     private fun targetOf(
@@ -107,15 +107,14 @@ object OpenTargetLink {
             }
         }
 
+    /** The query's key-value pairs, or `null` if a value has a malformed escape. */
     private fun parseQuery(query: String): Map<String, String>? {
         if (query.isEmpty()) return emptyMap()
         val pairs =
             query.split('&').map { part ->
-                val key = part.substringBefore('=')
-                val value = percentDecode(part.substringAfter('=', missingDelimiterValue = "")) ?: return null
-                key to value
+                part.substringBefore('=') to percentDecode(part.substringAfter('=', missingDelimiterValue = ""))
             }
-        return pairs.toMap()
+        return if (pairs.any { it.second == null }) null else pairs.associate { (key, value) -> key to value.orEmpty() }
     }
 
     /** Percent-encodes everything except RFC 3986 unreserved characters. */
@@ -140,11 +139,7 @@ object OpenTargetLink {
         while (index < value.length) {
             val char = value[index]
             if (char == '%') {
-                if (index + 2 >= value.length) return null
-                val high = HEX.indexOf(value[index + 1].uppercaseChar())
-                val low = HEX.indexOf(value[index + 2].uppercaseChar())
-                if (high < 0 || low < 0) return null
-                bytes += ((high shl NIBBLE_BITS) or low).toByte()
+                bytes += escapedByte(value, index) ?: return null
                 index += ESCAPE_LENGTH
             } else {
                 bytes += char.code.toByte()
@@ -152,6 +147,16 @@ object OpenTargetLink {
             }
         }
         return bytes.toByteArray().decodeToString()
+    }
+
+    /** The byte of the `%XX` escape at [index], or `null` if it is cut off or not hexadecimal. */
+    private fun escapedByte(
+        value: String,
+        index: Int,
+    ): Byte? {
+        val high = HEX.indexOf(value.getOrNull(index + 1)?.uppercaseChar() ?: ' ')
+        val low = HEX.indexOf(value.getOrNull(index + 2)?.uppercaseChar() ?: ' ')
+        return if (high < 0 || low < 0) null else ((high shl NIBBLE_BITS) or low).toByte()
     }
 
     private fun Char.isUnreserved(): Boolean =

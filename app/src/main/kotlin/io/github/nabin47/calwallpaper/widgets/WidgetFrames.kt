@@ -1,8 +1,8 @@
 package io.github.nabin47.calwallpaper.widgets
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
+import androidx.core.graphics.createBitmap
 import io.github.nabin47.calwallpaper.render.LayoutEngine
 import io.github.nabin47.calwallpaper.wallpaper.WallpaperGraph
 import io.github.nabin47.calwallpaper.wallpaper.feed.currentAgenda
@@ -47,7 +47,7 @@ class WidgetFrames(
             val request = base.copy(screen = base.screen.copy(density = canvas.pxPerDp))
             val paints = TextPaints()
             val scene = LayoutEngine(AndroidTextMeasurer(paints)).layout(request)
-            val bitmap = Bitmap.createBitmap(canvas.widthPx, canvas.heightPx, Bitmap.Config.ARGB_8888)
+            val bitmap = createBitmap(canvas.widthPx, canvas.heightPx)
             SceneCanvasRenderer(paints).draw(Canvas(bitmap), scene)
             WidgetFrame(bitmap, WidgetTaps.from(scene.hitRegions, canvas.pxPerDp))
         }

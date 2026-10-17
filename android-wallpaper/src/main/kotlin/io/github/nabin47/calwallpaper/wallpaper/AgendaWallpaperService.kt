@@ -2,20 +2,15 @@ package io.github.nabin47.calwallpaper.wallpaper
 
 import android.app.WallpaperColors
 import android.app.WallpaperManager
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
 import io.github.nabin47.calwallpaper.core.AgendaItem
-import io.github.nabin47.calwallpaper.core.OpenTarget
-import io.github.nabin47.calwallpaper.core.OpenTargetLink
 import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.render.RenderRequest
 import io.github.nabin47.calwallpaper.wallpaper.feed.FeedKey
@@ -47,9 +42,8 @@ import kotlin.time.Clock
  * time or time-zone change, a lock-state change (privacy mode) or a configuration change. There are no timers,
  * no animation and no foreground service; while invisible it draws nothing and holds no bitmap.
  *
- * Taps: launchers that support it report taps on empty home-screen space as [WallpaperManager.COMMAND_TAP]. The
- * engine hit-tests the drawn [io.github.nabin47.calwallpaper.render.Scene] and hands the target to the app's
- * router activity (ADR 0005).
+ * Taps: launchers that support it report taps on empty home-screen space as [WallpaperManager.COMMAND_TAP];
+ * [WallpaperTaps] opens what was drawn there (ADR 0005).
  */
 class AgendaWallpaperService : WallpaperService() {
     private val engines = mutableSetOf<AgendaEngine>()
@@ -71,6 +65,7 @@ class AgendaWallpaperService : WallpaperService() {
         private val frame = WallpaperFrame()
         private val events = SystemEvents(this@AgendaWallpaperService, ::onSystemEvent)
         private val inputs = MutableStateFlow(readInputs())
+        private val taps = WallpaperTaps(this@AgendaWallpaperService, graph.deviceState)
 
         private var settings: Settings? = null
         private var items: List<AgendaItem>? = null
@@ -154,7 +149,10 @@ class AgendaWallpaperService : WallpaperService() {
             extras: Bundle?,
             resultRequested: Boolean,
         ): Bundle? {
-            if (action == WallpaperManager.COMMAND_TAP) onTap(x.toFloat(), y.toFloat())
+            // The picker's preview and an invisible wallpaper open nothing.
+            if (action == WallpaperManager.COMMAND_TAP && !isPreview && visible) {
+                taps.onTap(frame.currentScene, x.toFloat(), y.toFloat())
+            }
             return super.onCommand(action, x, y, z, extras, resultRequested)
         }
 
@@ -175,35 +173,6 @@ class AgendaWallpaperService : WallpaperService() {
                 SystemEvent.USER_UNLOCKED -> {
                     inputs.value = readInputs()
                 }
-            }
-        }
-
-        /**
-         * A tap at ([x], [y]) in screen coordinates, which equal surface coordinates because the wallpaper fills
-         * the screen. Ignored in the picker's preview, while invisible, and while the device is locked (the lock
-         * screen never reports taps, but a launcher on top of a not-yet-dismissed keyguard might).
-         */
-        private fun onTap(
-            x: Float,
-            y: Float,
-        ) {
-            if (isPreview || !visible || graph.deviceState.isLocked()) return
-            frame.currentScene?.hitTest(x, y)?.let(::open)
-        }
-
-        /**
-         * Starts the app's router with [target]. Allowed from the background because the wallpaper's window is
-         * visible: Android exempts apps with a visible non-app window, naming live wallpapers (ADR 0005).
-         */
-        private fun open(target: OpenTarget) {
-            val intent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(OpenTargetLink.encode(target)))
-                    .setClassName(packageName, OpenTargetLink.ROUTER_CLASS)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            try {
-                startActivity(intent)
-            } catch (_: ActivityNotFoundException) {
-                // Only possible in a build without the app module (tests); nothing to open.
             }
         }
 
