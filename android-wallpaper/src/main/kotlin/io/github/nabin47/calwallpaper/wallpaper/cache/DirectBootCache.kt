@@ -28,14 +28,19 @@ class DirectBootCache(
     private var lastWritten: CachedAgenda? = null
 
     /** The cached items, or an empty list when there is no usable cache (missing, unreadable or corrupt). */
-    suspend fun read(): List<AgendaItem> =
+    suspend fun read(): List<AgendaItem> = withContext(ioDispatcher) { readSnapshot()?.toItems().orEmpty() }
+
+    /**
+     * Removes titles from the stored cache if [privacy] no longer allows them. Call when the user turns privacy
+     * mode on, so no title stays in device-protected storage even if the live wallpaper is not running.
+     */
+    suspend fun restrictTo(privacy: PrivacyMode) {
         withContext(ioDispatcher) {
-            runCatching {
-                if (file.exists()) json.decodeFromString(CachedAgenda.serializer(), file.readText()) else null
-            }.getOrNull()
-                ?.toItems()
-                .orEmpty()
+            val stored = readSnapshot() ?: return@withContext
+            val restricted = stored.restrictedTo(privacy)
+            if (restricted != stored) store(restricted)
         }
+    }
 
     /**
      * Replaces the cache with [items], with titles kept only when [privacy] is off. Best effort: a failed write
@@ -47,14 +52,22 @@ class DirectBootCache(
     ) {
         val snapshot = CachedAgenda.fromItems(items, privacy)
         if (snapshot == lastWritten) return
-        withContext(ioDispatcher) {
-            runCatching {
-                file.parentFile?.mkdirs()
-                val temp = File(file.parentFile, "${file.name}.tmp")
-                temp.writeText(json.encodeToString(CachedAgenda.serializer(), snapshot))
-                check(temp.renameTo(file)) { "rename failed" }
-            }.onSuccess { lastWritten = snapshot }
-        }
+        withContext(ioDispatcher) { store(snapshot) }
+    }
+
+    private fun readSnapshot(): CachedAgenda? =
+        runCatching {
+            if (file.exists()) json.decodeFromString(CachedAgenda.serializer(), file.readText()) else null
+        }.getOrNull()
+
+    /** Atomic replace (temp file + rename). Best effort. */
+    private fun store(snapshot: CachedAgenda) {
+        runCatching {
+            file.parentFile?.mkdirs()
+            val temp = File(file.parentFile, "${file.name}.tmp")
+            temp.writeText(json.encodeToString(CachedAgenda.serializer(), snapshot))
+            check(temp.renameTo(file)) { "rename failed" }
+        }.onSuccess { lastWritten = snapshot }
     }
 
     private companion object {

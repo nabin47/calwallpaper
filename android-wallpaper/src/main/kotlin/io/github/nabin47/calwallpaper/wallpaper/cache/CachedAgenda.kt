@@ -24,6 +24,10 @@ import kotlin.time.Instant
 data class CachedAgenda(
     val items: List<CachedItem> = emptyList(),
 ) {
+    /** This snapshot as allowed under [privacy]: titles blanked unless privacy mode is off. Pure. */
+    fun restrictedTo(privacy: PrivacyMode): CachedAgenda =
+        if (privacy == PrivacyMode.OFF) this else copy(items = items.map { it.copy(title = "") })
+
     /** Back to agenda items; entries that no longer parse are skipped. Pure. */
     fun toItems(): List<AgendaItem> = items.mapNotNull { it.toItem() }
 

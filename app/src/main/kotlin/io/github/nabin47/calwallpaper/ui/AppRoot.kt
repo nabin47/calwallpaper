@@ -59,7 +59,10 @@ fun AppRoot(
     }
 }
 
-/** Static-mode bookkeeping after each settings change. Main thread only. */
+/**
+ * Bookkeeping after each settings change: static-mode triggers and image, and the Direct Boot cache.
+ * Main thread only.
+ */
 private class StaticSync(
     private val services: AppServices,
     private val scope: CoroutineScope,
@@ -71,6 +74,10 @@ private class StaticSync(
         after: Settings,
     ) {
         if (before.batteryMode != after.batteryMode) services.staticScheduler.sync(after)
+        if (before.privacyMode != after.privacyMode) {
+            // Strip titles from the Direct Boot cache right away, even if the live wallpaper is not running.
+            scope.launch { services.graph.directBootCache.restrictTo(after.privacyMode) }
+        }
         if (after.batteryMode != BatteryMode.STATIC) return
         pendingApply?.cancel()
         val switched = before.batteryMode != BatteryMode.STATIC

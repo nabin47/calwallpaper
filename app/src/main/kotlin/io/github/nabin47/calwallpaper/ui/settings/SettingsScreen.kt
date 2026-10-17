@@ -15,10 +15,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,6 +35,7 @@ import io.github.nabin47.calwallpaper.core.AgendaItem
 import io.github.nabin47.calwallpaper.core.Outcome
 import io.github.nabin47.calwallpaper.core.getOrNull
 import io.github.nabin47.calwallpaper.data.calendar.DeviceCalendar
+import io.github.nabin47.calwallpaper.domain.settings.BatteryMode
 import io.github.nabin47.calwallpaper.domain.settings.Settings
 import io.github.nabin47.calwallpaper.render.theme.Palette
 import io.github.nabin47.calwallpaper.ui.CalendarPermissionState
@@ -80,6 +83,7 @@ fun SettingsScreen(
     }
     val liveActive = remember(resumeCount) { LiveWallpaper.isActive(context) }
     val report by produceState(PerfReport(), resumeCount) { value = services.graph.diagnostics.read() }
+    RefreshStaticOnPermissionChange(services, settings, permission.granted)
 
     Column(modifier = modifier.fillMaxSize().safeDrawingPadding()) {
         Column(
@@ -142,6 +146,25 @@ private fun SettingsList(
                 modifier = Modifier.padding(vertical = 24.dp),
             )
         }
+    }
+}
+
+/**
+ * Re-applies the battery saver image when calendar access is granted or revoked (in the dialog or in system
+ * settings): the content-trigger job only sees calendar data changes, not permission changes.
+ */
+@Composable
+private fun RefreshStaticOnPermissionChange(
+    services: AppServices,
+    settings: Settings,
+    granted: Boolean,
+) {
+    val currentSettings by rememberUpdatedState(settings)
+    var lastSeen by remember { mutableStateOf(granted) }
+    LaunchedEffect(granted) {
+        if (granted == lastSeen) return@LaunchedEffect
+        lastSeen = granted
+        if (currentSettings.batteryMode == BatteryMode.STATIC) services.staticUpdater.refresh()
     }
 }
 

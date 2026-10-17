@@ -70,6 +70,17 @@ class CachedAgendaTest {
     }
 
     @Test
+    fun turningPrivacyOnStripsTitlesFromAnExistingSnapshot() {
+        val withTitles = CachedAgenda.fromItems(items, PrivacyMode.OFF)
+        assertEquals(withTitles, withTitles.restrictedTo(PrivacyMode.OFF))
+        for (privacy in listOf(PrivacyMode.WHEN_LOCKED, PrivacyMode.ALWAYS)) {
+            val restricted = withTitles.restrictedTo(privacy)
+            assertTrue(restricted.items.all { it.title.isEmpty() }, "$privacy")
+            assertEquals(withTitles.items.map { it.id }, restricted.items.map { it.id }, "only titles change")
+        }
+    }
+
+    @Test
     fun malformedEntriesAreSkipped() {
         val good = CachedItem.from(items[0], keepTitle = true)
         val agenda =

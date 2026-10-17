@@ -75,8 +75,10 @@ class AgendaWallpaperService : WallpaperService() {
             setTouchEventsEnabled(false)
             events.register()
             scope.launch {
-                graph.settings.settings.collect {
-                    settings = it
+                graph.settings.settings.collect { next ->
+                    val previousPrivacy = settings?.privacyMode
+                    settings = next
+                    if (previousPrivacy != null && previousPrivacy != next.privacyMode) refreshCache(next)
                     onChange(RedrawReason.SETTINGS_CHANGED)
                 }
             }
@@ -182,6 +184,15 @@ class AgendaWallpaperService : WallpaperService() {
                         flow { emit(graph.directBootCache.read()) }
                     }
                 }
+
+        /**
+         * Rewrites the Direct Boot cache under the new privacy mode, so titles appear or disappear there too
+         * (a privacy change alone does not restart observation, which is what normally refreshes the cache).
+         */
+        private suspend fun refreshCache(next: Settings) {
+            val current = items ?: return
+            if (graph.deviceState.isUserUnlocked()) graph.directBootCache.write(current, next.privacyMode)
+        }
 
         private fun readInputs(): EngineInputs {
             val zone = TimeZone.currentSystemDefault()
