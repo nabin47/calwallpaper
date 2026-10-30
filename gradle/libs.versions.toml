@@ -15,7 +15,7 @@ datetime = "0.8.0"
 room3 = "3.0.3"
 sqlite = "2.7.1"
 datastore = "1.2.1"
-roborazzi = "1.76.0"
+roborazzi = "1.77.0"
 robolectric = "4.17"
 annotation = "1.11.0"
 # Latest stable on developer.android.com/jetpack/androidx/releases/glance (verified 2026-10-17).
