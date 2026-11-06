@@ -21,7 +21,7 @@ annotation = "1.11.0"
 # Latest stable on developer.android.com/jetpack/androidx/releases/glance (verified 2026-10-17).
 glance = "1.2.0"
 # Latest stable on Maven Central (verified 2026-10-17). Todoist API v1 client (CLAUDE.md §3).
-ktor = "3.6.0"
+ktor = "3.6.1"
 # Latest stable on developer.android.com/jetpack/androidx/releases/work (verified 2026-10-17).
 work = "2.12.0"
 # Latest stable on developer.android.com/jetpack/androidx/releases/benchmark (verified 2026-10-17). The Baseline
